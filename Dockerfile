@@ -8,7 +8,7 @@ COPY yarn.lock .
 RUN yarn && yarn cache clean
 
 # Bundle app source
-COPY backend .
+COPY . .
 
 # Expose port and start application
 EXPOSE 8080
