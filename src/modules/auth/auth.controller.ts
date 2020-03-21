@@ -18,7 +18,6 @@ export class AuthController {
   }
 
   @Post('login')
-  // @UseGuards(AuthGuard())
   @ApiResponse({status: HttpStatus.ACCEPTED, description: 'Successful Login'})
   @ApiResponse({status: HttpStatus.BAD_REQUEST, description: 'Bad Request'})
   @ApiResponse({status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized'})

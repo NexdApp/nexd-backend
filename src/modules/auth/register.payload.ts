@@ -14,9 +14,8 @@ export class RegisterPayload {
   @IsNotEmpty()
   lastName!: string;
 
-  @ApiProperty({required: true, enum: ['helper', 'seeker']})
-  @IsNotEmpty()
-  role!: string;
+  @ApiProperty({required: false, enum: ['helper', 'seeker']})
+  role?: string;
 
   @ApiProperty({required: true})
   @IsNotEmpty()

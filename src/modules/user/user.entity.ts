@@ -24,7 +24,13 @@ export class User {
     type: 'enum',
     enum: ['helper', 'seeker'],
   })
-  role!: string;
+  role?: string;
+
+  @Column({length: 255})
+  telephone?: string;
+
+  @Column({length: 10})
+  zipCode?: string;
 
   @Column({
     name: 'password',
@@ -39,6 +45,8 @@ export class UserFillableFields {
   email!: string;
   firstName!: string;
   lastName!: string;
-  role!: string;
+  role?: string;
+  telephone?: string;
+  zipCode?: string;
   password!: string;
 }
