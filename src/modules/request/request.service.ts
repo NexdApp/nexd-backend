@@ -40,7 +40,9 @@ export class RequestService {
     return this.requestRepository.save(request);
   }
 
-  async getAll() {
+  async getAll(user: any, onlyMine: string) {
+    if (onlyMine === 'true') {
+    }
     return await this.requestRepository.find({ relations: ['articles'] });
   }
 }
