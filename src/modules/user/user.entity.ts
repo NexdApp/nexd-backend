@@ -22,7 +22,6 @@ export class User {
   @Column({
     name: 'role',
     type: 'enum',
-    nullable: true,
     enum: ['helper', 'seeker'],
   })
   role?: string;
