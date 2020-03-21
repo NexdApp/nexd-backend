@@ -14,10 +14,10 @@ async function bootstrap() {
   const logger = new Logger('Main', true);
   const globalPrefix = '/api';
 
+  app.setGlobalPrefix(globalPrefix);
   setupSwagger(app);
 
   app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix(globalPrefix);
   app.use(helmet());
   app.use(loggerMiddleware);
 

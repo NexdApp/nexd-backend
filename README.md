@@ -100,7 +100,8 @@ yarn test:cov
 ## Swagger
 
 RESTful APIs you can describe with already integrated Swagger.
-To see all available endpoints visit `~~http://localhost:3000/api/docs~~`
+To see all available endpoints visit `http://localhost:3000/api/docs`
+To get the endpoints in JSON format, visit `http://localhost:3000/api/docs-json`
 
 ## TypeORM
 
