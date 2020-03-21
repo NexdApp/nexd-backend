@@ -24,7 +24,7 @@ export class ArticlesController {
   }
 
   @Get()
-  findAll(): string {
-    return 'This action returns all cats';
+  findAll(): Promise<Article[]> {
+    return this.articlesService.findAll();
   }
 }
