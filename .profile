@@ -1,0 +1,1 @@
+yarn deploy:local
