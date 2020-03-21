@@ -13,6 +13,7 @@ import { Article } from 'articles/article.entity';
 import { ArticlesController } from 'articles/articles.controller';
 import { ArticlesService } from 'articles/articles.service';
 import { RequestModule } from 'modules/request/request.module';
+import { CallModule } from 'modules/call/call.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RequestModule } from 'modules/request/request.module';
     DatabaseModule,
     RequestModule,
     TypeOrmModule.forFeature([User, Article, Request]),
+    CallModule,
   ],
   controllers: [AppController, ArticlesController],
   providers: [AppService, ArticlesService],
