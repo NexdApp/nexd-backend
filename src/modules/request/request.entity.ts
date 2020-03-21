@@ -21,6 +21,35 @@ export class Request {
   @Column()
   requester!: number;
 
+  @Column({
+    name: 'priority',
+    type: 'enum',
+    default: 'low',
+    enum: ['low', 'medium', 'high'],
+  })
+  priority?: string;
+
+  @Column()
+  additionalRequest?: string;
+
+  @Column()
+  address?: string;
+
+  @Column()
+  zipCode?: string;
+
+  @Column()
+  city?: string;
+
+  @Column()
+  deliveryComment?: string;
+
+  @Column({
+    length: 255,
+    nullable: true,
+  })
+  phoneNumber?: string;
+
   @OneToMany(
     type => RequestArticle,
     requestArticle => requestArticle.request,

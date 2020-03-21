@@ -28,7 +28,7 @@ export class RequestController {
   }
 
   @Post()
-  async insertMany(
+  async insertRequestWithArticles(
     @Body() createRequestDto: CreateRequestDto,
     @ReqUser() user: any,
   ): Promise<RequestEntity> {
