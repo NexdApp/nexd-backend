@@ -17,7 +17,7 @@ export class AuthController {
   ) {}
 
   @Post('login')
-  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Successful Login' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Successful Login' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
   async login(@Body() credentials: LoginPayload): Promise<any> {
@@ -27,7 +27,7 @@ export class AuthController {
 
   @Post('register')
   @ApiResponse({
-    status: HttpStatus.ACCEPTED,
+    status: HttpStatus.CREATED,
     description: 'Successful Registration',
   })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
