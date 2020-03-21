@@ -1,9 +1,11 @@
-import {Module} from '@nestjs/common';
-import {TypeOrmModule, TypeOrmModuleOptions} from '@nestjs/typeorm';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-import {ConfigModule} from '../config/config.module';
-import {ConfigService} from '../config/config.service';
-import {User} from '../user/user.entity';
+import { ConfigModule } from '../config/config.module';
+import { ConfigService } from '../config/config.service';
+import { User } from '../user/user.entity';
+import { Seeker } from 'modules/seeker/seeker.entity';
+import { Helper } from 'modules/helper/helper.entity';
 
 @Module({
   imports: [
@@ -20,8 +22,8 @@ import {User} from '../user/user.entity';
           password: config.databasePassword,
           // importing entities directly because Webpack + glob path pattern + ts file = crash
           // https://github.com/nestjs/nest/issues/711
-          entities: [User], // ['src/modules/**/*.entity{.ts,.js}'],
-          migrations: [User], // ['src/modules/**/*.migration{.ts,.js}'],
+          entities: [User, Seeker, Helper], // ['src/modules/**/*.entity{.ts,.js}'],
+          migrations: [User, Seeker, Helper], // ['src/modules/**/*.migration{.ts,.js}'],
           synchronize: config.isDev,
           logging: !config.isProd,
           useNewUrlParser: true,
@@ -29,5 +31,4 @@ import {User} from '../user/user.entity';
     }),
   ],
 })
-export class DatabaseModule {
-}
+export class DatabaseModule {}
