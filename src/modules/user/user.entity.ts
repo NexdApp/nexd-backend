@@ -20,6 +20,7 @@ export class User {
   email!: string;
 
   @Column({
+    nullable: true,
     name: 'role',
     type: 'enum',
     enum: ['helper', 'seeker'],

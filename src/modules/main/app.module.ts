@@ -8,9 +8,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from '../auth/auth.module';
 import { User } from '../user/user.entity';
-import { Article } from 'articles/article.entity';
-import { ArticlesController } from 'articles/articles.controller';
-import { ArticlesService } from 'articles/articles.service';
+import { Article } from '../../articles/article.entity';
+import { ArticlesController } from '../../articles/articles.controller';
+import { ArticlesService } from '../../articles/articles.service';
 
 @Module({
   imports: [

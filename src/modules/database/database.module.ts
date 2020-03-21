@@ -4,7 +4,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
 import { User } from '../user/user.entity';
-import { Article } from 'articles/article.entity';
+import { Article } from '../../articles/article.entity';
 
 @Module({
   imports: [
