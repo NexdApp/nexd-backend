@@ -18,7 +18,7 @@ export class RequestArticle {
     type => Request,
     request => request.articles,
   )
-  request?: Request;
+  request!: Request;
 }
 
 export class RequestFillableFields {

@@ -20,20 +20,27 @@ export class RequestService {
     return this.requestRepository.findOne(id);
   }
 
-  async create(createRequestDto: CreateRequestDto, user: User) {
+  async create(createRequestDto: CreateRequestDto, user: any) {
     const request = new Request();
+    request.articles = [];
     createRequestDto.articles.forEach(art => {
       const newArticle = new RequestArticle();
       newArticle.articleId = art.articleId;
       newArticle.articleCount = art.articleCount;
       request.articles?.push(newArticle);
     });
-    request.requester = user.id;
+    request.requester = user.userId;
+    request.additionalRequest = createRequestDto.additionalRequest;
+    request.address = createRequestDto.address;
+    request.zipCode = createRequestDto.zipCode;
+    request.city = createRequestDto.city;
+    request.phoneNumber = createRequestDto.phoneNumber;
+    request.deliveryComment = createRequestDto.deliveryComment;
 
     return this.requestRepository.save(request);
   }
 
   async getAll() {
-    return await this.requestRepository.find();
+    return await this.requestRepository.find({ relations: ['articles'] });
   }
 }
