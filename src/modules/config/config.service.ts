@@ -65,6 +65,14 @@ export class ConfigService {
     return this.envConfig.GOOGLEAUTH_REDIRECT_URI;
   }
 
+  public get twillioAccountSSID(){
+    return this.envConfig.TWILIO_ACCOUNT_SSID;
+  }
+
+  public get twillioAuthtoken(){
+    return this.envConfig.TWILIO_ACCOUNT_SSID;
+  }
+
   /**
    * Generic getter
    */
@@ -102,6 +110,8 @@ export class ConfigService {
       //   .required()
       //   .default(true),
       // add more validation rules ...
+      TWILIO_ACCOUNT_SSID: Joi.string().required(),
+      TWILIO_AUTH_TOKEN: Joi.string().required()
     });
 
     const validationOptions: Joi.ValidationOptions = {allowUnknown: true};
