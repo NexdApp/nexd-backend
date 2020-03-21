@@ -42,11 +42,13 @@ Next, in `.env`, set these vars:
 > JWT_SECRET=jwt_awesome_key
 
 Create a copy of `.env` called `.env.development` and change these vars:
+
 > DATABASE_HOST=localhost
 > DATABASE_PORT=54321
 
 ### Docker
 
+**Temporary Note**
 To spin up a docker container for local API development, following commands can be used.
 
 Create the postgres docker volume:
@@ -56,6 +58,14 @@ Create the postgres docker volume:
 Run the postgis image:
 
 `docker run -d --name postgres-nearbuy -p 5432:5432 -e POSTGRES_PASSWORD=secretpassword -e POSTGRES_DB=dbname -e POSTGRES_USER=username -v pgdata:/var/lib/postgresql/data postgis/postgis:12-2.5`
+
+---
+
+Postgres admin:
+
+`docker run --network nearbuy-backend_default -p 3010:80 -e 'PGADMIN_DEFAULT_EMAIL=user@domain.com' -e 'PGADMIN_DEFAULT_PASSWORD=SuperSecret' -d dpage/pgadmin4`
+
+That adds a pgadmin container to the docker network created by docker-compose. You can connect in there to the host "db" (if using defaults).
 
 ---
 
