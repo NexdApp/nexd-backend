@@ -20,7 +20,7 @@ export class RequestService {
     return this.requestRepository.findOne(id);
   }
 
-  async create(createRequestDto: CreateRequestDto, user: User) {
+  async create(createRequestDto: CreateRequestDto, user: any) {
     const request = new Request();
     createRequestDto.articles.forEach(art => {
       const newArticle = new RequestArticle();
@@ -28,7 +28,7 @@ export class RequestService {
       newArticle.articleCount = art.articleCount;
       request.articles?.push(newArticle);
     });
-    request.requester = user.id;
+    request.requester = user.userId;
 
     return this.requestRepository.save(request);
   }
