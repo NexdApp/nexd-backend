@@ -24,6 +24,11 @@ export class ArticlesController {
   }
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'All existing articles',
+    type: [Article],
+  })
   findAll(): Promise<Article[]> {
     return this.articlesService.findAll();
   }
