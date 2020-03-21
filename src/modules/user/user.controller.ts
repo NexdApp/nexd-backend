@@ -10,8 +10,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ReqUser } from 'modules/common/decorators/user.decorator';
-import { User } from 'modules/user/user.entity';
+import { ReqUser } from '../common/decorators/user.decorator';
+import { User } from './user.entity';
 import { UsersService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-guard';
