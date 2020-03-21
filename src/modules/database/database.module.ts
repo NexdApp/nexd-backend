@@ -5,8 +5,8 @@ import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
 import { User } from '../user/user.entity';
 import { Request } from '../request/request.entity';
-import { Article } from 'articles/article.entity';
-import { RequestArticle } from 'modules/request/requestArticle.entity';
+import { Article } from '../articles/article.entity';
+import { RequestArticle } from '../request/requestArticle.entity';
 
 @Module({
   imports: [
