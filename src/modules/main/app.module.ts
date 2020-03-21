@@ -8,19 +8,18 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from '../auth/auth.module';
 import { User } from '../user/user.entity';
-import { Article } from 'articles/article.entity';
-import { ArticlesController } from 'articles/articles.controller';
-import { ArticlesService } from 'articles/articles.service';
+import { CallModule } from 'modules/call/call.module';
 
 @Module({
   imports: [
     AuthModule,
     ConfigModule,
     DatabaseModule,
-    TypeOrmModule.forFeature([User, Article]),
+    TypeOrmModule.forFeature([User]),
+    CallModule,
   ],
-  controllers: [AppController, ArticlesController],
-  providers: [AppService, ArticlesService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule /* implements NestModule */ {
   static port: string | number;
