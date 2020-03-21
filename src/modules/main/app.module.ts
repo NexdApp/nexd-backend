@@ -1,13 +1,13 @@
-import {ConfigService} from '../config/config.service';
-import {Module} from '@nestjs/common';
-import {TypeOrmModule} from '@nestjs/typeorm';
+import { ConfigService } from '../config/config.service';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import {ConfigModule} from '../config/config.module';
-import {DatabaseModule} from '../database/database.module';
-import {AppController} from './app.controller';
-import {AppService} from './app.service';
-import {AuthModule} from '../auth/auth.module';
-import {User} from '../user/user.entity';
+import { ConfigModule } from '../config/config.module';
+import { DatabaseModule } from '../database/database.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from '../auth/auth.module';
+import { User } from '../user/user.entity';
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ export class AppModule /* implements NestModule */ {
   static isDev: boolean;
 
   constructor(private readonly config: ConfigService) {
-    AppModule.port = config.get('API_PORT');
+    AppModule.port = process.env.PORT || config.get('API_PORT');
     AppModule.isDev = config.isDev;
   }
 
