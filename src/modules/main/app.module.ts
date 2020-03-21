@@ -8,16 +8,19 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from '../auth/auth.module';
 import { User } from '../user/user.entity';
+import { Request } from '../request/request.entity';
 import { Article } from 'articles/article.entity';
 import { ArticlesController } from 'articles/articles.controller';
 import { ArticlesService } from 'articles/articles.service';
+import { RequestModule } from 'modules/request/request.module';
 
 @Module({
   imports: [
     AuthModule,
     ConfigModule,
     DatabaseModule,
-    TypeOrmModule.forFeature([User, Article]),
+    RequestModule,
+    TypeOrmModule.forFeature([User, Article, Request]),
   ],
   controllers: [AppController, ArticlesController],
   providers: [AppService, ArticlesService],
