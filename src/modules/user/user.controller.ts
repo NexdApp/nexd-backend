@@ -1,12 +1,14 @@
-import {Body, Controller, Get, HttpStatus, Logger, Param, Put, UnauthorizedException} from '@nestjs/common';
+import {Body, Controller, Get, HttpStatus, Logger, Param, Put, UnauthorizedException, UseGuards} from '@nestjs/common';
 import {ApiBearerAuth, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {ReqUser} from 'modules/common/decorators/user.decorator';
 import {User} from 'modules/user/user.entity';
 import {UsersService} from './user.service';
 import {UpdateUserDto} from './dto/update-user.dto';
+import {JwtAuthGuard} from '../common/guards/jwt-guard';
 
 @ApiBearerAuth()
 @Controller('user')
+@UseGuards(JwtAuthGuard)
 @ApiTags('User')
 export class UserController {
   static LOGGER = new Logger('User', true);
@@ -33,14 +35,12 @@ export class UserController {
   @ApiResponse({status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized'})
   async update(@Param('id') id: number,
                @Body() updateUserDto: UpdateUserDto,
-               @ReqUser() user: User,
+               @ReqUser() user: any,
   ): Promise<User> {
-    UserController.LOGGER.log('User ' + await user);
-    const expectedUser = await this.userService.get(id);
-    UserController.LOGGER.log('Expect ' + await user);
-    if (expectedUser.id !== user.id) {
+    const userToUpdate = await this.userService.get(id);
+    if (userToUpdate.id !== user.userId) {
       throw new UnauthorizedException('You cannot edit other users!');
     }
-    return this.userService.update(updateUserDto, user);
+    return this.userService.update(updateUserDto, userToUpdate);
   }
 }

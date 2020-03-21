@@ -1,19 +1,24 @@
-import { ConfigService } from '../config/config.service';
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import {ConfigService} from '../config/config.service';
+import {Module} from '@nestjs/common';
+import {TypeOrmModule} from '@nestjs/typeorm';
 
-import { ConfigModule } from '../config/config.module';
-import { DatabaseModule } from '../database/database.module';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthModule } from '../auth/auth.module';
-import { User } from '../user/user.entity';
-import { Request } from '../request/request.entity';
-import { Article } from 'articles/article.entity';
-import { ArticlesController } from 'articles/articles.controller';
-import { ArticlesService } from 'articles/articles.service';
-import { RequestModule } from 'modules/request/request.module';
-import { CallModule } from 'modules/call/call.module';
+import {ConfigModule} from '../config/config.module';
+import {DatabaseModule} from '../database/database.module';
+import {AppController} from './app.controller';
+import {AppService} from './app.service';
+import {AuthModule} from '../auth/auth.module';
+import {User} from '../user/user.entity';
+import {Request} from '../request/request.entity';
+import {Article} from 'articles/article.entity';
+import {ArticlesController} from 'articles/articles.controller';
+import {ArticlesService} from 'articles/articles.service';
+import {RequestModule} from 'modules/request/request.module';
+import {CallModule} from 'modules/call/call.module';
+import {UserModule} from '../user/user.module';
+import {UserController} from '../user/user.controller';
+import {RequestController} from '../request/request.controller';
+import {UsersService} from '../user/user.service';
+import {RequestService} from '../request/request.service';
 
 @Module({
   imports: [
@@ -21,11 +26,12 @@ import { CallModule } from 'modules/call/call.module';
     ConfigModule,
     DatabaseModule,
     RequestModule,
+    UserModule,
     TypeOrmModule.forFeature([User, Article, Request]),
     CallModule,
   ],
-  controllers: [AppController, ArticlesController],
-  providers: [AppService, ArticlesService],
+  controllers: [AppController, ArticlesController, UserController, RequestController],
+  providers: [AppService, ArticlesService, UsersService, RequestService],
 })
 export class AppModule /* implements NestModule */ {
   static port: string | number;

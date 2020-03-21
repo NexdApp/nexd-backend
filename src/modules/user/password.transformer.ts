@@ -1,5 +1,6 @@
 import * as crypto from 'crypto';
 import {ValueTransformer} from 'typeorm';
+import {UserModule} from './user.module';
 
 export class PasswordTransformer implements ValueTransformer {
   from(value: string) {
