@@ -24,8 +24,9 @@ export class Request {
   @OneToMany(
     type => RequestArticle,
     requestArticle => requestArticle.request,
+    { cascade: true },
   )
-  articles?: RequestArticle[];
+  articles!: RequestArticle[];
 }
 
 export class RequestFillableFields {

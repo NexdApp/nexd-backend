@@ -22,6 +22,7 @@ export class RequestService {
 
   async create(createRequestDto: CreateRequestDto, user: any) {
     const request = new Request();
+    request.articles = [];
     createRequestDto.articles.forEach(art => {
       const newArticle = new RequestArticle();
       newArticle.articleId = art.articleId;
@@ -34,6 +35,6 @@ export class RequestService {
   }
 
   async getAll() {
-    return await this.requestRepository.find();
+    return await this.requestRepository.find({ relations: ['articles'] });
   }
 }
