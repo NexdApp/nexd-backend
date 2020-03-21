@@ -1,8 +1,9 @@
 ## Dependencies
+
 - NodeJS
 - Docker
 - PostgreSQL Client
-    - `sudo apt install postgresql postgresql-contrib`
+  - `sudo apt install postgresql postgresql-contrib`
 - Yarn
 
 ## Installation
@@ -40,8 +41,19 @@ Next, in `.env.development` and `.env`, set these vars :
 > DATABASE_NAME=dbname
 > JWT_SECRET=jwt_awesome_key
 
-
 ### Docker
+
+To spin up a docker container for local API development, following commands can be used.
+
+Create the postgres docker volume:
+
+`docker volume create --name=pgdata`
+
+Run the postgis image:
+
+`docker run -d --name postgres-nearbuy -p 5432:5432 -e POSTGRES_PASSWORD=secretpassword -e POSTGRES_DB=dbname -e POSTGRES_USER=username -v pgdata:/var/lib/postgresql/data postgis/postgis:12-2.5`
+
+---
 
 To mount the project with Docker, you can use `yarn deploy:local` (which executes `docker-compose up`)
 
