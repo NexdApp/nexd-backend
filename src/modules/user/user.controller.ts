@@ -31,7 +31,7 @@ export class UserController {
   }
 
   @Get(':id')
-  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Successful' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Successful' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
   async findOne(@Param('id') id: number): Promise<User> {
     return await this.userService.get(id);

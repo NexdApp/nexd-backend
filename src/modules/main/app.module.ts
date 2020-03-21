@@ -1,24 +1,28 @@
-import { ConfigService } from '../config/config.service';
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import {ConfigService} from '../config/config.service';
+import {Module} from '@nestjs/common';
+import {TypeOrmModule} from '@nestjs/typeorm';
 
-import { ConfigModule } from '../config/config.module';
-import { DatabaseModule } from '../database/database.module';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthModule } from '../auth/auth.module';
-import { User } from '../user/user.entity';
-import { Request } from '../request/request.entity';
-import { Article } from '../articles/article.entity';
-import { ArticlesController } from '../articles/articles.controller';
-import { ArticlesService } from '../articles/articles.service';
-import { RequestModule } from '../request/request.module';
-import { CallModule } from '../call/call.module';
-import { UserModule } from '../user/user.module';
-import { UserController } from '../user/user.controller';
-import { RequestController } from '../request/request.controller';
-import { UsersService } from '../user/user.service';
-import { RequestService } from '../request/request.service';
+import {ConfigModule} from '../config/config.module';
+import {DatabaseModule} from '../database/database.module';
+import {AppController} from './app.controller';
+import {AppService} from './app.service';
+import {AuthModule} from '../auth/auth.module';
+import {User} from '../user/user.entity';
+import {Request} from '../request/request.entity';
+import {Article} from '../articles/article.entity';
+import {ArticlesController} from '../articles/articles.controller';
+import {ArticlesService} from '../articles/articles.service';
+import {RequestModule} from '../request/request.module';
+import {CallModule} from '../call/call.module';
+import {UserModule} from '../user/user.module';
+import {UserController} from '../user/user.controller';
+import {RequestController} from '../request/request.controller';
+import {UsersService} from '../user/user.service';
+import {RequestService} from '../request/request.service';
+import {ShoppingListController} from '../shoppingList/shopping-list.controller';
+import {ShoppingList} from '../shoppingList/shopping-list.entity';
+import {ShoppingListModule} from '../shoppingList/shopping-list.module';
+import {ShoppingListService} from '../shoppingList/shopping-list.service';
 
 @Module({
   imports: [
@@ -27,7 +31,8 @@ import { RequestService } from '../request/request.service';
     DatabaseModule,
     RequestModule,
     UserModule,
-    TypeOrmModule.forFeature([User, Article, Request]),
+    ShoppingListModule,
+    TypeOrmModule.forFeature([User, Article, Request, ShoppingList]),
     CallModule,
   ],
   controllers: [
@@ -35,8 +40,9 @@ import { RequestService } from '../request/request.service';
     ArticlesController,
     UserController,
     RequestController,
+    ShoppingListController,
   ],
-  providers: [AppService, ArticlesService, UsersService, RequestService],
+  providers: [AppService, ArticlesService, UsersService, RequestService, ShoppingListService],
 })
 export class AppModule /* implements NestModule */ {
   static port: string | number;
