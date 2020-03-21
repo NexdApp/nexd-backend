@@ -31,15 +31,19 @@ create database dbname with owner username;
 then `ctrl + c` to exit the shell, then try to connect with  
 `psql -U username dbname` (it will ask for your password)
 
-Next, in `.env.development` and `.env`, set these vars :
+Next, in `.env`, set these vars:
 
 > DATABASE_TYPE=postgres  
-> DATABASE_HOST=localhost  
+> DATABASE_HOST=db  
 > DATABASE_PORT=5432  
 > DATABASE_USERNAME=username  
 > DATABASE_PASSWORD=secretpassword  
 > DATABASE_NAME=dbname
 > JWT_SECRET=jwt_awesome_key
+
+Create a copy of `.env` called `.env.development` and change these vars:
+> DATABASE_HOST=localhost
+> DATABASE_PORT=54321
 
 ### Docker
 
