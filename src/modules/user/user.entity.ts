@@ -37,7 +37,7 @@ export class User {
     length: 10,
     nullable: true,
   })
-  zipCode?: string;
+  address?: string;
 
   @Column({
     name: 'password',
@@ -54,6 +54,6 @@ export class UserFillableFields {
   lastName!: string;
   role?: string;
   telephone?: string;
-  zipCode?: string;
+  address?: string;
   password!: string;
 }
