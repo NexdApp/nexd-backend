@@ -30,6 +30,12 @@ export class RequestService {
       request.articles?.push(newArticle);
     });
     request.requester = user.userId;
+    request.additionalRequest = createRequestDto.additionalRequest;
+    request.address = createRequestDto.address;
+    request.zipCode = createRequestDto.zipCode;
+    request.city = createRequestDto.city;
+    request.phoneNumber = createRequestDto.phoneNumber;
+    request.deliveryComment = createRequestDto.deliveryComment;
 
     return this.requestRepository.save(request);
   }

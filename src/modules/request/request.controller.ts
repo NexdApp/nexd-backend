@@ -6,8 +6,14 @@ import {
   Req,
   Request,
   UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiTags,
+  ApiResponse,
+  ApiCreatedResponse,
+} from '@nestjs/swagger';
 import { RequestService } from './request.service';
 import { Request as RequestEntity } from './request.entity';
 import { CreateRequestDto } from './dto/create-request.dto';
@@ -27,6 +33,11 @@ export class RequestController {
     return await this.requestService.getAll();
   }
 
+  @ApiCreatedResponse({
+    status: HttpStatus.ACCEPTED,
+    description: 'Add a complete request including articles.',
+    type: RequestEntity,
+  })
   @Post()
   async insertRequestWithArticles(
     @Body() createRequestDto: CreateRequestDto,
