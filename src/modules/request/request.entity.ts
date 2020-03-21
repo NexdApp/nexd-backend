@@ -1,4 +1,11 @@
-import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+} from 'typeorm';
+import { RequestArticle } from './requestArticle.entity';
 
 @Entity({
   name: 'request',
@@ -13,6 +20,12 @@ export class Request {
 
   @Column()
   requester!: number;
+
+  @OneToMany(
+    type => RequestArticle,
+    requestArticle => requestArticle.request,
+  )
+  articles?: RequestArticle[];
 }
 
 export class RequestFillableFields {

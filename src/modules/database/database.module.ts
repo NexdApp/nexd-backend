@@ -6,6 +6,7 @@ import { ConfigService } from '../config/config.service';
 import { User } from '../user/user.entity';
 import { Request } from '../request/request.entity';
 import { Article } from 'articles/article.entity';
+import { RequestArticle } from 'modules/request/requestArticle.entity';
 
 @Module({
   imports: [
@@ -22,8 +23,8 @@ import { Article } from 'articles/article.entity';
           password: config.databasePassword,
           // importing entities directly because Webpack + glob path pattern + ts file = crash
           // https://github.com/nestjs/nest/issues/711
-          entities: [User, Article, Request], // ['src/modules/**/*.entity{.ts,.js}'],
-          migrations: [User, Article, Request], // ['src/modules/**/*.migration{.ts,.js}'],
+          entities: [User, Article, Request, RequestArticle], // ['src/modules/**/*.entity{.ts,.js}'],
+          migrations: [User, Article, Request, RequestArticle], // ['src/modules/**/*.migration{.ts,.js}'],
           synchronize: config.isDev,
           // synchronize: false,
           logging: !config.isProd,
