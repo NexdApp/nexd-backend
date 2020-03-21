@@ -1,9 +1,9 @@
-import {Module} from '@nestjs/common';
-import {TypeOrmModule, TypeOrmModuleOptions} from '@nestjs/typeorm';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-import {ConfigModule} from '../config/config.module';
-import {ConfigService} from '../config/config.service';
-import {User} from '../user/user.entity';
+import { ConfigModule } from '../config/config.module';
+import { ConfigService } from '../config/config.service';
+import { User } from '../user/user.entity';
 
 @Module({
   imports: [
@@ -22,12 +22,12 @@ import {User} from '../user/user.entity';
           // https://github.com/nestjs/nest/issues/711
           entities: [User], // ['src/modules/**/*.entity{.ts,.js}'],
           migrations: [User], // ['src/modules/**/*.migration{.ts,.js}'],
-          synchronize: config.isDev,
+          // synchronize: config.isDev,
+          synchronize: false,
           logging: !config.isProd,
           useNewUrlParser: true,
         } as TypeOrmModuleOptions),
     }),
   ],
 })
-export class DatabaseModule {
-}
+export class DatabaseModule {}
