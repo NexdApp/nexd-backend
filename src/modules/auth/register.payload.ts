@@ -14,6 +14,9 @@ export class RegisterPayload {
   @IsNotEmpty()
   lastName!: string;
 
+  @ApiProperty({required: false, enum: ['helper', 'seeker']})
+  role?: string;
+
   @ApiProperty({required: true})
   @IsNotEmpty()
   @MinLength(5)
