@@ -7,6 +7,7 @@ COPY package.json .
 COPY yarn.lock .
 RUN yarn && yarn cache clean
 
+COPY .env ./.env.development
 # Bundle app source
 COPY . .
 
