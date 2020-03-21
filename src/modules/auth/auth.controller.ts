@@ -7,7 +7,7 @@ import {RegisterPayload} from './register.payload';
 import {UsersService} from '../user/user.service';
 
 @Controller('auth')
-@ApiTags('authentication')
+@ApiTags('Authentication')
 export class AuthController {
   static LOGGER = new Logger('Auth', true);
 
