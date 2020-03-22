@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   ForbiddenException,
   Get,
   Logger,
@@ -99,6 +100,20 @@ export class ShoppingListController {
       throw new BadRequestException('This request does not exist');
     }
     return this.shoppingListService.addRequestToList(request.id, shoppingList);
+  }
+
+  @Delete(':shoppingListId/:requestId')
+  @ApiOkResponse({description: 'Successful', type: ShoppingList})
+  @ApiBadRequestResponse({description: 'Bad request'})
+  @ApiForbiddenResponse({description: 'This is not your shopping list'})
+  @ApiNotFoundResponse({description: 'Shopping list not found'})
+  async deleteRequestFromList(
+    @Param('shoppingListId') shoppingListId: number,
+    @Param('requestId') requestId: number,
+    @ReqUser() user: UserID,
+  ): Promise<ShoppingList> {
+    const shoppingList = await this.findShoppingList(shoppingListId, user.userId);
+    return this.shoppingListService.removeRequest(requestId, shoppingList);
   }
 
   private async findShoppingList(id: number, userId: number) {

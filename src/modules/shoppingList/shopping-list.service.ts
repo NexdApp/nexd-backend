@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import {BadRequestException, Injectable, Logger, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
 
@@ -12,6 +12,8 @@ import {UserID} from '../user/user.entity';
 @Injectable()
 @Roles('helper')
 export class ShoppingListService {
+  static LOGGER = new Logger('ShoppingList', true);
+
   constructor(
     @InjectRepository(ShoppingList)
     private readonly shoppingListRepository: Repository<ShoppingList>,
@@ -51,10 +53,22 @@ export class ShoppingListService {
   async addRequestToList(requestId: number, shoppingList: ShoppingList) {
     if (!shoppingList.requests.find(r => r.requestId === requestId)) {
       const newRequest = new ShoppingListRequest();
-      newRequest.id = requestId;
+      newRequest.requestId = requestId;
       shoppingList.requests.push(newRequest);
     } else {
       throw new BadRequestException('Already exists');
+    }
+    return await this.shoppingListRepository.save(shoppingList);
+  }
+
+  async removeRequest(requestId: number, shoppingList: ShoppingList) {
+    const index = shoppingList.requests.findIndex(r => r.requestId === Number(requestId));
+    ShoppingListService.LOGGER.log(index);
+    ShoppingListService.LOGGER.log(shoppingList);
+    if (index > -1) {
+      shoppingList.requests.splice(index, 1);
+    } else {
+      throw new BadRequestException('Does not exists');
     }
     return await this.shoppingListRepository.save(shoppingList);
   }
