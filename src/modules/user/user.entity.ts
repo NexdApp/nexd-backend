@@ -1,7 +1,8 @@
-import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {Exclude} from 'class-transformer';
+import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 
-import { PasswordTransformer } from './password.transformer';
+import {PasswordTransformer} from './password.transformer';
+import {UserRole} from './user-role';
 
 @Entity({
   name: 'users',
@@ -10,21 +11,21 @@ export class User {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ length: 255 })
+  @Column({length: 255})
   firstName!: string;
 
-  @Column({ length: 255 })
+  @Column({length: 255})
   lastName!: string;
 
-  @Column({ length: 255 })
+  @Column({length: 255})
   email!: string;
 
   @Column({
-    name: 'role',
     type: 'enum',
-    enum: ['helper', 'seeker'],
+    enum: UserRole,
+    default: UserRole.NONE,
   })
-  role?: string;
+  role!: string;
 
   @Column({
     length: 255,
@@ -55,4 +56,8 @@ export class UserFillableFields {
   telephone?: string;
   address?: string;
   password!: string;
+}
+
+export class UserID {
+  userId!: number;
 }
