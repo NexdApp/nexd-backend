@@ -1,5 +1,5 @@
 export enum RequestStatus {
-  NEW = 'new',
+  PENDING = 'pending',
   ONGOING = 'ongoing',
   COMPLETED = 'completed',
 }

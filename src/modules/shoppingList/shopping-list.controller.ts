@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -100,12 +99,10 @@ export class ShoppingListController {
       shoppingListId,
       user.userId,
     );
-    const request = await this.requestService.get(requestId);
-    ShoppingListController.LOGGER.log(request);
-    if (!request) {
-      throw new BadRequestException('This request does not exist');
-    }
-    return this.shoppingListService.addRequestToList(request.id, shoppingList);
+    const updateDto = new ShoppingListFormDto();
+    updateDto.requests = shoppingList.requests.map(r => r.requestId);
+    updateDto.requests.push(requestId);
+    return this.shoppingListService.update(updateDto, shoppingList);
   }
 
   @Delete(':shoppingListId/:requestId')
