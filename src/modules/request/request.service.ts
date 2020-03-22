@@ -33,13 +33,15 @@ export class RequestService {
 
   private populateRequest(request: RequestEntity, createRequestDto: RequestFormDto) {
     request.articles = [];
-    createRequestDto.articles.forEach(art => {
-      const newArticle = new RequestArticle();
-      newArticle.articleId = art.articleId;
-      newArticle.articleCount = art.articleCount;
-      newArticle.articleDone = false;
-      request.articles.push(newArticle);
-    });
+    if (createRequestDto.articles) {
+      createRequestDto.articles.forEach(art => {
+        const newArticle = new RequestArticle();
+        newArticle.articleId = art.articleId;
+        newArticle.articleCount = art.articleCount;
+        newArticle.articleDone = false;
+        request.articles.push(newArticle);
+      });
+    }
     request.additionalRequest = createRequestDto.additionalRequest;
     request.phoneNumber = createRequestDto.phoneNumber;
     request.deliveryComment = createRequestDto.deliveryComment;
