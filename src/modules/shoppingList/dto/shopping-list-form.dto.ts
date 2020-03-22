@@ -1,5 +1,5 @@
-import {ApiProperty} from '@nestjs/swagger';
-import {ShoppingListStatus} from '../shopping-list-status';
+import { ApiProperty } from '@nestjs/swagger';
+import { ShoppingListStatus } from '../shopping-list-status';
 
 export class ShoppingListFormDto {
   @ApiProperty({

@@ -1,10 +1,9 @@
-import {Body, Controller, Get, HttpStatus, Logger, Post, UseGuards} from '@nestjs/common';
-import {ApiBearerAuth, ApiCreatedResponse, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {Body, Controller, Get, HttpStatus, Logger, Post, Query, UseGuards} from '@nestjs/common';
+import {ApiBearerAuth, ApiCreatedResponse, ApiQuery, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {RequestService} from './request.service';
 import {Request as RequestEntity} from './request.entity';
 import {CreateRequestDto} from './dto/create-request.dto';
 import {ReqUser} from '../common/decorators/user.decorator';
-import {User} from '../user/user.entity';
 import {JwtAuthGuard} from '../common/guards/jwt-guard';
 
 @ApiBearerAuth()
@@ -13,18 +12,32 @@ import {JwtAuthGuard} from '../common/guards/jwt-guard';
 @ApiResponse({status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized'})
 @Controller('request')
 export class RequestController {
-  static LOGGER = new Logger('User', true);
+  static LOGGER = new Logger('Request', true);
 
   constructor(private readonly requestService: RequestService) {
   }
 
   @Get()
-  async getAll(): Promise<RequestEntity[]> {
-    return await this.requestService.getAll();
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successful',
+    type: [RequestEntity],
+  })
+  @ApiQuery({
+    name: 'onlyMine',
+    required: false,
+    description:
+      'if "true", only the requesting user requests will be replied.',
+  })
+  async getAll(
+    @Query('onlyMine') onlyMine: string,
+    @ReqUser() user: any,
+  ): Promise<RequestEntity[]> {
+    return await this.requestService.getAll(user, onlyMine);
   }
 
   @ApiCreatedResponse({
-    status: HttpStatus.ACCEPTED,
+    status: HttpStatus.CREATED,
     description: 'Add a complete request including articles.',
     type: RequestEntity,
   })

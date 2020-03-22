@@ -9,7 +9,7 @@ import {RequestArticle} from './requestArticle.entity';
 import {RequestArticleStatusDto} from '../shoppingList/dto/shopping-list-form.dto';
 
 @Injectable()
-@Roles('user') // TODO: Add 'authenticatedUser'
+@Roles('user')
 export class RequestService {
   static LOGGER = new Logger('Request', true);
 
@@ -44,8 +44,13 @@ export class RequestService {
     return this.requestRepository.save(request);
   }
 
-  async getAll() {
-    return await this.requestRepository.find({relations: ['articles']});
+  async getAll(user: any, onlyMine: string) {
+    let where = {};
+    if (onlyMine === 'true') {
+      where = { where: { requester: user.userId } };
+    }
+    return await this.requestRepository.find({...where,relations: ['articles'],
+    });
   }
 
   async updateRequestArticle(requestId: number, articleId: number, articleStatusDto: RequestArticleStatusDto) {

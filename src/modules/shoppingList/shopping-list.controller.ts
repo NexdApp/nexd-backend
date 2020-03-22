@@ -29,7 +29,8 @@ export class ShoppingListController {
   static LOGGER = new Logger('ShoppingList', true);
 
   constructor(private readonly shoppingListService: ShoppingListService,
-              private readonly requestService: RequestService) {
+              private readonly requestService: RequestService,
+  ) {
   }
 
   @Get()
@@ -40,9 +41,18 @@ export class ShoppingListController {
 
   @Get(':id')
   @ApiResponse({status: HttpStatus.OK, description: 'Successful'})
-  @ApiResponse({status: HttpStatus.NOT_FOUND, description: 'Shopping list not found'})
-  @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'This is not your shopping list'})
-  async findOne(@Param('id') id: number, @ReqUser() user: UserID): Promise<ShoppingList> {
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Shopping list not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'This is not your shopping list',
+  })
+  async findOne(
+    @Param('id') id: number,
+    @ReqUser() user: UserID,
+  ): Promise<ShoppingList> {
     return await this.findShoppingList(id, user.userId);
   }
 
@@ -53,7 +63,10 @@ export class ShoppingListController {
     type: ShoppingList,
   })
   @ApiResponse({status: HttpStatus.BAD_REQUEST, description: 'Bad Request'})
-  @ApiResponse({status: HttpStatus.NOT_FOUND, description: 'Request not found'})
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Request not found',
+  })
   @ApiResponse({status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized'})
   async insertNewShoppingList(
     @Body() createRequestDto: ShoppingListFormDto,
@@ -66,7 +79,10 @@ export class ShoppingListController {
   @Put(':id')
   @ApiResponse({status: HttpStatus.OK, description: 'Updated'})
   @ApiResponse({status: HttpStatus.BAD_REQUEST, description: 'Bad Request'})
-  @ApiResponse({status: HttpStatus.NOT_FOUND, description: 'Shopping list not found'})
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Shopping list not found',
+  })
   @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden'})
   async updateShoppingList(
     @Param('id') id: number,
@@ -80,7 +96,10 @@ export class ShoppingListController {
   @Put(':id/:requestId')
   @ApiResponse({status: HttpStatus.OK, description: 'Updated'})
   @ApiResponse({status: HttpStatus.BAD_REQUEST, description: 'Bad Request'})
-  @ApiResponse({status: HttpStatus.NOT_FOUND, description: 'Shopping list not found'})
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Shopping list not found',
+  })
   @ApiResponse({status: HttpStatus.FORBIDDEN, description: 'Forbidden'})
   async addRequestToList(
     @Param('id') id: number,

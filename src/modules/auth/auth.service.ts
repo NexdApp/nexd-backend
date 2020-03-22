@@ -20,7 +20,7 @@ export class AuthService {
     delete userPayload.password;
 
     return {
-      expiresIn: this.configService.get('JWT_EXPIRATION_TIME'),
+      expiresIn: Number(this.configService.get('JWT_EXPIRATION_TIME')),
       accessToken: this.jwtService.sign({...userPayload}),
       id: user.id,
     };
