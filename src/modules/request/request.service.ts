@@ -41,8 +41,13 @@ export class RequestService {
   }
 
   async getAll(user: any, onlyMine: string) {
+    let where = {};
     if (onlyMine === 'true') {
+      where = { where: { requester: user.userId } };
     }
-    return await this.requestRepository.find({ relations: ['articles'] });
+    return await this.requestRepository.find({
+      ...where,
+      relations: ['articles'],
+    });
   }
 }

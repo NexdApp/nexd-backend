@@ -13,6 +13,7 @@ import {
   ApiCreatedResponse,
   ApiTags,
   ApiResponse,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { RequestService } from './request.service';
 import { Request as RequestEntity } from './request.entity';
@@ -30,7 +31,17 @@ export class RequestController {
   constructor(private readonly requestService: RequestService) {}
 
   @Get()
-  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Successful' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successful',
+    type: [RequestEntity],
+  })
+  @ApiQuery({
+    name: 'onlyMine',
+    required: false,
+    description:
+      'if "true", only the requesting user requests will be replied.',
+  })
   async getAll(
     @Query('onlyMine') onlyMine: string,
     @ReqUser() user: any,
@@ -39,7 +50,7 @@ export class RequestController {
   }
 
   @ApiCreatedResponse({
-    status: HttpStatus.ACCEPTED,
+    status: HttpStatus.CREATED,
     description: 'Add a complete request including articles.',
     type: RequestEntity,
   })
