@@ -10,7 +10,7 @@ export class ShoppingListRequest {
   @ApiHideProperty()
   id!: number;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: true, type: 'integer' })
   @Column()
   requestId!: number;
 

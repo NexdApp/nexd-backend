@@ -1,17 +1,24 @@
-import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
-import {ShoppingListRequest} from './shopping-list-request.entity';
-import {ApiProperty} from '@nestjs/swagger';
-import {ShoppingListStatus} from './shopping-list-status';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { ShoppingListRequest } from './shopping-list-request.entity';
+import { ApiProperty } from '@nestjs/swagger';
+import { ShoppingListStatus } from './shopping-list-status';
 
 @Entity({
   name: 'shoppingList',
 })
 export class ShoppingList {
-  @ApiProperty()
+  @ApiProperty({ type: 'integer' })
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: 'integer' })
   @Column()
   owner!: number;
 
@@ -25,19 +32,23 @@ export class ShoppingList {
   @UpdateDateColumn()
   updated_at!: Date;
 
-  @ApiProperty()
-  @Column({
-    type: 'enum',
+  @ApiProperty({
     enum: ShoppingListStatus,
+    default: ShoppingListStatus.ACTIVE,
+    type: ShoppingListStatus,
+  })
+  @Column({
+    enum: ShoppingListStatus,
+    type: 'enum',
     default: ShoppingListStatus.ACTIVE,
   })
   status!: string;
 
-  @ApiProperty({type: [ShoppingListRequest]})
+  @ApiProperty({ type: [ShoppingListRequest] })
   @OneToMany(
     type => ShoppingListRequest,
     shoppingListRequest => shoppingListRequest.shoppingList,
-    {cascade: true},
+    { cascade: true },
   )
   requests!: ShoppingListRequest[];
 }
