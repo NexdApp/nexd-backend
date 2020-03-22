@@ -20,7 +20,7 @@ export class RequestService {
   }
 
   async get(id: number) {
-    return this.requestRepository.findOne(id);
+    return this.requestRepository.findOne(id, {relations: ['articles']});
   }
 
   async create(createRequestDto: CreateRequestDto, user: any) {
@@ -41,7 +41,6 @@ export class RequestService {
     request.phoneNumber = createRequestDto.phoneNumber;
     request.deliveryComment = createRequestDto.deliveryComment;
 
-    RequestService.LOGGER.log(request);
     return this.requestRepository.save(request);
   }
 
@@ -50,16 +49,15 @@ export class RequestService {
   }
 
   async updateRequestArticle(requestId: number, articleId: number, articleStatusDto: RequestArticleStatusDto) {
-    const request = await this.get(requestId);
+    const request: Request | undefined = await this.get(requestId);
     if (!request) {
       throw new NotFoundException('This request does not exist');
     }
-    const article = request.articles.find((v) => v.articleId === articleId);
+    const article = request.articles.find((v) => v.articleId === Number(articleId));
     if (!article) {
       throw new BadRequestException('This article does not exist in the request');
     }
     article.articleDone = articleStatusDto.articleDone;
-    RequestService.LOGGER.log(request);
     return this.requestRepository.save(request);
   }
 }

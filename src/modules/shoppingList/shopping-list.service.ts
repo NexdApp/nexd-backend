@@ -8,7 +8,6 @@ import {ShoppingListFormDto} from './dto/shopping-list-form.dto';
 import {ShoppingListStatus} from './shopping-list-status';
 import {ShoppingListRequest} from './shopping-list-request.entity';
 import {UserID} from '../user/user.entity';
-import {ShoppingListController} from './shopping-list.controller';
 
 @Injectable()
 @Roles('helper')
@@ -20,7 +19,7 @@ export class ShoppingListService {
   }
 
   async get(id: number) {
-    const shoppingList = await this.shoppingListRepository.findOne(id);
+    const shoppingList = await this.shoppingListRepository.findOne(id, {relations: ['requests']});
     if (!shoppingList) {
       throw new NotFoundException('Shopping List not found');
     }
@@ -62,7 +61,6 @@ export class ShoppingListService {
     const newRequest = new ShoppingListRequest();
     newRequest.id = requestId;
     shoppingList.requests.push(newRequest);
-    ShoppingListController.LOGGER.log(shoppingList)
     return await this.shoppingListRepository.save(shoppingList);
   }
 }
