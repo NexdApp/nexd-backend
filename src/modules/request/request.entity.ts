@@ -1,18 +1,13 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  OneToMany,
-} from 'typeorm';
-import { RequestArticle } from './requestArticle.entity';
-import { ApiProperty } from '@nestjs/swagger';
+import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {RequestArticle} from './requestArticle.entity';
+import {ApiProperty} from '@nestjs/swagger';
+import {RequestStatus} from './request-status';
 
 @Entity({
   name: 'request',
 })
 export class Request {
-  @ApiProperty({ type: 'integer' })
+  @ApiProperty({type: 'integer'})
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -21,7 +16,7 @@ export class Request {
   @CreateDateColumn()
   created_at!: Date;
 
-  @ApiProperty({ type: 'integer' })
+  @ApiProperty({type: 'integer'})
   @Column()
   requester!: number;
 
@@ -33,9 +28,8 @@ export class Request {
     enum: ['low', 'medium', 'high'],
   })
   priority?: string;
-
   @ApiProperty()
-  @Column({ nullable: true })
+  @Column({nullable: true})
   additionalRequest?: string;
 
   @ApiProperty()
@@ -51,7 +45,7 @@ export class Request {
   city?: string;
 
   @ApiProperty()
-  @Column({ nullable: true })
+  @Column({nullable: true})
   deliveryComment?: string;
 
   @ApiProperty()
@@ -61,11 +55,19 @@ export class Request {
   })
   phoneNumber?: string;
 
-  @ApiProperty({ type: [RequestArticle] })
+  @ApiProperty()
+  @Column({
+    type: 'enum',
+    enum: RequestStatus,
+    default: RequestStatus.NEW,
+  })
+  status!: string;
+
+  @ApiProperty({type: [RequestArticle]})
   @OneToMany(
     type => RequestArticle,
     requestArticle => requestArticle.request,
-    { cascade: true },
+    {cascade: true},
   )
   articles!: RequestArticle[];
 }
