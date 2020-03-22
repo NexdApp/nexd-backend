@@ -5,7 +5,7 @@ export class ShoppingListFormDto {
   @ApiProperty({
     required: true,
     description: 'List of request IDs',
-    type: [Number],
+    type: ['integer'],
   })
   readonly requests!: number[];
 
@@ -13,6 +13,7 @@ export class ShoppingListFormDto {
     required: false,
     enum: ShoppingListStatus,
     default: ShoppingListStatus.ACTIVE,
+    type: ShoppingListStatus,
   })
   status!: string;
 }
