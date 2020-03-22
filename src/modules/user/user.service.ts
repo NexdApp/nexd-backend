@@ -60,7 +60,10 @@ export class UsersService {
   }
 
   async update(editRequestDto: UpdateUserDto, user: User) {
-    user.address = editRequestDto.address;
+    user.city = editRequestDto.city;
+    user.street = editRequestDto.street;
+    user.number = editRequestDto.number;
+    user.zipCode = editRequestDto.zipCode;
     user.firstName = editRequestDto.firstName;
     user.lastName = editRequestDto.lastName;
     user.role = editRequestDto.role;

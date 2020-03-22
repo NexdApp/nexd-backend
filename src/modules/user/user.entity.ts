@@ -1,30 +1,31 @@
-import {Exclude} from 'class-transformer';
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-import {PasswordTransformer} from './password.transformer';
-import {UserRole} from './user-role';
-import {ApiProperty} from '@nestjs/swagger';
+import { PasswordTransformer } from './password.transformer';
+import { UserRole } from './user-role';
+import { ApiProperty } from '@nestjs/swagger';
+import { AddressModel } from '../main/models/address.model';
 
 @Entity({
   name: 'users',
 })
-export class User {
+export class User extends AddressModel {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ApiProperty({required: true})
-  @Column({length: 255})
+  @ApiProperty({ required: true })
+  @Column({ length: 255 })
   firstName!: string;
 
-  @ApiProperty({required: true})
-  @Column({length: 255})
+  @ApiProperty({ required: true })
+  @Column({ length: 255 })
   lastName!: string;
 
-  @ApiProperty({required: true})
-  @Column({length: 255})
+  @ApiProperty({ required: true })
+  @Column({ length: 255 })
   email!: string;
 
-  @ApiProperty({required: true})
+  @ApiProperty({ required: true })
   @Column({
     type: 'enum',
     enum: UserRole,
@@ -32,19 +33,12 @@ export class User {
   })
   role!: string;
 
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
   @Column({
     length: 255,
     nullable: true,
   })
   telephone?: string;
-
-  @ApiProperty({required: false})
-  @Column({
-    length: 10,
-    nullable: true,
-  })
-  address?: string;
 
   @Column({
     name: 'password',

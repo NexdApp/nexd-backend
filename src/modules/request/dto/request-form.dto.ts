@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { AddressModel } from '../../main/models/address.model';
 
 export class CreateRequestArticleDto {
   @ApiProperty({
@@ -17,28 +17,13 @@ export class CreateRequestArticleDto {
   readonly articleCount!: number;
 }
 
-export class RequestFormDto {
+export class RequestFormDto extends AddressModel {
   @ApiProperty({
     required: true,
     description: 'List of articles',
     type: [CreateRequestArticleDto],
   })
   readonly articles!: CreateRequestArticleDto[];
-
-  @ApiProperty({
-    required: true,
-  })
-  readonly address!: string;
-
-  @ApiProperty({
-    required: true,
-  })
-  readonly zipCode!: string;
-
-  @ApiProperty({
-    required: true,
-  })
-  readonly city!: string;
 
   @ApiProperty()
   readonly additionalRequest?: string;

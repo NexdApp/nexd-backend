@@ -1,7 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
+import { AddressModel } from '../../main/models/address.model';
 
-export class UpdateUserDto {
+export class UpdateUserDto extends AddressModel {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   firstName!: string;
@@ -13,9 +14,6 @@ export class UpdateUserDto {
   @ApiProperty({ required: true, enum: ['helper', 'seeker'] })
   @IsNotEmpty()
   role!: string;
-
-  @ApiPropertyOptional()
-  address?: string;
 
   @ApiPropertyOptional()
   telephone?: string;

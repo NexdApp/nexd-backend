@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -12,13 +17,17 @@ import { UserID } from '../user/user.entity';
 @Injectable()
 @Roles('helper')
 export class ShoppingListService {
+  static LOGGER = new Logger('ShoppingList', true);
+
   constructor(
     @InjectRepository(ShoppingList)
     private readonly shoppingListRepository: Repository<ShoppingList>,
   ) {}
 
   async get(id: number) {
-    const shoppingList = await this.shoppingListRepository.findOne(id, {relations: ['requests']});
+    const shoppingList = await this.shoppingListRepository.findOne(id, {
+      relations: ['requests'],
+    });
     if (!shoppingList) {
       throw new NotFoundException('Shopping List not found');
     }
@@ -28,11 +37,7 @@ export class ShoppingListService {
   async create(createRequestDto: ShoppingListFormDto, user: UserID) {
     const shoppingList = new ShoppingList();
     shoppingList.requests = [];
-    createRequestDto.requests.forEach(reqId => {
-      const newRequest = new ShoppingListRequest();
-      newRequest.requestId = reqId;
-      shoppingList.requests.push(newRequest);
-    });
+    this.populateShoppingList(createRequestDto, shoppingList);
     shoppingList.owner = user.userId;
     shoppingList.status = ShoppingListStatus.ACTIVE;
 
@@ -47,19 +52,45 @@ export class ShoppingListService {
   }
 
   async update(form: ShoppingListFormDto, shoppingList: ShoppingList) {
-    shoppingList.status = form.status;
-    form.requests.forEach(reqId => {
-      const newRequest = new ShoppingListRequest();
-      newRequest.requestId = reqId;
-      shoppingList.requests.push(newRequest);
-    });
+    this.populateShoppingList(form, shoppingList);
     return await this.shoppingListRepository.save(shoppingList);
   }
 
   async addRequestToList(requestId: number, shoppingList: ShoppingList) {
-    const newRequest = new ShoppingListRequest();
-    newRequest.id = requestId;
-    shoppingList.requests.push(newRequest);
+    if (!shoppingList.requests.find(r => r.requestId === requestId)) {
+      const newRequest = new ShoppingListRequest();
+      newRequest.requestId = requestId;
+      shoppingList.requests.push(newRequest);
+    } else {
+      throw new BadRequestException('Already exists');
+    }
     return await this.shoppingListRepository.save(shoppingList);
+  }
+
+  async removeRequest(requestId: number, shoppingList: ShoppingList) {
+    const index = shoppingList.requests.findIndex(
+      r => r.requestId === Number(requestId),
+    );
+    ShoppingListService.LOGGER.log(index);
+    ShoppingListService.LOGGER.log(shoppingList);
+    if (index > -1) {
+      shoppingList.requests.splice(index, 1);
+    } else {
+      throw new BadRequestException('Does not exists');
+    }
+    return await this.shoppingListRepository.save(shoppingList);
+  }
+
+  private populateShoppingList(from: ShoppingListFormDto, to: ShoppingList) {
+    to.status = from.status;
+    if (from.requests) {
+      from.requests.forEach(reqId => {
+        if (!to.requests.find(r => r.requestId === reqId)) {
+          const newRequest = new ShoppingListRequest();
+          newRequest.requestId = reqId;
+          to.requests.push(newRequest);
+        }
+      });
+    }
   }
 }

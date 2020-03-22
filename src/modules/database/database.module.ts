@@ -4,7 +4,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
 import { User } from '../user/user.entity';
-import { Request } from '../request/request.entity';
+import { RequestEntity } from '../request/request.entity';
 import { Article } from '../articles/article.entity';
 import { RequestArticle } from '../request/requestArticle.entity';
 import { ShoppingList } from '../shoppingList/shopping-list.entity';
@@ -30,6 +30,7 @@ import { AudioFile } from 'modules/audio-storage/audio-storage.entity';
             User,
             Article,
             Request,
+            RequestEntity,
             RequestArticle,
             ShoppingList,
             ShoppingListRequest,
@@ -39,6 +40,7 @@ import { AudioFile } from 'modules/audio-storage/audio-storage.entity';
             User,
             Article,
             Request,
+            RequestEntity,
             RequestArticle,
             ShoppingList,
             ShoppingListRequest,

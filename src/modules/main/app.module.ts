@@ -8,7 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from '../auth/auth.module';
 import { User } from '../user/user.entity';
-import { Request } from '../request/request.entity';
+import { RequestEntity } from '../request/request.entity';
 import { Article } from '../articles/article.entity';
 import { ArticlesController } from '../articles/articles.controller';
 import { ArticlesService } from '../articles/articles.service';
@@ -23,11 +23,10 @@ import { ShoppingListController } from '../shoppingList/shopping-list.controller
 import { ShoppingList } from '../shoppingList/shopping-list.entity';
 import { ShoppingListModule } from '../shoppingList/shopping-list.module';
 import { ShoppingListService } from '../shoppingList/shopping-list.service';
-import { AudioStorageController } from 'modules/audio-storage/audio-storage.controller';
-import { AudioStorageModule } from 'modules/audio-storage/audio-storage.module';
-import { AudioStorageService } from 'modules/audio-storage/audio-storage.service';
-import { MulterModule } from '@nestjs/platform-express';
-import { AudioFile } from 'modules/audio-storage/audio-storage.entity';
+import { AudioStorageController } from '../audio-storage/audio-storage.controller';
+import { AudioStorageModule } from '../audio-storage/audio-storage.module';
+import { AudioStorageService } from '../audio-storage/audio-storage.service';
+import { AudioFile } from '../audio-storage/audio-storage.entity';
 
 @Module({
   imports: [
@@ -37,12 +36,15 @@ import { AudioFile } from 'modules/audio-storage/audio-storage.entity';
     RequestModule,
     UserModule,
     ShoppingListModule,
-    TypeOrmModule.forFeature([User, Article, Request, ShoppingList, AudioFile]),
+    TypeOrmModule.forFeature([
+      User,
+      Article,
+      RequestEntity,
+      ShoppingList,
+      AudioFile,
+    ]),
     CallModule,
     AudioStorageModule,
-    MulterModule.register({
-      dest: '../../../tmp/audios',
-    }),
   ],
   controllers: [
     AppController,

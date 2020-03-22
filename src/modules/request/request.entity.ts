@@ -1,13 +1,22 @@
-import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
-import {RequestArticle} from './requestArticle.entity';
-import {ApiProperty} from '@nestjs/swagger';
-import {RequestStatus} from './request-status';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { RequestArticle } from './requestArticle.entity';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { RequestStatus } from './request-status';
+import { AddressModel } from '../main/models/address.model';
+import { User } from '../user/user.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity({
   name: 'request',
 })
-export class Request {
-  @ApiProperty({type: 'integer'})
+export class RequestEntity extends AddressModel {
+  @ApiProperty({ type: 'integer' })
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -16,9 +25,9 @@ export class Request {
   @CreateDateColumn()
   created_at!: Date;
 
-  @ApiProperty({type: 'integer'})
+  @ApiProperty({ type: 'integer' })
   @Column()
-  requester!: number;
+  requesterId!: number;
 
   @ApiProperty()
   @Column({
@@ -28,24 +37,13 @@ export class Request {
     enum: ['low', 'medium', 'high'],
   })
   priority?: string;
+
   @ApiProperty()
-  @Column({nullable: true})
+  @Column({ nullable: true })
   additionalRequest?: string;
 
   @ApiProperty()
-  @Column()
-  address?: string;
-
-  @ApiProperty()
-  @Column()
-  zipCode?: string;
-
-  @ApiProperty()
-  @Column()
-  city?: string;
-
-  @ApiProperty()
-  @Column({nullable: true})
+  @Column({ nullable: true })
   deliveryComment?: string;
 
   @ApiProperty()
@@ -63,15 +61,19 @@ export class Request {
   })
   status!: string;
 
-  @ApiProperty({type: [RequestArticle]})
+  @ApiProperty({ type: [RequestArticle] })
   @OneToMany(
     type => RequestArticle,
     requestArticle => requestArticle.request,
-    {cascade: true},
+    { cascade: true },
   )
   articles!: RequestArticle[];
+
+  @ApiPropertyOptional({ type: User })
+  @Exclude()
+  requester!: User;
 }
 
 export class RequestFillableFields {
-  requester!: number;
+  requesterId!: number;
 }
