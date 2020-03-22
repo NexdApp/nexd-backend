@@ -1,0 +1,196 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>nexd-api documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+	      <link rel="stylesheet" href="./styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="./" class="navbar-brand">nexd-api documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content getting-started">
+                   <div class="content-data">
+
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+<li>NodeJS</li>
+<li>Docker</li>
+<li>PostgreSQL Client<ul>
+<li><code>sudo apt install postgresql postgresql-contrib</code></li>
+</ul>
+</li>
+<li>Yarn</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<p>Install dependencies</p>
+<div><pre class="line-numbers"><code class="language-bash">yarn</code></pre></div><h3 id="environment-configuration">Environment Configuration</h3>
+<p>Create a <code>.env</code> file in the root folder</p>
+<p>Configure PostgreSQL:</p>
+<div><pre class="line-numbers"><code class="language-sh">sudo -i -u postgres # Switch over to the postgres account on your server by typing:
+psql -U postgres # type the default password, usually &#39;postgres&#39;
+create user username with encrypted password &#39;secretpassword&#39;;
+create database dbname with owner username;
+\l # dbname should appear with username as owner</code></pre></div><p>then <code>ctrl + c</code> to exit the shell, then try to connect with<br><code>psql -U username dbname</code> (it will ask for your password)</p>
+<p>Next, in <code>.env</code>, set these vars:</p>
+<blockquote>
+<p>DATABASE_TYPE=postgres<br>DATABASE_HOST=db<br>DATABASE_PORT=5432<br>DATABASE_USERNAME=username<br>DATABASE_PASSWORD=secretpassword<br>DATABASE_NAME=dbname
+JWT_SECRET=jwt_awesome_key</p>
+</blockquote>
+<p>Create a copy of <code>.env</code> called <code>.env.development</code> and change these vars:</p>
+<blockquote>
+<p>DATABASE_HOST=localhost
+DATABASE_PORT=54321</p>
+</blockquote>
+<h3 id="docker">Docker</h3>
+<p><strong>Temporary Note</strong>
+To spin up a docker container for local API development, following commands can be used.</p>
+<p>Create the postgres docker volume:</p>
+<p><code>docker volume create --name=pgdata</code></p>
+<p>Run the postgis image:</p>
+<p><code>docker run -d --name postgres-nearbuy -p 5432:5432 -e POSTGRES_PASSWORD=secretpassword -e POSTGRES_DB=dbname -e POSTGRES_USER=username -v pgdata:/var/lib/postgresql/data postgis/postgis:12-2.5</code></p>
+<hr>
+<p>Postgres admin:</p>
+<p><code>docker run --network nearbuy-backend_default -p 3010:80 -e &#39;PGADMIN_DEFAULT_EMAIL=user@domain.com&#39; -e &#39;PGADMIN_DEFAULT_PASSWORD=SuperSecret&#39; -d dpage/pgadmin4</code></p>
+<p>That adds a pgadmin container to the docker network created by docker-compose. You can connect in there to the host &quot;db&quot; (if using defaults).</p>
+<hr>
+<p>To mount the project with Docker, you can use <code>yarn deploy:local</code> (which executes <code>docker-compose up</code>)</p>
+<h2 id="usage">Usage</h2>
+<div><pre class="line-numbers"><code class="language-bash"># development
+yarn start
+
+# watch mode
+yarn start:dev
+
+# production mode
+yarn start:prod</code></pre></div><h2 id="test">Test</h2>
+<div><pre class="line-numbers"><code class="language-bash"># unit tests
+yarn test
+
+# e2e tests
+yarn test:e2e
+
+# test coverage
+yarn test:cov</code></pre></div><h2 id="swagger">Swagger</h2>
+<p>RESTful APIs you can describe with already integrated Swagger.
+To see all available endpoints visit <code>http://localhost:3000/api/docs</code>
+To get the endpoints in JSON format, visit <code>http://localhost:3000/api/docs-json</code></p>
+<h2 id="typeorm">TypeORM</h2>
+<p><a href="http://typeorm.io/">TypeORM</a> gives you possibility to use next db types:
+<code>mysql</code>, <code>postgres</code>, <code>mariadb</code>, <code>sqlite</code>, etc. Please look at docs for more details.
+We have provided working example with <code>sqlite</code>, but you have possibility to change
+this through <code>ormconfig.json</code>. By default you will get <code>sqlite-example.sql</code> file
+created in the root directory, but it&#39;s ignored by git.</p>
+<h3 id="seeding">Seeding</h3>
+<p>See <a href="https://robinck.github.io/typeorm-fixtures/">TypeORM-Fixtures</a></p>
+<h2 id="authentication---jwt">Authentication - JWT</h2>
+<p>Already preconfigured JWT authentication.
+It&#39;s suggested to change current password hashing to something more secure.
+You can start use already working implementation of <code>Login</code> and <code>Registration</code>
+endpoints, just take a look at <a href="http://localhost:3000/api/docs">http://localhost:3000/api/docs</a>.</p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li><p><a href="https://github.com/typeorm/typeorm/blob/master/docs/mongodb.md">TypeORM MongoDB Documentation</a></p>
+</li>
+<li><p><a href="https://www.tutorialspoint.com/mongodb/mongodb_quick_guide.htm">Great MongoDB tutorial</a></p>
+</li>
+<li><p><a href="https://github.com/unlight/nest-typescript-starter/tree/ad59f3443f347e668f1d6f6c22f78f01bddcfb89">Another NestJS boilerplate</a></p>
+</li>
+<li><p><a href="https://scotch.io/tutorials/building-a-modern-app-using-nestjs-mongodb-and-vuejs?utm_source=spotim&amp;utm_medium=spotim_recirculation&amp;spotim_referrer=recirculation&amp;spot_im_comment_id=sp_D7GE1sbz_46694_c_Ta07US">Tutorial to build NestJS API + MongoDB with Mongoose instead of TypeORM</a></p>
+</li>
+<li><p><a href="https://scotch.io/@devGson/api-authentication-with-json-web-tokensjwt-and-passport">Basic Authentication with JSON Web Tokens and Passport</a></p>
+</li>
+<li><p><a href="https://codebrains.io/jwt-auth-with-nestjs-passport-and-express/">... or this one better integrated with NestJS</a></p>
+</li>
+<li><p><a href="https://github.com/abouroubi/nestjs-auth-jwt">Boilerplate with expiration-based JWT tokens</a></p>
+</li>
+<li><p><a href="http://blog.exceptionfound.com/index.php/2018/06/07/nestjs-basic-auth-and-sessions/#Get_Projects_for_Authenticated_User">Variant using Basic auth with cookie in session</a></p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'getting-started';
+            var COMPODOC_CURRENT_PAGE_URL = 'index.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="./js/libs/custom-elements.min.js"></script>
+       <script src="./js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="./js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="./js/menu-wc.js" defer></script>
+
+       <script src="./js/libs/bootstrap-native.js"></script>
+
+       <script src="./js/libs/es6-shim.min.js"></script>
+       <script src="./js/libs/EventDispatcher.js"></script>
+       <script src="./js/libs/promise.min.js"></script>
+       <script src="./js/libs/zepto.min.js"></script>
+
+       <script src="./js/compodoc.js"></script>
+
+       <script src="./js/tabs.js"></script>
+       <script src="./js/menu.js"></script>
+       <script src="./js/libs/clipboard.min.js"></script>
+       <script src="./js/libs/prism.js"></script>
+       <script src="./js/sourceCode.js"></script>
+          <script src="./js/search/search.js"></script>
+          <script src="./js/search/lunr.min.js"></script>
+          <script src="./js/search/search-lunr.js"></script>
+          <script src="./js/search/search_index.js"></script>
+       <script src="./js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
