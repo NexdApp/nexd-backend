@@ -4,13 +4,13 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package.json .
-COPY yarn.lock .
-RUN yarn && yarn cache clean
+COPY package-lock.json .
+RUN npm clean-install
 
-COPY .env ./.env.development
 # Bundle app source
 COPY . .
 
 # Expose port and start application
 EXPOSE 8080
-CMD ["yarn", "start"]
+
+CMD [ "npm", "run", "start:prod" ]

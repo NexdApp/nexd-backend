@@ -1,5 +1,5 @@
-import {DotenvParseOutput, parse} from 'dotenv';
-import {readFileSync} from 'fs';
+import { DotenvParseOutput, parse } from 'dotenv';
+import { readFileSync } from 'fs';
 import * as Joi from 'joi';
 
 export class ConfigService {
@@ -65,6 +65,14 @@ export class ConfigService {
     return this.envConfig.GOOGLEAUTH_REDIRECT_URI;
   }
 
+  public get twillioAccountSSID() {
+    return this.envConfig.TWILIO_ACCOUNT_SSID;
+  }
+
+  public get twillioAuthtoken() {
+    return this.envConfig.TWILIO_ACCOUNT_SSID;
+  }
+
   /**
    * Generic getter
    */
@@ -104,9 +112,9 @@ export class ConfigService {
       // add more validation rules ...
     });
 
-    const validationOptions: Joi.ValidationOptions = {allowUnknown: true};
+    const validationOptions: Joi.ValidationOptions = { allowUnknown: true };
 
-    const {error, value: validatedEnvConfig} = Joi.validate(
+    const { error, value: validatedEnvConfig } = Joi.validate(
       parsedConfig,
       envVarsSchema,
       validationOptions,

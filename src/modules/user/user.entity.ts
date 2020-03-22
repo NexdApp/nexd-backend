@@ -2,41 +2,43 @@ import { Exclude } from 'class-transformer';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { PasswordTransformer } from './password.transformer';
+import { UserRole } from './user-role';
+import { ApiProperty } from '@nestjs/swagger';
+import { AddressModel } from '../main/models/address.model';
 
 @Entity({
   name: 'users',
 })
-export class User {
+export class User extends AddressModel {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @ApiProperty({ required: true })
   @Column({ length: 255 })
   firstName!: string;
 
+  @ApiProperty({ required: true })
   @Column({ length: 255 })
   lastName!: string;
 
+  @ApiProperty({ required: true })
   @Column({ length: 255 })
   email!: string;
 
+  @ApiProperty({ required: true })
   @Column({
-    name: 'role',
     type: 'enum',
-    enum: ['helper', 'seeker'],
+    enum: UserRole,
+    default: UserRole.NONE,
   })
-  role?: string;
+  role!: string;
 
+  @ApiProperty({ required: false })
   @Column({
     length: 255,
     nullable: true,
   })
   telephone?: string;
-
-  @Column({
-    length: 10,
-    nullable: true,
-  })
-  zipCode?: string;
 
   @Column({
     name: 'password',
@@ -53,6 +55,10 @@ export class UserFillableFields {
   lastName!: string;
   role?: string;
   telephone?: string;
-  zipCode?: string;
+  address?: string;
   password!: string;
+}
+
+export class UserID {
+  userId!: number;
 }

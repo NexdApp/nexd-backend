@@ -6,7 +6,7 @@ services:
   api:
     build: .
     ports:
-    - 8080:$API_PORT
+    - $API_PORT:$API_PORT
     environment:
       DATABASE_TYPE: $DATABASE_TYPE
       DATABASE_HOST: db

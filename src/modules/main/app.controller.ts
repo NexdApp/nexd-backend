@@ -1,16 +1,15 @@
 import {Controller, Get} from '@nestjs/common';
-import {ApiBearerAuth} from '@nestjs/swagger';
 
 import {AppService} from './app.service';
+import {ApiOkResponse} from '@nestjs/swagger';
 
-@ApiBearerAuth()
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {
   }
 
   @Get()
-  // @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({description: 'Successful'})
   root(): string {
     return this.appService.root();
   }

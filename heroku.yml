@@ -1,0 +1,19 @@
+setup:
+  addons:
+  - plan: heroku-postgresql
+    as: DATABASE
+build:
+  docker:
+    web: Dockerfile
+  config:
+    DATABASE_TYPE: $DATABASE_TYPE
+    DATABASE_HOST: $DATABASE_HOST
+    DATABASE_PORT: $DATABASE_PORT
+    DATABASE_USERNAME: $DATABASE_USERNAME
+    DATABASE_PASSWORD: $DATABASE_PASSWORD
+    DATABASE_NAME: $DATABASE_NAME
+    JWT_SECRET: $JWT_SECRET
+    API_PORT: $API_PORT
+    NODE_OPTIONS: $NODE_OPTIONS
+run:
+  web: npm run start:prod
