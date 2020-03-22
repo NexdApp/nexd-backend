@@ -14,15 +14,15 @@ export class ConfigService {
    * Getters for each environment variable
    */
   public get isDev() {
-    return this.envConfig.NODE_ENV === 'development';
+    return process.env.NODE_ENV === 'development';
   }
 
   public get isProd() {
-    return this.envConfig.NODE_ENV === 'production';
+    return process.env.NODE_ENV === 'production';
   }
 
   public get isTest() {
-    return this.envConfig.NODE_ENV === 'test';
+    return process.env.NODE_ENV === 'test';
   }
 
   public get databaseType() {
