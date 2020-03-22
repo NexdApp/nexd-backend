@@ -4,11 +4,12 @@ import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import {PasswordTransformer} from './password.transformer';
 import {UserRole} from './user-role';
 import {ApiProperty} from '@nestjs/swagger';
+import {AddressModel} from '../main/models/address.model';
 
 @Entity({
   name: 'users',
 })
-export class User {
+export class User extends AddressModel {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -38,13 +39,6 @@ export class User {
     nullable: true,
   })
   telephone?: string;
-
-  @ApiProperty({required: false})
-  @Column({
-    length: 10,
-    nullable: true,
-  })
-  address?: string;
 
   @Column({
     name: 'password',

@@ -8,7 +8,7 @@ import {AppController} from './app.controller';
 import {AppService} from './app.service';
 import {AuthModule} from '../auth/auth.module';
 import {User} from '../user/user.entity';
-import {Request} from '../request/request.entity';
+import {RequestEntity} from '../request/request.entity';
 import {Article} from '../articles/article.entity';
 import {ArticlesController} from '../articles/articles.controller';
 import {ArticlesService} from '../articles/articles.service';
@@ -23,6 +23,7 @@ import {ShoppingListController} from '../shoppingList/shopping-list.controller';
 import {ShoppingList} from '../shoppingList/shopping-list.entity';
 import {ShoppingListModule} from '../shoppingList/shopping-list.module';
 import {ShoppingListService} from '../shoppingList/shopping-list.service';
+import {AddressModel} from './models/address.model';
 
 @Module({
   imports: [
@@ -32,8 +33,9 @@ import {ShoppingListService} from '../shoppingList/shopping-list.service';
     RequestModule,
     UserModule,
     ShoppingListModule,
-    TypeOrmModule.forFeature([User, Article, Request, ShoppingList]),
+    TypeOrmModule.forFeature([User, Article, RequestEntity, ShoppingList]),
     CallModule,
+    AddressModel,
   ],
   controllers: [
     AppController,

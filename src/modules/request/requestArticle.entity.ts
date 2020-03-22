@@ -1,5 +1,5 @@
 import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
-import {Request} from './request.entity';
+import {RequestEntity} from './request.entity';
 import {ApiProperty} from '@nestjs/swagger';
 
 @Entity({
@@ -22,10 +22,10 @@ export class RequestArticle {
   articleDone!: boolean;
 
   @ManyToOne(
-    type => Request,
+    type => RequestEntity,
     request => request.articles,
   )
-  request!: Request;
+  request!: RequestEntity;
 }
 
 export class RequestFillableFields {

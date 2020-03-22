@@ -3,7 +3,7 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
 
 import {Roles} from '../common/decorators/roles.decorator';
-import {Request} from './request.entity';
+import {RequestEntity} from './request.entity';
 import {RequestFormDto} from './dto/request-form.dto';
 import {RequestArticle} from './requestArticle.entity';
 import {RequestArticleStatusDto} from '../shoppingList/dto/shopping-list-form.dto';
@@ -14,8 +14,8 @@ export class RequestService {
   static LOGGER = new Logger('Request', true);
 
   constructor(
-    @InjectRepository(Request)
-    private readonly requestRepository: Repository<Request>,
+    @InjectRepository(RequestEntity)
+    private readonly requestRepository: Repository<RequestEntity>,
   ) {
   }
 
@@ -24,14 +24,14 @@ export class RequestService {
   }
 
   async create(createRequestDto: RequestFormDto, user: any) {
-    const request = new Request();
+    const request = new RequestEntity();
     this.populateRequest(request, createRequestDto);
     request.requester = user.userId;
 
     return this.requestRepository.save(request);
   }
 
-  private populateRequest(request: Request, createRequestDto: RequestFormDto) {
+  private populateRequest(request: RequestEntity, createRequestDto: RequestFormDto) {
     request.articles = [];
     createRequestDto.articles.forEach(art => {
       const newArticle = new RequestArticle();
@@ -41,9 +41,10 @@ export class RequestService {
       request.articles.push(newArticle);
     });
     request.additionalRequest = createRequestDto.additionalRequest;
-    request.address = createRequestDto.address;
-    request.zipCode = createRequestDto.zipCode;
     request.city = createRequestDto.city;
+    request.street = createRequestDto.street;
+    request.number = createRequestDto.number;
+    request.zipCode = createRequestDto.zipCode;
     request.phoneNumber = createRequestDto.phoneNumber;
     request.deliveryComment = createRequestDto.deliveryComment;
   }
@@ -59,7 +60,7 @@ export class RequestService {
   }
 
   async updateRequestArticle(requestId: number, articleId: number, articleStatusDto: RequestArticleStatusDto) {
-    const request: Request = await this.findRequest(requestId);
+    const request: RequestEntity = await this.findRequest(requestId);
     const article = request.articles.find((v) => v.articleId === Number(articleId));
     if (!article) {
       throw new BadRequestException('This article does not exist in the request');
@@ -69,14 +70,14 @@ export class RequestService {
   }
 
   async update(requestId: number, requestEntity: RequestFormDto) {
-    const request: Request = await this.findRequest(requestId);
+    const request: RequestEntity = await this.findRequest(requestId);
     this.populateRequest(request, requestEntity);
 
     return await this.requestRepository.save(request);
   }
 
   private async findRequest(id: number) {
-    const request: Request | undefined = await this.get(id);
+    const request: RequestEntity | undefined = await this.get(id);
     if (!request) {
       throw new NotFoundException('This request does not exist');
     }

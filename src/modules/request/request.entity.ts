@@ -2,11 +2,12 @@ import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} fro
 import {RequestArticle} from './requestArticle.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import {RequestStatus} from './request-status';
+import {AddressModel} from '../main/models/address.model';
 
 @Entity({
   name: 'request',
 })
-export class Request {
+export class RequestEntity extends AddressModel {
   @ApiProperty({type: 'integer'})
   @PrimaryGeneratedColumn()
   id!: number;
@@ -28,21 +29,10 @@ export class Request {
     enum: ['low', 'medium', 'high'],
   })
   priority?: string;
+
   @ApiProperty()
   @Column({nullable: true})
   additionalRequest?: string;
-
-  @ApiProperty()
-  @Column()
-  address?: string;
-
-  @ApiProperty()
-  @Column()
-  zipCode?: string;
-
-  @ApiProperty()
-  @Column()
-  city?: string;
 
   @ApiProperty()
   @Column({nullable: true})

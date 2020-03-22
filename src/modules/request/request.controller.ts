@@ -10,7 +10,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import {RequestService} from './request.service';
-import {Request as RequestEntity} from './request.entity';
+import {RequestEntity} from './request.entity';
 import {RequestFormDto} from './dto/request-form.dto';
 import {ReqUser} from '../common/decorators/user.decorator';
 import {JwtAuthGuard} from '../common/guards/jwt-guard';

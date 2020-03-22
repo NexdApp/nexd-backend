@@ -1,14 +1,10 @@
-import {
-  Injectable,
-  NotAcceptableException,
-  NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {Injectable, NotAcceptableException, NotFoundException} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
 
-import { Roles } from '../common/decorators/roles.decorator';
-import { User, UserFillableFields } from './user.entity';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {Roles} from '../common/decorators/roles.decorator';
+import {User, UserFillableFields} from './user.entity';
+import {UpdateUserDto} from './dto/update-user.dto';
 
 @Injectable()
 @Roles('admin') // TODO: Add 'authenticatedUser'
@@ -16,7 +12,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) {
+  }
 
   async get(id: number) {
     const user = await this.userRepository.findOne(id);
@@ -27,7 +24,7 @@ export class UsersService {
   }
 
   async getByEmail(email: string) {
-    return await this.userRepository.findOne({ email });
+    return await this.userRepository.findOne({email});
     // return await this.userRepository
     //   .createQueryBuilder('users')
     //   .where('users.email = :email')
@@ -37,7 +34,7 @@ export class UsersService {
 
   async getByEmailAndPass(email: string, password: string) {
     // const passHash = createHmac('sha256', password).digest('hex');
-    return await this.userRepository.findOne({ email, password });
+    return await this.userRepository.findOne({email, password});
     // return await this.userRepository
     //   .createQueryBuilder('users')
     //   .where('users.email = :email and users.password = :password')
@@ -60,7 +57,10 @@ export class UsersService {
   }
 
   async update(editRequestDto: UpdateUserDto, user: User) {
-    user.address = editRequestDto.address;
+    user.city = editRequestDto.city;
+    user.street = editRequestDto.street;
+    user.number = editRequestDto.number;
+    user.zipCode = editRequestDto.zipCode;
     user.firstName = editRequestDto.firstName;
     user.lastName = editRequestDto.lastName;
     user.role = editRequestDto.role;
