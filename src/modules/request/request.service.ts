@@ -1,12 +1,17 @@
-import {BadRequestException, Injectable, Logger, NotFoundException} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
-import {Roles} from '../common/decorators/roles.decorator';
-import {RequestEntity} from './request.entity';
-import {RequestFormDto} from './dto/request-form.dto';
-import {RequestArticle} from './requestArticle.entity';
-import {RequestArticleStatusDto} from '../shoppingList/dto/shopping-list-form.dto';
+import { Roles } from '../common/decorators/roles.decorator';
+import { RequestEntity } from './request.entity';
+import { RequestFormDto } from './dto/request-form.dto';
+import { RequestArticle } from './requestArticle.entity';
+import { RequestArticleStatusDto } from '../shoppingList/dto/shopping-list-form.dto';
 
 @Injectable()
 @Roles('user')
@@ -16,11 +21,10 @@ export class RequestService {
   constructor(
     @InjectRepository(RequestEntity)
     private readonly requestRepository: Repository<RequestEntity>,
-  ) {
-  }
+  ) {}
 
   async get(id: number) {
-    return this.requestRepository.findOne(id, {relations: ['articles']});
+    return this.requestRepository.findOne(id, { relations: ['articles'] });
   }
 
   async create(createRequestDto: RequestFormDto, user: any) {
@@ -31,7 +35,10 @@ export class RequestService {
     return this.requestRepository.save(request);
   }
 
-  private populateRequest(request: RequestEntity, createRequestDto: RequestFormDto) {
+  private populateRequest(
+    request: RequestEntity,
+    createRequestDto: RequestFormDto,
+  ) {
     request.articles = [];
     if (createRequestDto.articles) {
       createRequestDto.articles.forEach(art => {
@@ -60,15 +67,24 @@ export class RequestService {
       conditions.zipCode = zipCode;
     }
     return await this.requestRepository.find({
-      where: conditions, relations: ['articles'],
+      where: conditions,
+      relations: ['articles'],
     });
   }
 
-  async updateRequestArticle(requestId: number, articleId: number, articleStatusDto: RequestArticleStatusDto) {
+  async updateRequestArticle(
+    requestId: number,
+    articleId: number,
+    articleStatusDto: RequestArticleStatusDto,
+  ) {
     const request: RequestEntity = await this.findRequest(requestId);
-    const article = request.articles.find((v) => v.articleId === Number(articleId));
+    const article = request.articles.find(
+      v => v.articleId === Number(articleId),
+    );
     if (!article) {
-      throw new BadRequestException('This article does not exist in the request');
+      throw new BadRequestException(
+        'This article does not exist in the request',
+      );
     }
     article.articleDone = articleStatusDto.articleDone;
     return await this.requestRepository.save(request);

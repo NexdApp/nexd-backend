@@ -1,5 +1,5 @@
-import {ApiProperty} from '@nestjs/swagger';
-import {AddressModel} from '../../main/models/address.model';
+import { ApiProperty } from '@nestjs/swagger';
+import { AddressModel } from '../../main/models/address.model';
 
 export class CreateRequestArticleDto {
   @ApiProperty({

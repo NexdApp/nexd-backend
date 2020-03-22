@@ -1,5 +1,5 @@
-import {Column} from 'typeorm';
-import {ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
+import { Column } from 'typeorm';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class AddressModel {
   @ApiPropertyOptional()

@@ -1,4 +1,15 @@
-import {Body, Controller, Get, Logger, NotFoundException, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -9,28 +20,30 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import {RequestService} from './request.service';
-import {RequestEntity} from './request.entity';
-import {RequestFormDto} from './dto/request-form.dto';
-import {ReqUser} from '../common/decorators/user.decorator';
-import {JwtAuthGuard} from '../common/guards/jwt-guard';
-import {RequestArticleStatusDto} from '../shoppingList/dto/shopping-list-form.dto';
-import {UserID} from '../user/user.entity';
-import {UsersService} from '../user/user.service';
+import { RequestService } from './request.service';
+import { RequestEntity } from './request.entity';
+import { RequestFormDto } from './dto/request-form.dto';
+import { ReqUser } from '../common/decorators/user.decorator';
+import { JwtAuthGuard } from '../common/guards/jwt-guard';
+import { RequestArticleStatusDto } from '../shoppingList/dto/shopping-list-form.dto';
+import { UserID } from '../user/user.entity';
+import { UsersService } from '../user/user.service';
 
 @ApiBearerAuth()
 @ApiTags('Request')
 @UseGuards(JwtAuthGuard)
-@ApiUnauthorizedResponse({description: 'Unauthorized'})
+@ApiUnauthorizedResponse({ description: 'Unauthorized' })
 @Controller('request')
 export class RequestController {
   static LOGGER = new Logger('Request', true);
 
-  constructor(private readonly requestService: RequestService, private readonly userService: UsersService) {
-  }
+  constructor(
+    private readonly requestService: RequestService,
+    private readonly userService: UsersService,
+  ) {}
 
   @Get()
-  @ApiOkResponse({description: 'Successful', type: [RequestEntity]})
+  @ApiOkResponse({ description: 'Successful', type: [RequestEntity] })
   @ApiQuery({
     name: 'onlyMine',
     required: false,
@@ -50,7 +63,7 @@ export class RequestController {
   ): Promise<RequestEntity[]> {
     const requests = await this.requestService.getAll(user, onlyMine, zipCode);
     if (onlyMine !== 'true')
-      requests.map(async (r) => {
+      requests.map(async r => {
         r.requester = await this.userService.get(r.requesterId);
       });
     return requests;
@@ -71,9 +84,9 @@ export class RequestController {
   }
 
   @Get(':requestId')
-  @ApiOkResponse({description: 'Successful', type: RequestEntity})
-  @ApiBadRequestResponse({description: 'Bad request'})
-  @ApiNotFoundResponse({description: 'Request not found'})
+  @ApiOkResponse({ description: 'Successful', type: RequestEntity })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiNotFoundResponse({ description: 'Request not found' })
   async getSingleRequest(
     @Param('requestId') requestId: number,
   ): Promise<RequestEntity> {
@@ -86,9 +99,9 @@ export class RequestController {
   }
 
   @Put(':requestId')
-  @ApiOkResponse({description: 'Successful', type: RequestEntity})
-  @ApiBadRequestResponse({description: 'Bad request'})
-  @ApiNotFoundResponse({description: 'Request not found'})
+  @ApiOkResponse({ description: 'Successful', type: RequestEntity })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiNotFoundResponse({ description: 'Request not found' })
   async updateRequest(
     @Param('requestId') requestId: number,
     @Body() requestFormDto: RequestFormDto,
@@ -100,16 +113,20 @@ export class RequestController {
   }
 
   @Put(':requestId/:articleId')
-  @ApiOkResponse({description: 'Successful', type: RequestEntity})
-  @ApiBadRequestResponse({description: 'Bad request'})
-  @ApiNotFoundResponse({description: 'Request not found'})
+  @ApiOkResponse({ description: 'Successful', type: RequestEntity })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiNotFoundResponse({ description: 'Request not found' })
   async markArticleAsDone(
     @Param('requestId') requestId: number,
     @Param('articleId') articleId: number,
     @Body() articleStatus: RequestArticleStatusDto,
     @ReqUser() user: UserID,
   ): Promise<RequestEntity> {
-    const entity = await this.requestService.updateRequestArticle(requestId, articleId, articleStatus);
+    const entity = await this.requestService.updateRequestArticle(
+      requestId,
+      articleId,
+      articleStatus,
+    );
     entity.requester = await this.userService.get(entity.requesterId);
     return entity;
   }

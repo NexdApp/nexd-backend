@@ -1,1 +1,1 @@
-web: npm run start:prod
+web: yarn docs && yarn start:prod
