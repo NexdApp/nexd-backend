@@ -1,6 +1,6 @@
 import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import {RequestArticle} from './requestArticle.entity';
-import {ApiProperty} from '@nestjs/swagger';
+import {ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
 import {RequestStatus} from './request-status';
 import {AddressModel} from '../main/models/address.model';
 import {User} from '../user/user.entity';
@@ -63,7 +63,7 @@ export class RequestEntity extends AddressModel {
   )
   articles!: RequestArticle[];
 
-  @ApiProperty({type: User})
+  @ApiPropertyOptional({type: User})
   @Exclude()
   requester!: User;
 }
