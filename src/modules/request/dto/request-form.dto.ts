@@ -17,7 +17,7 @@ export class CreateRequestArticleDto {
   readonly articleCount!: number;
 }
 
-export class CreateRequestDto {
+export class RequestFormDto {
   @ApiProperty({
     required: true,
     description: 'List of articles',

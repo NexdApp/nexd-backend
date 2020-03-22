@@ -82,17 +82,17 @@ export class ShoppingListController {
     return this.shoppingListService.update(updateShoppingList, shoppingList);
   }
 
-  @Put(':id/:requestId')
+  @Put(':shoppingListId/:requestId')
   @ApiOkResponse({description: 'Successful', type: ShoppingList})
   @ApiBadRequestResponse({description: 'Bad request'})
   @ApiForbiddenResponse({description: 'This is not your shopping list'})
   @ApiNotFoundResponse({description: 'Shopping list not found'})
   async addRequestToList(
-    @Param('id') id: number,
+    @Param('shoppingListId') shoppingListId: number,
     @Param('requestId') requestId: number,
     @ReqUser() user: UserID,
   ): Promise<ShoppingList> {
-    const shoppingList = await this.findShoppingList(id, user.userId);
+    const shoppingList = await this.findShoppingList(shoppingListId, user.userId);
     const request = await this.requestService.get(requestId);
     ShoppingListController.LOGGER.log(request);
     if (!request) {

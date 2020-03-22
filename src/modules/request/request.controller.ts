@@ -3,7 +3,6 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
-  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiQuery,
@@ -12,7 +11,7 @@ import {
 } from '@nestjs/swagger';
 import {RequestService} from './request.service';
 import {Request as RequestEntity} from './request.entity';
-import {CreateRequestDto} from './dto/create-request.dto';
+import {RequestFormDto} from './dto/request-form.dto';
 import {ReqUser} from '../common/decorators/user.decorator';
 import {JwtAuthGuard} from '../common/guards/jwt-guard';
 import {RequestArticleStatusDto} from '../shoppingList/dto/shopping-list-form.dto';
@@ -50,10 +49,22 @@ export class RequestController {
   })
   @Post()
   async insertRequestWithArticles(
-    @Body() createRequestDto: CreateRequestDto,
+    @Body() createRequestDto: RequestFormDto,
     @ReqUser() user: any,
   ): Promise<RequestEntity> {
     return this.requestService.create(createRequestDto, user);
+  }
+
+  @Put(':requestId')
+  @ApiOkResponse({description: 'Successful', type: RequestEntity})
+  @ApiBadRequestResponse({description: 'Bad request'})
+  @ApiNotFoundResponse({description: 'Request not found'})
+  async updateRequest(
+    @Param('requestId') requestId: number,
+    @Body() requestFormDto: RequestFormDto,
+    @ReqUser() user: UserID,
+  ): Promise<RequestEntity> {
+    return await this.requestService.update(requestId, requestFormDto);
   }
 
   @Put(':requestId/:articleId')
