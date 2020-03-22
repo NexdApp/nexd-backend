@@ -3,7 +3,7 @@ import {IsEmail, IsNotEmpty, MinLength} from 'class-validator';
 import {UserRole} from '../user/user-role';
 
 export class RegisterPayload {
-  @ApiProperty({required: true})
+  @ApiProperty({required: true, example: 'test@test.com'})
   @IsEmail()
   email!: string;
 

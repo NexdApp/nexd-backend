@@ -4,7 +4,7 @@ import { IsString } from 'class-validator';
 export class CreateRequestArticleDto {
   @ApiProperty({
     required: true,
-    description: 'Article Id received from the article list',
+    description: 'Article ID received from the article list',
     type: 'integer',
   })
   readonly articleId!: number;

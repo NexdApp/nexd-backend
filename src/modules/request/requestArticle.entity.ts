@@ -1,5 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Request } from './request.entity';
+import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {Request} from './request.entity';
 
 @Entity({
   name: 'requestArticle',
@@ -13,6 +13,9 @@ export class RequestArticle {
 
   @Column()
   articleCount!: number;
+
+  @Column({default: false})
+  articleDone!: boolean;
 
   @ManyToOne(
     type => Request,

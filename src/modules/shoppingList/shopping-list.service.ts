@@ -18,7 +18,7 @@ export class ShoppingListService {
   ) {}
 
   async get(id: number) {
-    const shoppingList = await this.shoppingListRepository.findOne(id);
+    const shoppingList = await this.shoppingListRepository.findOne(id, {relations: ['requests']});
     if (!shoppingList) {
       throw new NotFoundException('Shopping List not found');
     }
@@ -30,7 +30,7 @@ export class ShoppingListService {
     shoppingList.requests = [];
     createRequestDto.requests.forEach(reqId => {
       const newRequest = new ShoppingListRequest();
-      newRequest.id = reqId;
+      newRequest.requestId = reqId;
       shoppingList.requests.push(newRequest);
     });
     shoppingList.owner = user.userId;
@@ -50,7 +50,7 @@ export class ShoppingListService {
     shoppingList.status = form.status;
     form.requests.forEach(reqId => {
       const newRequest = new ShoppingListRequest();
-      newRequest.id = reqId;
+      newRequest.requestId = reqId;
       shoppingList.requests.push(newRequest);
     });
     return await this.shoppingListRepository.save(shoppingList);
