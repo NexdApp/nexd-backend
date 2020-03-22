@@ -7,7 +7,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import {ApiBearerAuth, ApiCreatedResponse, ApiResponse, ApiTags} from '@nestjs/swagger';
 import { RequestService } from './request.service';
 import { Request as RequestEntity } from './request.entity';
 import { CreateRequestDto } from './dto/create-request.dto';
@@ -18,6 +18,7 @@ import { JwtAuthGuard } from '../common/guards/jwt-guard';
 @ApiBearerAuth()
 @ApiTags('Request')
 @UseGuards(JwtAuthGuard)
+@ApiResponse({status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized'})
 @Controller('request')
 export class RequestController {
   static LOGGER = new Logger('User', true);

@@ -1,7 +1,7 @@
 import {ApiProperty} from '@nestjs/swagger';
 import {ShoppingListStatus} from '../shopping-list-status';
 
-export class CreateShoppingListDto {
+export class ShoppingListFormDto {
   @ApiProperty({
     required: true,
     description: 'List of request IDs',
