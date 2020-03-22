@@ -12,6 +12,7 @@
     "start": "node_modules/.bin/cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "node_modules/.bin/nodemon",
     "start:debug": "node_modules/.bin/nodemon --config nodemon-debug.json",
+    "prestart:prod": "node_modules/.bin/rimraf dist && tsc",
     "start:prod": "node_modules/.bin/cross-env NODE_ENV=production node dist/main.js",
     "docs": "npx compodoc -p tsconfig.json -d documentation",
     "tscheck:w": "node_modules/.bin/tsc -w",
