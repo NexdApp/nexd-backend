@@ -2,19 +2,19 @@
   "name": "nexd-api",
   "version": "0.1.0",
   "description": "API for the Nexd App",
-  "authors":[
+  "authors": [
     "Rossana Bermudez <rossana.bermudezd@gmail.com"
   ],
   "license": "MIT",
   "private": true,
   "repository": "git@github.com:NearBuyVsVirus/nearbuy-backend.git",
   "scripts": {
-    "start": "node_modules/.bin/cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/main.ts",
+    "start": "yarn docs && node_modules/.bin/cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "node_modules/.bin/nodemon",
     "start:debug": "node_modules/.bin/nodemon --config nodemon-debug.json",
     "prestart:prod": "node_modules/.bin/rimraf dist && tsc",
     "start:prod": "node_modules/.bin/cross-env NODE_ENV=production node dist/main.js",
-    "docs": "npx compodoc -p tsconfig.json -d src/documentation",
+    "docs": "npx compodoc -p tsconfig.json -d documentation",
     "tscheck:w": "node_modules/.bin/tsc -w",
     "format": "node_modules/.bin/prettier --write \\\"src/**/*.ts\\\"",
     "lint": "node_modules/.bin/tslint --fix",
@@ -45,6 +45,7 @@
     "@nestjs/jwt": "^6.1.1",
     "@nestjs/passport": "^6.1.1",
     "@nestjs/platform-express": "7.0.0",
+    "@nestjs/serve-static": "^2.1.0",
     "@nestjs/swagger": "^4.1.10",
     "@nestjs/testing": "^6.10.14",
     "@nestjs/typeorm": "^6.2.0",
@@ -65,6 +66,7 @@
     "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "hbs": "^4.1.0",
     "helmet": "^3.21.2",
     "husky": "^4.0.7",
     "jest": "^25.1.0",
