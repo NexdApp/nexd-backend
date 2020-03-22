@@ -25,10 +25,10 @@
         }
       ],
       "command": [
-        "/bin/sh -c \"echo '<html> <head> <title>Amazon ECS Sample App</title> <style>body {margin-top: 40px; background-color: #333;} </style> </head><body> <div style=color:white;text-align:center> <h1>Amazon ECS Sample App</h1> <h2>Congratulations!</h2> <p>Your application is now running on a container in Amazon ECS.</p> </div></body></html>' >  /usr/local/apache2/htdocs/index.html && httpd-foreground\""
+        "npm run start:prod"
       ],
       "linuxParameters": null,
-      "cpu": 256,
+      "cpu": 1024,
       "environment": [],
       "resourceRequirements": null,
       "ulimits": null,
@@ -38,7 +38,7 @@
       "secrets": null,
       "dockerSecurityOptions": null,
       "memory": null,
-      "memoryReservation": 512,
+      "memoryReservation": 4096,
       "volumesFrom": [],
       "stopTimeout": null,
       "image": "httpd:2.4",
@@ -64,11 +64,6 @@
   "placementConstraints": [],
   "memory": "4096",
   "taskRoleArn": null,
-  "compatibilities": [
-    "EC2",
-    "FARGATE"
-  ],
-  "taskDefinitionArn": "arn:aws:ecs:us-east-2:367176527025:task-definition/nexd-api:1",
   "family": "nexd-api",
   "requiresAttributes": [
     {
@@ -114,8 +109,6 @@
   ],
   "networkMode": "awsvpc",
   "cpu": "1024",
-  "revision": 1,
-  "status": "ACTIVE",
   "inferenceAccelerators": null,
   "proxyConfiguration": null,
   "volumes": []
