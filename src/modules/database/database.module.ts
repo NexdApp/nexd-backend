@@ -9,7 +9,7 @@ import { Article } from '../articles/article.entity';
 import { RequestArticle } from '../request/requestArticle.entity';
 import { ShoppingList } from '../shoppingList/shopping-list.entity';
 import { ShoppingListRequest } from '../shoppingList/shopping-list-request.entity';
-import { AudioFile } from 'modules/audio-storage/audio-storage.entity';
+import { AudioFile } from '../audio-storage/audio-storage.entity';
 
 @Module({
   imports: [
@@ -29,7 +29,6 @@ import { AudioFile } from 'modules/audio-storage/audio-storage.entity';
           entities: [
             User,
             Article,
-            Request,
             RequestEntity,
             RequestArticle,
             ShoppingList,
@@ -39,7 +38,6 @@ import { AudioFile } from 'modules/audio-storage/audio-storage.entity';
           migrations: [
             User,
             Article,
-            Request,
             RequestEntity,
             RequestArticle,
             ShoppingList,
