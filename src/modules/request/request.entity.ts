@@ -12,7 +12,7 @@ import { ApiProperty } from '@nestjs/swagger';
   name: 'request',
 })
 export class Request {
-  @ApiProperty()
+  @ApiProperty({ type: 'integer' })
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -21,7 +21,7 @@ export class Request {
   @CreateDateColumn()
   created_at!: Date;
 
-  @ApiProperty()
+  @ApiProperty({ type: 'integer' })
   @Column()
   requester!: number;
 
