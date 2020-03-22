@@ -8,6 +8,7 @@ import {ShoppingListFormDto} from './dto/shopping-list-form.dto';
 import {ShoppingListStatus} from './shopping-list-status';
 import {ShoppingListRequest} from './shopping-list-request.entity';
 import {UserID} from '../user/user.entity';
+import {ShoppingListController} from './shopping-list.controller';
 
 @Injectable()
 @Roles('helper')
@@ -31,7 +32,7 @@ export class ShoppingListService {
     shoppingList.requests = [];
     createRequestDto.requests.forEach(reqId => {
       const newRequest = new ShoppingListRequest();
-      newRequest.id = reqId;
+      newRequest.requestId = reqId;
       shoppingList.requests.push(newRequest);
     });
     shoppingList.owner = user.userId;
@@ -51,7 +52,7 @@ export class ShoppingListService {
     shoppingList.status = form.status;
     form.requests.forEach(reqId => {
       const newRequest = new ShoppingListRequest();
-      newRequest.id = reqId;
+      newRequest.requestId = reqId;
       shoppingList.requests.push(newRequest);
     });
     return await this.shoppingListRepository.save(shoppingList);
@@ -61,6 +62,7 @@ export class ShoppingListService {
     const newRequest = new ShoppingListRequest();
     newRequest.id = requestId;
     shoppingList.requests.push(newRequest);
+    ShoppingListController.LOGGER.log(shoppingList)
     return await this.shoppingListRepository.save(shoppingList);
   }
 }

@@ -16,3 +16,10 @@ export class ShoppingListFormDto {
   })
   status!: string;
 }
+
+export class RequestArticleStatusDto {
+  @ApiProperty({
+    required: true,
+  })
+  articleDone!: boolean;
+}

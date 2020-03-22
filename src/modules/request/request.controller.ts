@@ -1,19 +1,11 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Logger,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import {Body, Controller, Get, HttpStatus, Logger, Post, UseGuards} from '@nestjs/common';
 import {ApiBearerAuth, ApiCreatedResponse, ApiResponse, ApiTags} from '@nestjs/swagger';
-import { RequestService } from './request.service';
-import { Request as RequestEntity } from './request.entity';
-import { CreateRequestDto } from './dto/create-request.dto';
-import { ReqUser } from '../common/decorators/user.decorator';
-import { User } from '../user/user.entity';
-import { JwtAuthGuard } from '../common/guards/jwt-guard';
+import {RequestService} from './request.service';
+import {Request as RequestEntity} from './request.entity';
+import {CreateRequestDto} from './dto/create-request.dto';
+import {ReqUser} from '../common/decorators/user.decorator';
+import {User} from '../user/user.entity';
+import {JwtAuthGuard} from '../common/guards/jwt-guard';
 
 @ApiBearerAuth()
 @ApiTags('Request')
@@ -23,7 +15,8 @@ import { JwtAuthGuard } from '../common/guards/jwt-guard';
 export class RequestController {
   static LOGGER = new Logger('User', true);
 
-  constructor(private readonly requestService: RequestService) {}
+  constructor(private readonly requestService: RequestService) {
+  }
 
   @Get()
   async getAll(): Promise<RequestEntity[]> {
@@ -40,7 +33,6 @@ export class RequestController {
     @Body() createRequestDto: CreateRequestDto,
     @ReqUser() user: any,
   ): Promise<RequestEntity> {
-    RequestController.LOGGER.log(user);
     return this.requestService.create(createRequestDto, user);
   }
 }
