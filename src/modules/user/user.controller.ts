@@ -1,17 +1,17 @@
 import {
   Body,
-  Controller, ForbiddenException,
+  Controller,
+  ForbiddenException,
   Get,
   HttpStatus,
   Logger,
   Param,
   Put,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags, ApiParam } from '@nestjs/swagger';
 import { ReqUser } from '../common/decorators/user.decorator';
-import {User, UserID} from './user.entity';
+import { User, UserID } from './user.entity';
 import { UsersService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-guard';
@@ -33,6 +33,11 @@ export class UserController {
   @Get(':id')
   @ApiResponse({ status: HttpStatus.OK, description: 'Successful' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
+  @ApiParam({
+    name: 'id',
+    description: 'user id',
+    type: 'integer',
+  })
   async findOne(@Param('id') id: number): Promise<User> {
     return await this.userService.get(id);
   }
@@ -42,6 +47,11 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden' })
+  @ApiParam({
+    name: 'id',
+    description: 'user id',
+    type: 'integer',
+  })
   async update(
     @Param('id') id: number,
     @Body() updateUserDto: UpdateUserDto,
