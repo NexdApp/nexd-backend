@@ -27,7 +27,3 @@ export class RequestArticle {
   )
   request!: RequestEntity;
 }
-
-export class RequestFillableFields {
-  requester!: number;
-}

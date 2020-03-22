@@ -48,7 +48,7 @@ import {AudioStorageService} from '../audio-storage/audio-storage.service';
     CallModule,
     AudioStorageModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'documentation'),
+      rootPath: join(__dirname, '../../..', 'documentation'),
     }),
   ],
   controllers: [
