@@ -10,7 +10,7 @@ export class CreateShoppingListDto {
   readonly requests!: number[];
 
   @ApiProperty({
-    required: true,
+    required: false,
     enum: ShoppingListStatus,
     default: ShoppingListStatus.ACTIVE,
   })

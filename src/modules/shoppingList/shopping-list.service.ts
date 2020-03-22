@@ -7,6 +7,7 @@ import {ShoppingList} from './shopping-list.entity';
 import {CreateShoppingListDto} from './dto/create-shopping-list.dto';
 import {ShoppingListStatus} from './shopping-list-status';
 import {ShoppingListRequest} from './shopping-list-request.entity';
+import {UserID} from '../user/user.entity';
 
 @Injectable()
 @Roles('helper')
@@ -25,7 +26,7 @@ export class ShoppingListService {
     return shoppingList;
   }
 
-  async create(createRequestDto: CreateShoppingListDto, user: any) {
+  async create(createRequestDto: CreateShoppingListDto, user: UserID) {
     const shoppingList = new ShoppingList();
     shoppingList.requests = [];
     createRequestDto.requests.forEach(reqId => {
@@ -33,12 +34,16 @@ export class ShoppingListService {
       newRequest.id = reqId;
       shoppingList.requests.push(newRequest);
     });
+    shoppingList.owner = user.userId;
     shoppingList.status = ShoppingListStatus.ACTIVE;
 
     return this.shoppingListRepository.save(shoppingList);
   }
 
-  async getAll() {
-    return await this.shoppingListRepository.find({relations: ['requests']});
+  async getAllByUser(userId: number) {
+    return await this.shoppingListRepository.find({
+      where: {owner: userId},
+      relations: ['requests'],
+    });
   }
 }

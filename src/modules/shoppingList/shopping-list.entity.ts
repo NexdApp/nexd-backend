@@ -12,6 +12,10 @@ export class ShoppingList {
   id!: number;
 
   @ApiProperty()
+  @Column()
+  owner!: number;
+
+  @ApiProperty()
   @Column({
     type: 'enum',
     enum: ShoppingListStatus,
@@ -29,5 +33,5 @@ export class ShoppingList {
 }
 
 export class ShoppingListFillableFields {
-  requester!: number;
+  owner!: number;
 }

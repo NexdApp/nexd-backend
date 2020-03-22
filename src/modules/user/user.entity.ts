@@ -57,3 +57,7 @@ export class UserFillableFields {
   address?: string;
   password!: string;
 }
+
+export class UserID {
+  userId!: number;
+}
