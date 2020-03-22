@@ -4,7 +4,7 @@ import {Repository} from 'typeorm';
 
 import {Roles} from '../common/decorators/roles.decorator';
 import {ShoppingList} from './shopping-list.entity';
-import {CreateShoppingListDto} from './dto/create-shopping-list.dto';
+import {ShoppingListFormDto} from './dto/shopping-list-form.dto';
 import {ShoppingListStatus} from './shopping-list-status';
 import {ShoppingListRequest} from './shopping-list-request.entity';
 import {UserID} from '../user/user.entity';
@@ -26,7 +26,7 @@ export class ShoppingListService {
     return shoppingList;
   }
 
-  async create(createRequestDto: CreateShoppingListDto, user: UserID) {
+  async create(createRequestDto: ShoppingListFormDto, user: UserID) {
     const shoppingList = new ShoppingList();
     shoppingList.requests = [];
     createRequestDto.requests.forEach(reqId => {
@@ -45,5 +45,22 @@ export class ShoppingListService {
       where: {owner: userId},
       relations: ['requests'],
     });
+  }
+
+  async update(form: ShoppingListFormDto, shoppingList: ShoppingList) {
+    shoppingList.status = form.status;
+    form.requests.forEach(reqId => {
+      const newRequest = new ShoppingListRequest();
+      newRequest.id = reqId;
+      shoppingList.requests.push(newRequest);
+    });
+    return await this.shoppingListRepository.save(shoppingList);
+  }
+
+  async addRequestToList(requestId: number, shoppingList: ShoppingList) {
+    const newRequest = new ShoppingListRequest();
+    newRequest.id = requestId;
+    shoppingList.requests.push(newRequest);
+    return await this.shoppingListRepository.save(shoppingList);
   }
 }
