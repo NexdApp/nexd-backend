@@ -40,7 +40,14 @@ export class RequestService {
     return this.requestRepository.save(request);
   }
 
-  async getAll() {
-    return await this.requestRepository.find({ relations: ['articles'] });
+  async getAll(user: any, onlyMine: string) {
+    let where = {};
+    if (onlyMine === 'true') {
+      where = { where: { requester: user.userId } };
+    }
+    return await this.requestRepository.find({
+      ...where,
+      relations: ['articles'],
+    });
   }
 }

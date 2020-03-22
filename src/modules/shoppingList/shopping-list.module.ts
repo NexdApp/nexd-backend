@@ -1,9 +1,9 @@
-import {Module} from '@nestjs/common';
-import {TypeOrmModule} from '@nestjs/typeorm';
-import {ShoppingListService} from './shopping-list.service';
-import {ShoppingListController} from './shopping-list.controller';
-import {ShoppingList} from './shopping-list.entity';
-import {RequestModule} from '../request/request.module';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ShoppingListService } from './shopping-list.service';
+import { ShoppingListController } from './shopping-list.controller';
+import { ShoppingList } from './shopping-list.entity';
+import { RequestModule } from '../request/request.module';
 
 @Module({
   imports: [RequestModule, TypeOrmModule.forFeature([ShoppingList])],
@@ -11,5 +11,4 @@ import {RequestModule} from '../request/request.module';
   controllers: [ShoppingListController],
   providers: [ShoppingListService],
 })
-export class ShoppingListModule {
-}
+export class ShoppingListModule {}

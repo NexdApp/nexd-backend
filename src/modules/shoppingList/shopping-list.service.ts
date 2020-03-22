@@ -1,13 +1,13 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
-import {Roles} from '../common/decorators/roles.decorator';
-import {ShoppingList} from './shopping-list.entity';
-import {ShoppingListFormDto} from './dto/shopping-list-form.dto';
-import {ShoppingListStatus} from './shopping-list-status';
-import {ShoppingListRequest} from './shopping-list-request.entity';
-import {UserID} from '../user/user.entity';
+import { Roles } from '../common/decorators/roles.decorator';
+import { ShoppingList } from './shopping-list.entity';
+import { ShoppingListFormDto } from './dto/shopping-list-form.dto';
+import { ShoppingListStatus } from './shopping-list-status';
+import { ShoppingListRequest } from './shopping-list-request.entity';
+import { UserID } from '../user/user.entity';
 
 @Injectable()
 @Roles('helper')
@@ -15,8 +15,7 @@ export class ShoppingListService {
   constructor(
     @InjectRepository(ShoppingList)
     private readonly shoppingListRepository: Repository<ShoppingList>,
-  ) {
-  }
+  ) {}
 
   async get(id: number) {
     const shoppingList = await this.shoppingListRepository.findOne(id);
@@ -42,7 +41,7 @@ export class ShoppingListService {
 
   async getAllByUser(userId: number) {
     return await this.shoppingListRepository.find({
-      where: {owner: userId},
+      where: { owner: userId },
       relations: ['requests'],
     });
   }
