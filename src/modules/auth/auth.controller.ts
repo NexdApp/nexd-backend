@@ -1,10 +1,11 @@
-import {Body, Controller, HttpStatus, Logger, Post} from '@nestjs/common';
-import {ApiResponse, ApiTags} from '@nestjs/swagger';
+import { Body, Controller, HttpStatus, Logger, Post } from '@nestjs/common';
+import { ApiResponse, ApiTags, ApiOkResponse } from '@nestjs/swagger';
 
-import {AuthService} from './auth.service';
-import {LoginPayload} from './login.payload';
-import {RegisterPayload} from './register.payload';
-import {UsersService} from '../user/user.service';
+import { AuthService } from './auth.service';
+import { LoginPayload } from './login.payload';
+import { RegisterPayload } from './register.payload';
+import { UsersService } from '../user/user.service';
+import { ResponseTokenDto } from './dto/response-token.dt';
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -14,13 +15,15 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UsersService,
-  ) {
-  }
+  ) {}
 
   @Post('login')
-  @ApiResponse({status: HttpStatus.OK, description: 'Successful Login'})
-  @ApiResponse({status: HttpStatus.BAD_REQUEST, description: 'Bad Request'})
-  @ApiResponse({status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized'})
+  @ApiOkResponse({
+    description: 'Successful Login',
+    type: ResponseTokenDto,
+  })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
   async login(@Body() credentials: LoginPayload): Promise<any> {
     const user = await this.authService.validateUser(credentials);
     return await this.authService.generateToken(user);
@@ -30,9 +33,10 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Successful Registration',
+    type: ResponseTokenDto,
   })
-  @ApiResponse({status: HttpStatus.BAD_REQUEST, description: 'Bad Request'})
-  @ApiResponse({status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized'})
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
   async register(@Body() payload: RegisterPayload): Promise<any> {
     const user = await this.userService.create(payload);
     AuthController.LOGGER.log(user);
