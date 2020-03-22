@@ -14,5 +14,6 @@ build:
     DATABASE_NAME: $DATABASE_NAME
     JWT_SECRET: $JWT_SECRET
     API_PORT: $API_PORT
+    NODE_OPTIONS: $NODE_OPTIONS
 run:
   web: npm run start:prod
