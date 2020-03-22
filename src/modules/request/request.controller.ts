@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Logger, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Logger, NotFoundException, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -59,6 +59,21 @@ export class RequestController {
     @ReqUser() user: UserID,
   ): Promise<RequestEntity> {
     const entity = await this.requestService.create(createRequestDto, user);
+    entity.requester = await this.userService.get(entity.requesterId);
+    return entity;
+  }
+
+  @Get(':requestId')
+  @ApiOkResponse({description: 'Successful', type: RequestEntity})
+  @ApiBadRequestResponse({description: 'Bad request'})
+  @ApiNotFoundResponse({description: 'Request not found'})
+  async getSingleRequest(
+    @Param('requestId') requestId: number,
+  ): Promise<RequestEntity> {
+    const entity = await this.requestService.get(requestId);
+    if (!entity) {
+      throw new NotFoundException('This request does not exist');
+    }
     entity.requester = await this.userService.get(entity.requesterId);
     return entity;
   }
