@@ -28,7 +28,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && docs"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
@@ -45,6 +45,7 @@
     "@nestjs/jwt": "^6.1.1",
     "@nestjs/passport": "^6.1.1",
     "@nestjs/platform-express": "7.0.0",
+    "@nestjs/serve-static": "^2.1.0",
     "@nestjs/swagger": "^4.1.10",
     "@nestjs/testing": "^6.10.14",
     "@nestjs/typeorm": "^6.2.0",
