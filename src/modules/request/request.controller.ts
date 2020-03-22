@@ -24,6 +24,7 @@ import { JwtAuthGuard } from '../common/guards/jwt-guard';
 @ApiBearerAuth()
 @ApiTags('Request')
 @UseGuards(JwtAuthGuard)
+@ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
 @Controller('request')
 export class RequestController {
   static LOGGER = new Logger('Request', true);

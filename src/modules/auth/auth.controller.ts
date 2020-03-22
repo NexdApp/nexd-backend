@@ -36,6 +36,10 @@ export class AuthController {
     type: ResponseTokenDto,
   })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
+  @ApiResponse({
+    status: HttpStatus.NOT_ACCEPTABLE,
+    description: 'Already exists',
+  })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
   async register(@Body() payload: RegisterPayload): Promise<any> {
     const user = await this.userService.create(payload);
