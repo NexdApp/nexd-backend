@@ -49,13 +49,16 @@ export class RequestService {
     request.zipCode = createRequestDto.zipCode;
   }
 
-  async getAll(user: any, onlyMine: string) {
-    let where = {};
+  async getAll(user: any, onlyMine: string, zipCode: string) {
+    const conditions: any = {};
     if (onlyMine === 'true') {
-      where = {where: {requester: user.userId}};
+      conditions.requester = user.userId;
+    }
+    if (zipCode) {
+      conditions.zipCode = zipCode;
     }
     return await this.requestRepository.find({
-      ...where, relations: ['articles'],
+      where: conditions, relations: ['articles'],
     });
   }
 

@@ -37,11 +37,18 @@ export class RequestController {
     description:
       'if "true", only the requesting user requests will be replied.',
   })
+  @ApiQuery({
+    name: 'zipCode',
+    required: false,
+    description:
+      'if set, only requests within the same zip code will be replied',
+  })
   async getAll(
     @Query('onlyMine') onlyMine: string,
+    @Query('zipCode') zipCode: string,
     @ReqUser() user: any,
   ): Promise<RequestEntity[]> {
-    const requests = await this.requestService.getAll(user, onlyMine);
+    const requests = await this.requestService.getAll(user, onlyMine, zipCode);
     if (onlyMine !== 'true')
       requests.map(async (r) => {
         r.requester = await this.userService.get(r.requesterId);

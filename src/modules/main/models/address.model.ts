@@ -16,14 +16,14 @@ export class AddressModel {
   })
   number?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @Column({
     length: 10,
     nullable: true,
   })
   zipCode?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @Column({
     length: 10,
     nullable: true,
