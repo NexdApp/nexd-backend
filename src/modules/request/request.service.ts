@@ -47,9 +47,10 @@ export class RequestService {
   async getAll(user: any, onlyMine: string) {
     let where = {};
     if (onlyMine === 'true') {
-      where = { where: { requester: user.userId } };
+      where = {where: {requester: user.userId}};
     }
-    return await this.requestRepository.find({...where,relations: ['articles'],
+    return await this.requestRepository.find({
+      ...where, relations: ['articles'],
     });
   }
 
@@ -63,6 +64,6 @@ export class RequestService {
       throw new BadRequestException('This article does not exist in the request');
     }
     article.articleDone = articleStatusDto.articleDone;
-    return this.requestRepository.save(request);
+    return await this.requestRepository.save(request);
   }
 }

@@ -1,20 +1,18 @@
+import {Body, Controller, ForbiddenException, Get, Logger, Param, Put, UseGuards} from '@nestjs/common';
 import {
-  Body,
-  Controller,
-  ForbiddenException,
-  Get,
-  HttpStatus,
-  Logger,
-  Param,
-  Put,
-  UseGuards,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags, ApiParam } from '@nestjs/swagger';
-import { ReqUser } from '../common/decorators/user.decorator';
-import { User, UserID } from './user.entity';
-import { UsersService } from './user.service';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGuard } from '../common/guards/jwt-guard';
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import {ReqUser} from '../common/decorators/user.decorator';
+import {User, UserID} from './user.entity';
+import {UsersService} from './user.service';
+import {UpdateUserDto} from './dto/update-user.dto';
+import {JwtAuthGuard} from '../common/guards/jwt-guard';
 
 @ApiBearerAuth()
 @Controller('user')
@@ -23,16 +21,19 @@ import { JwtAuthGuard } from '../common/guards/jwt-guard';
 export class UserController {
   static LOGGER = new Logger('User', true);
 
-  constructor(private readonly userService: UsersService) {}
+  constructor(private readonly userService: UsersService) {
+  }
 
   @Get()
+  @ApiOkResponse({description: 'Successful', type: [User]})
   async getAll(): Promise<User[]> {
     return await this.userService.getAll();
   }
 
   @Get(':id')
-  @ApiResponse({ status: HttpStatus.OK, description: 'Successful' })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
+  @ApiOkResponse({description: 'Successful', type: User})
+  @ApiNotFoundResponse({description: 'User not found'})
+  @ApiBadRequestResponse({description: 'Bad Request'})
   @ApiParam({
     name: 'id',
     description: 'user id',
@@ -43,10 +44,10 @@ export class UserController {
   }
 
   @Put(':id')
-  @ApiResponse({ status: HttpStatus.OK, description: 'Updated' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
-  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden' })
+  @ApiOkResponse({description: 'Successful', type: User})
+  @ApiBadRequestResponse({description: 'Bad Request'})
+  @ApiNotFoundResponse({description: 'User not found'})
+  @ApiForbiddenResponse({description: 'Forbidden'})
   @ApiParam({
     name: 'id',
     description: 'user id',

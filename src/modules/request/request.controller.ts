@@ -1,15 +1,27 @@
-import {Body, Controller, Get, HttpStatus, Logger, Post, Query, UseGuards} from '@nestjs/common';
-import {ApiBearerAuth, ApiCreatedResponse, ApiQuery, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {Body, Controller, Get, Logger, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiQuery,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import {RequestService} from './request.service';
 import {Request as RequestEntity} from './request.entity';
 import {CreateRequestDto} from './dto/create-request.dto';
 import {ReqUser} from '../common/decorators/user.decorator';
 import {JwtAuthGuard} from '../common/guards/jwt-guard';
+import {RequestArticleStatusDto} from '../shoppingList/dto/shopping-list-form.dto';
+import {UserID} from '../user/user.entity';
 
 @ApiBearerAuth()
 @ApiTags('Request')
 @UseGuards(JwtAuthGuard)
-@ApiResponse({status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized'})
+@ApiUnauthorizedResponse({description: 'Unauthorized'})
 @Controller('request')
 export class RequestController {
   static LOGGER = new Logger('Request', true);
@@ -18,11 +30,7 @@ export class RequestController {
   }
 
   @Get()
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Successful',
-    type: [RequestEntity],
-  })
+  @ApiOkResponse({description: 'Successful', type: [RequestEntity]})
   @ApiQuery({
     name: 'onlyMine',
     required: false,
@@ -37,7 +45,6 @@ export class RequestController {
   }
 
   @ApiCreatedResponse({
-    status: HttpStatus.CREATED,
     description: 'Add a complete request including articles.',
     type: RequestEntity,
   })
@@ -47,5 +54,18 @@ export class RequestController {
     @ReqUser() user: any,
   ): Promise<RequestEntity> {
     return this.requestService.create(createRequestDto, user);
+  }
+
+  @Put(':requestId/:articleId')
+  @ApiOkResponse({description: 'Successful', type: RequestEntity})
+  @ApiBadRequestResponse({description: 'Bad request'})
+  @ApiNotFoundResponse({description: 'Request not found'})
+  async markArticleAsDone(
+    @Param('requestId') requestId: number,
+    @Param('articleId') articleId: number,
+    @Body() articleStatus: RequestArticleStatusDto,
+    @ReqUser() user: UserID,
+  ): Promise<RequestEntity> {
+    return await this.requestService.updateRequestArticle(requestId, articleId, articleStatus);
   }
 }

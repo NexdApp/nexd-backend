@@ -1,4 +1,4 @@
-import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {ShoppingListRequest} from './shopping-list-request.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import {ShoppingListStatus} from './shopping-list-status';
@@ -14,6 +14,16 @@ export class ShoppingList {
   @ApiProperty()
   @Column()
   owner!: number;
+
+  @ApiProperty()
+  @Column()
+  @CreateDateColumn()
+  created_at!: Date;
+
+  @ApiProperty()
+  @Column()
+  @UpdateDateColumn()
+  updated_at!: Date;
 
   @ApiProperty()
   @Column({
