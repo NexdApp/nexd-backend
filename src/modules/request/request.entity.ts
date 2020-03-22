@@ -3,6 +3,8 @@ import {RequestArticle} from './requestArticle.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import {RequestStatus} from './request-status';
 import {AddressModel} from '../main/models/address.model';
+import {User} from '../user/user.entity';
+import {Exclude} from 'class-transformer';
 
 @Entity({
   name: 'request',
@@ -19,7 +21,7 @@ export class RequestEntity extends AddressModel {
 
   @ApiProperty({type: 'integer'})
   @Column()
-  requester!: number;
+  requesterId!: number;
 
   @ApiProperty()
   @Column({
@@ -60,8 +62,12 @@ export class RequestEntity extends AddressModel {
     {cascade: true},
   )
   articles!: RequestArticle[];
+
+  @ApiProperty({type: User})
+  @Exclude()
+  requester!: User;
 }
 
 export class RequestFillableFields {
-  requester!: number;
+  requesterId!: number;
 }

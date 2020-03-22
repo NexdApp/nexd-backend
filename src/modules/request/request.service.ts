@@ -26,7 +26,7 @@ export class RequestService {
   async create(createRequestDto: RequestFormDto, user: any) {
     const request = new RequestEntity();
     this.populateRequest(request, createRequestDto);
-    request.requester = user.userId;
+    request.requesterId = user.userId;
 
     return this.requestRepository.save(request);
   }
@@ -41,12 +41,12 @@ export class RequestService {
       request.articles.push(newArticle);
     });
     request.additionalRequest = createRequestDto.additionalRequest;
+    request.phoneNumber = createRequestDto.phoneNumber;
+    request.deliveryComment = createRequestDto.deliveryComment;
     request.city = createRequestDto.city;
     request.street = createRequestDto.street;
     request.number = createRequestDto.number;
     request.zipCode = createRequestDto.zipCode;
-    request.phoneNumber = createRequestDto.phoneNumber;
-    request.deliveryComment = createRequestDto.deliveryComment;
   }
 
   async getAll(user: any, onlyMine: string) {

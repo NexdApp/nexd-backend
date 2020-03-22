@@ -16,6 +16,7 @@ import {ReqUser} from '../common/decorators/user.decorator';
 import {JwtAuthGuard} from '../common/guards/jwt-guard';
 import {RequestArticleStatusDto} from '../shoppingList/dto/shopping-list-form.dto';
 import {UserID} from '../user/user.entity';
+import {UsersService} from '../user/user.service';
 
 @ApiBearerAuth()
 @ApiTags('Request')
@@ -25,7 +26,7 @@ import {UserID} from '../user/user.entity';
 export class RequestController {
   static LOGGER = new Logger('Request', true);
 
-  constructor(private readonly requestService: RequestService) {
+  constructor(private readonly requestService: RequestService, private readonly userService: UsersService) {
   }
 
   @Get()
@@ -40,7 +41,12 @@ export class RequestController {
     @Query('onlyMine') onlyMine: string,
     @ReqUser() user: any,
   ): Promise<RequestEntity[]> {
-    return await this.requestService.getAll(user, onlyMine);
+    const requests = await this.requestService.getAll(user, onlyMine);
+    if (onlyMine !== 'true')
+      requests.map(async (r) => {
+        r.requester = await this.userService.get(r.requesterId);
+      });
+    return requests;
   }
 
   @ApiCreatedResponse({
@@ -50,9 +56,11 @@ export class RequestController {
   @Post()
   async insertRequestWithArticles(
     @Body() createRequestDto: RequestFormDto,
-    @ReqUser() user: any,
+    @ReqUser() user: UserID,
   ): Promise<RequestEntity> {
-    return this.requestService.create(createRequestDto, user);
+    const entity = await this.requestService.create(createRequestDto, user);
+    entity.requester = await this.userService.get(entity.requesterId);
+    return entity;
   }
 
   @Put(':requestId')
@@ -64,7 +72,9 @@ export class RequestController {
     @Body() requestFormDto: RequestFormDto,
     @ReqUser() user: UserID,
   ): Promise<RequestEntity> {
-    return await this.requestService.update(requestId, requestFormDto);
+    const entity = await this.requestService.update(requestId, requestFormDto);
+    entity.requester = await this.userService.get(entity.requesterId);
+    return entity;
   }
 
   @Put(':requestId/:articleId')
@@ -77,6 +87,8 @@ export class RequestController {
     @Body() articleStatus: RequestArticleStatusDto,
     @ReqUser() user: UserID,
   ): Promise<RequestEntity> {
-    return await this.requestService.updateRequestArticle(requestId, articleId, articleStatus);
+    const entity = await this.requestService.updateRequestArticle(requestId, articleId, articleStatus);
+    entity.requester = await this.userService.get(entity.requesterId);
+    return entity;
   }
 }
