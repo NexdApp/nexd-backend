@@ -1,28 +1,33 @@
-import {ConfigService} from '../config/config.service';
-import {Module} from '@nestjs/common';
-import {TypeOrmModule} from '@nestjs/typeorm';
+import { ConfigService } from '../config/config.service';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import {ConfigModule} from '../config/config.module';
-import {DatabaseModule} from '../database/database.module';
-import {AppController} from './app.controller';
-import {AppService} from './app.service';
-import {AuthModule} from '../auth/auth.module';
-import {User} from '../user/user.entity';
-import {Request} from '../request/request.entity';
-import {Article} from '../articles/article.entity';
-import {ArticlesController} from '../articles/articles.controller';
-import {ArticlesService} from '../articles/articles.service';
-import {RequestModule} from '../request/request.module';
-import {CallModule} from '../call/call.module';
-import {UserModule} from '../user/user.module';
-import {UserController} from '../user/user.controller';
-import {RequestController} from '../request/request.controller';
-import {UsersService} from '../user/user.service';
-import {RequestService} from '../request/request.service';
-import {ShoppingListController} from '../shoppingList/shopping-list.controller';
-import {ShoppingList} from '../shoppingList/shopping-list.entity';
-import {ShoppingListModule} from '../shoppingList/shopping-list.module';
-import {ShoppingListService} from '../shoppingList/shopping-list.service';
+import { ConfigModule } from '../config/config.module';
+import { DatabaseModule } from '../database/database.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from '../auth/auth.module';
+import { User } from '../user/user.entity';
+import { Request } from '../request/request.entity';
+import { Article } from '../articles/article.entity';
+import { ArticlesController } from '../articles/articles.controller';
+import { ArticlesService } from '../articles/articles.service';
+import { RequestModule } from '../request/request.module';
+import { CallModule } from '../call/call.module';
+import { UserModule } from '../user/user.module';
+import { UserController } from '../user/user.controller';
+import { RequestController } from '../request/request.controller';
+import { UsersService } from '../user/user.service';
+import { RequestService } from '../request/request.service';
+import { ShoppingListController } from '../shoppingList/shopping-list.controller';
+import { ShoppingList } from '../shoppingList/shopping-list.entity';
+import { ShoppingListModule } from '../shoppingList/shopping-list.module';
+import { ShoppingListService } from '../shoppingList/shopping-list.service';
+import { AudioStorageController } from 'modules/audio-storage/audio-storage.controller';
+import { AudioStorageModule } from 'modules/audio-storage/audio-storage.module';
+import { AudioStorageService } from 'modules/audio-storage/audio-storage.service';
+import { MulterModule } from '@nestjs/platform-express';
+import { AudioFile } from 'modules/audio-storage/audio-storage.entity';
 
 @Module({
   imports: [
@@ -32,8 +37,12 @@ import {ShoppingListService} from '../shoppingList/shopping-list.service';
     RequestModule,
     UserModule,
     ShoppingListModule,
-    TypeOrmModule.forFeature([User, Article, Request, ShoppingList]),
+    TypeOrmModule.forFeature([User, Article, Request, ShoppingList, AudioFile]),
     CallModule,
+    AudioStorageModule,
+    MulterModule.register({
+      dest: '../../../tmp/audios',
+    }),
   ],
   controllers: [
     AppController,
@@ -41,8 +50,16 @@ import {ShoppingListService} from '../shoppingList/shopping-list.service';
     UserController,
     RequestController,
     ShoppingListController,
+    AudioStorageController,
   ],
-  providers: [AppService, ArticlesService, UsersService, RequestService, ShoppingListService],
+  providers: [
+    AppService,
+    ArticlesService,
+    UsersService,
+    RequestService,
+    ShoppingListService,
+    AudioStorageService,
+  ],
 })
 export class AppModule /* implements NestModule */ {
   static port: string | number;

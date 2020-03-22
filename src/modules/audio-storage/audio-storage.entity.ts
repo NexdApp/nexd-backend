@@ -1,6 +1,10 @@
-import {Exclude} from 'class-transformer';
-import {Column, Entity, PrimaryGeneratedColumn, CreateDateColumn} from 'typeorm';
-
+import { Exclude } from 'class-transformer';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity({
   name: 'audio-file',
@@ -10,15 +14,26 @@ export class AudioFile {
   id!: number;
 
   @CreateDateColumn()
-  @Column({length: 255})
-  upload_date!: string;
+  created!: Date;
 
-  @Column({length: 255})
+  @Column({
+    nullable: true,
+  })
+  uploaded!: Date;
+
+  @Column({
+    length: 255,
+    nullable: true,
+  })
   path!: string;
 
-  @Column()
-  uploaded!: boolean;
+  @Column({
+    default: false,
+  })
+  isUploaded!: boolean;
 
-  @Column()
+  @Column({
+    default: false,
+  })
   translated!: boolean;
 }
