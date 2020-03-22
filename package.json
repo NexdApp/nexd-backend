@@ -14,7 +14,7 @@
     "start:debug": "node_modules/.bin/nodemon --config nodemon-debug.json",
     "prestart:prod": "node_modules/.bin/rimraf dist && tsc",
     "start:prod": "node_modules/.bin/cross-env NODE_ENV=production node dist/main.js",
-    "docs": "npx compodoc -p tsconfig.json -s --port 9000",
+    "docs": "npx compodoc -p tsconfig.json -d src/documentation",
     "tscheck:w": "node_modules/.bin/tsc -w",
     "format": "node_modules/.bin/prettier --write \\\"src/**/*.ts\\\"",
     "lint": "node_modules/.bin/tslint --fix",

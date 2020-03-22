@@ -1,4 +1,4 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
 
@@ -29,13 +29,7 @@ export class ShoppingListService {
   async create(createRequestDto: ShoppingListFormDto, user: UserID) {
     const shoppingList = new ShoppingList();
     shoppingList.requests = [];
-    if (createRequestDto.requests) {
-      createRequestDto.requests.forEach(reqId => {
-        const newRequest = new ShoppingListRequest();
-        newRequest.requestId = reqId;
-        shoppingList.requests.push(newRequest);
-      });
-    }
+    this.populateShoppingList(createRequestDto, shoppingList);
     shoppingList.owner = user.userId;
     shoppingList.status = ShoppingListStatus.ACTIVE;
 
@@ -50,21 +44,31 @@ export class ShoppingListService {
   }
 
   async update(form: ShoppingListFormDto, shoppingList: ShoppingList) {
-    shoppingList.status = form.status;
-    if (form.requests) {
-      form.requests.forEach(reqId => {
-        const newRequest = new ShoppingListRequest();
-        newRequest.requestId = reqId;
-        shoppingList.requests.push(newRequest);
-      });
-    }
+    this.populateShoppingList(form, shoppingList);
     return await this.shoppingListRepository.save(shoppingList);
   }
 
   async addRequestToList(requestId: number, shoppingList: ShoppingList) {
-    const newRequest = new ShoppingListRequest();
-    newRequest.id = requestId;
-    shoppingList.requests.push(newRequest);
+    if (!shoppingList.requests.find(r => r.requestId === requestId)) {
+      const newRequest = new ShoppingListRequest();
+      newRequest.id = requestId;
+      shoppingList.requests.push(newRequest);
+    } else {
+      throw new BadRequestException('Already exists');
+    }
     return await this.shoppingListRepository.save(shoppingList);
+  }
+
+  private populateShoppingList(from: ShoppingListFormDto, to: ShoppingList) {
+    to.status = from.status;
+    if (from.requests) {
+      from.requests.forEach(reqId => {
+        if (!to.requests.find(r => r.requestId === reqId)) {
+          const newRequest = new ShoppingListRequest();
+          newRequest.requestId = reqId;
+          to.requests.push(newRequest);
+        }
+      });
+    }
   }
 }
