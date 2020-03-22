@@ -9,7 +9,7 @@
   "private": true,
   "repository": "git@github.com:NearBuyVsVirus/nearbuy-backend.git",
   "scripts": {
-    "start": "yarn docs && node_modules/.bin/cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/main.ts",
+    "start": "node_modules/.bin/cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "node_modules/.bin/nodemon",
     "start:debug": "node_modules/.bin/nodemon --config nodemon-debug.json",
     "prestart:prod": "node_modules/.bin/rimraf dist && tsc",
@@ -33,8 +33,8 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "yarn format",
-      "yarn lint",
+      "npm run format",
+      "npm run lint",
       "git add"
     ]
   },
