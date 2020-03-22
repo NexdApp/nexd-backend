@@ -13,6 +13,8 @@ import { ShoppingListFormDto } from './dto/shopping-list-form.dto';
 import { ShoppingListStatus } from './shopping-list-status';
 import { ShoppingListRequest } from './shopping-list-request.entity';
 import { UserID } from '../user/user.entity';
+import { RequestEntity } from '../request/request.entity';
+import { RequestStatus } from '../request/request-status';
 
 @Injectable()
 @Roles('helper')
@@ -22,6 +24,8 @@ export class ShoppingListService {
   constructor(
     @InjectRepository(ShoppingList)
     private readonly shoppingListRepository: Repository<ShoppingList>,
+    @InjectRepository(RequestEntity)
+    private readonly requestRepository: Repository<RequestEntity>,
   ) {}
 
   async get(id: number) {
@@ -56,41 +60,45 @@ export class ShoppingListService {
     return await this.shoppingListRepository.save(shoppingList);
   }
 
-  async addRequestToList(requestId: number, shoppingList: ShoppingList) {
-    if (!shoppingList.requests.find(r => r.requestId === requestId)) {
-      const newRequest = new ShoppingListRequest();
-      newRequest.requestId = requestId;
-      shoppingList.requests.push(newRequest);
-    } else {
-      throw new BadRequestException('Already exists');
-    }
-    return await this.shoppingListRepository.save(shoppingList);
-  }
-
   async removeRequest(requestId: number, shoppingList: ShoppingList) {
     const index = shoppingList.requests.findIndex(
       r => r.requestId === Number(requestId),
     );
-    ShoppingListService.LOGGER.log(index);
-    ShoppingListService.LOGGER.log(shoppingList);
     if (index > -1) {
       shoppingList.requests.splice(index, 1);
+      const request = await this.requestRepository.findOne(requestId);
+      if (!request) {
+        throw new BadRequestException('The request does not exist');
+      }
+      request.status = RequestStatus.PENDING;
+      await this.requestRepository.save(request);
+      return await this.shoppingListRepository.save(shoppingList);
     } else {
       throw new BadRequestException('Does not exists');
     }
-    return await this.shoppingListRepository.save(shoppingList);
   }
 
   private populateShoppingList(from: ShoppingListFormDto, to: ShoppingList) {
     to.status = from.status;
     if (from.requests) {
-      from.requests.forEach(reqId => {
-        if (!to.requests.find(r => r.requestId === reqId)) {
-          const newRequest = new ShoppingListRequest();
-          newRequest.requestId = reqId;
-          to.requests.push(newRequest);
-        }
+      from.requests.forEach(async reqId => {
+        await this.addRequestToList(reqId, to);
       });
+    }
+  }
+
+  private async addRequestToList(requestId: number, list: ShoppingList) {
+    if (!list.requests.find(r => r.requestId === requestId)) {
+      const request = await this.requestRepository.findOne(requestId);
+      if (!request) {
+        throw new BadRequestException('The request does not exist');
+      }
+      const newRequest = new ShoppingListRequest();
+      newRequest.requestId = requestId;
+      list.requests.push(newRequest);
+
+      request.status = RequestStatus.ONGOING;
+      return await this.requestRepository.save(request);
     }
   }
 }

@@ -7,7 +7,7 @@ export class ShoppingListFormDto {
     description: 'List of request IDs',
     type: ['integer'],
   })
-  readonly requests!: number[];
+  requests!: number[];
 
   @ApiProperty({
     required: false,

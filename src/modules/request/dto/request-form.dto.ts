@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AddressModel } from '../../main/models/address.model';
+import { RequestStatus } from '../request-status';
 
 export class CreateRequestArticleDto {
   @ApiProperty({
@@ -24,6 +25,13 @@ export class RequestFormDto extends AddressModel {
     type: [CreateRequestArticleDto],
   })
   readonly articles!: CreateRequestArticleDto[];
+
+  @ApiPropertyOptional({
+    enum: RequestStatus,
+    default: RequestStatus.PENDING,
+    type: RequestStatus,
+  })
+  status!: string;
 
   @ApiProperty()
   readonly additionalRequest?: string;
