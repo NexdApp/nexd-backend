@@ -1,0 +1,752 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>nexd-api documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">nexd-api documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content controller">
+                   <div class="content-data">
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Controllers</li>
+  <li>CallController</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/modules/call/call.controller.ts</code>
+        </p>
+
+            <p class="comment">
+                <h3>Prefix</h3>
+            </p>
+            <p class="comment">
+                <code>call</code>
+            </p>
+
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#download">download</a>
+                            </li>
+                            <li>
+                                <a href="#index">index</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#init_upload">init_upload</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#translated">translated</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#upload">upload</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#webhook">webhook</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="download"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            download
+                        </b>
+                        <a href="#download"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>download(req: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, res: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get(&#x27;download/:id&#x27;)<br />@ApiOkResponse({description: &#x27;Successful&#x27;})<br />@ApiBadRequestResponse({description: &#x27;Bad Request&#x27;})<br />@ApiParam({name: &#x27;id&#x27;, description: &#x27;audio id&#x27;, type: &#x27;integer&#x27;})<br />@Redirect(&#x27;https://google.com&#x27;, 302)<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="50"
+                            class="link-to-prism">src/modules/call/call.controller.ts:50</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>res</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;any&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="index"></a>
+                    <span class="name">
+                        <b>
+                            index
+                        </b>
+                        <a href="#index"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>index()</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get()<br />@ApiOkResponse({description: &#x27;Successful&#x27;})<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="37"
+                            class="link-to-prism">src/modules/call/call.controller.ts:37</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="init_upload"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            init_upload
+                        </b>
+                        <a href="#init_upload"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>init_upload()</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get(&#x27;upload&#x27;)<br />@ApiResponse({status: undefined, description: &#x27;Success&#x27;})<br />@ApiResponse({status: undefined, description: &#x27;Bad Request&#x27;})<br />@ApiResponse({status: undefined, description: &#x27;Unauthorized&#x27;})<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="73"
+                            class="link-to-prism">src/modules/call/call.controller.ts:73</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;any&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="translated"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            translated
+                        </b>
+                        <a href="#translated"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>translated(res: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Put(&#x27;translated/:id&#x27;)<br />@ApiResponse({status: undefined, description: &#x27;Success&#x27;})<br />@ApiResponse({status: undefined, description: &#x27;Bad Request&#x27;})<br />@ApiResponse({status: undefined, description: &#x27;Unauthorized&#x27;})<br />@ApiParam({name: &#x27;id&#x27;, description: &#x27;audio id&#x27;, type: &#x27;integer&#x27;})<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="112"
+                            class="link-to-prism">src/modules/call/call.controller.ts:112</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>res</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;any&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="upload"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            upload
+                        </b>
+                        <a href="#upload"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>upload(req: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, res: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Post(&#x27;upload/:id&#x27;)<br />@ApiResponse({status: undefined, description: &#x27;Success&#x27;})<br />@ApiResponse({status: undefined, description: &#x27;Bad Request&#x27;})<br />@ApiResponse({status: undefined, description: &#x27;Unauthorized&#x27;})<br />@ApiParam({name: &#x27;id&#x27;, description: &#x27;audio id&#x27;, type: &#x27;integer&#x27;})<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="86"
+                            class="link-to-prism">src/modules/call/call.controller.ts:86</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>res</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;any&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="webhook"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            webhook
+                        </b>
+                        <a href="#webhook"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>webhook()</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get(&#x27;webhook&#x27;)<br />@ApiResponse({status: undefined, description: &#x27;Success&#x27;})<br />@ApiResponse({status: undefined, description: &#x27;Bad Request&#x27;})<br />@ApiResponse({status: undefined, description: &#x27;Unauthorized&#x27;})<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="67"
+                            class="link-to-prism">src/modules/call/call.controller.ts:67</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;any&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Controller,
+  Get,
+  Body,
+  HttpStatus,
+  UseInterceptors,
+  Post,
+  UploadedFile,
+  Req,
+  Res,
+  Param,
+  Redirect,
+  Put,
+} from &#x27;@nestjs/common&#x27;;
+import {
+  ApiResponse,
+  ApiParam,
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiUnauthorizedResponse,
+  ApiTags,
+} from &#x27;@nestjs/swagger&#x27;;
+import { FileInterceptor } from &#x27;@nestjs/platform-express&#x27;;
+import { UploadCallPayloadDto } from &#x27;./dto/upload-call-payload.dto&#x27;;
+import { TranslatedCallPayloadDto } from &#x27;./dto/translated-call-payload.dto&#x27;;
+import { AudioStorageService } from &#x27;../audio-storage/audio-storage.service&#x27;;
+import { AudioFile } from &#x27;../audio-storage/audio-storage.entity&#x27;;
+
+@Controller(&#x27;call&#x27;)
+@ApiTags(&#x27;Calls&#x27;)
+@ApiUnauthorizedResponse({ description: &#x27;Unauthorized&#x27; })
+export class CallController {
+  constructor(private readonly audioStorageService: AudioStorageService) {}
+
+  @Get()
+  @ApiOkResponse({ description: &#x27;Successful&#x27; })
+  index(): string {
+    return &#x27;call&#x27;;
+  }
+
+  @Get(&#x27;download/:id&#x27;)
+  @ApiOkResponse({ description: &#x27;Successful&#x27; })
+  @ApiBadRequestResponse({ description: &#x27;Bad Request&#x27; })
+  @ApiParam({
+    name: &#x27;id&#x27;,
+    description: &#x27;audio id&#x27;,
+    type: &#x27;integer&#x27;,
+  })
+  @Redirect(&#x27;https://google.com&#x27;, 302)
+  async download(
+    @Req() req: any,
+    @Res() res: any,
+    @Param(&#x27;id&#x27;) id: number,
+  ): Promise&lt;any&gt; {
+    const audioFile: AudioFile &#x3D; await this.audioStorageService.getById(id);
+
+    return {
+      url: audioFile.path,
+      statusCode: 302,
+    };
+  }
+
+  @Get(&#x27;webhook&#x27;)
+  @ApiResponse({ status: HttpStatus.ACCEPTED, description: &#x27;Success&#x27; })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: &#x27;Bad Request&#x27; })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: &#x27;Unauthorized&#x27; })
+  async webhook(): Promise&lt;any&gt; {}
+
+  @Get(&#x27;upload&#x27;)
+  @ApiResponse({ status: HttpStatus.ACCEPTED, description: &#x27;Success&#x27; })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: &#x27;Bad Request&#x27; })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: &#x27;Unauthorized&#x27; })
+  async init_upload(): Promise&lt;any&gt; {
+    return { id: await this.audioStorageService.create() };
+  }
+
+  @Post(&#x27;upload/:id&#x27;)
+  @ApiResponse({ status: HttpStatus.ACCEPTED, description: &#x27;Success&#x27; })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: &#x27;Bad Request&#x27; })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: &#x27;Unauthorized&#x27; })
+  @ApiParam({
+    name: &#x27;id&#x27;,
+    description: &#x27;audio id&#x27;,
+    type: &#x27;integer&#x27;,
+  })
+  async upload(
+    @Req() req: any,
+    @Res() res: any,
+    @Param(&#x27;id&#x27;) id: number,
+  ): Promise&lt;any&gt; {
+    try {
+      const fileEntry &#x3D; await this.audioStorageService.getById(id);
+      if (fileEntry) {
+        await this.audioStorageService.uploadToAWS(req, res, fileEntry);
+      } else {
+        return res.status(400).json(&#x60;Failed to upload file, undefined id.&#x60;);
+      }
+    } catch (error) {
+      return res.status(500).json(&#x60;Failed to upload file: ${error.message}&#x60;);
+    }
+  }
+
+  @Put(&#x27;translated/:id&#x27;)
+  @ApiResponse({ status: HttpStatus.ACCEPTED, description: &#x27;Success&#x27; })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: &#x27;Bad Request&#x27; })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: &#x27;Unauthorized&#x27; })
+  @ApiParam({
+    name: &#x27;id&#x27;,
+    description: &#x27;audio id&#x27;,
+    type: &#x27;integer&#x27;,
+  })
+  async translated(@Res() res: any, @Param(&#x27;id&#x27;) id: number): Promise&lt;any&gt; {
+    if (this.audioStorageService.setTranslated(true, id)) {
+      return res.status(200).json(&#x27;Set translated successfull&#x27;);
+    } else {
+      return res.status(500).json(&#x27;Failed to set translated&#x27;);
+    }
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'controller';
+            var COMPODOC_CURRENT_PAGE_URL = 'CallController.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -66,7 +66,6 @@
     "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "hbs": "^4.1.0",
     "helmet": "^3.21.2",
     "husky": "^4.0.7",
     "jest": "^25.1.0",
@@ -98,6 +97,9 @@
   },
   "devDependencies": {},
   "peerDependencies": {
-    "acorn": "^7.1.1"
+    "acorn": "^7.1.1",
+    "handlebars": "^4.7.3",
+    "minimist": "^1.2.5",
+    "optimist": "^0.6.1"
   }
 }
