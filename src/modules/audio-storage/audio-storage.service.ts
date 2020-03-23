@@ -30,7 +30,6 @@ export class AudioStorageService {
     try {
       this.upload(req, res, (error: string) => {
         if (error) {
-          console.log(error);
           return res.status(400).json(`Upload failed: ${error}`);
         }
 
