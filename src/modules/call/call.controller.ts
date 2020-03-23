@@ -32,12 +32,6 @@ import { AudioFile } from '../audio-storage/audio-storage.entity';
 export class CallController {
   constructor(private readonly audioStorageService: AudioStorageService) {}
 
-  @Get()
-  @ApiOkResponse({ description: 'Successful' })
-  index(): string {
-    return 'call';
-  }
-
   @Get('download/:id')
   @ApiOkResponse({ description: 'Successful' })
   @ApiBadRequestResponse({ description: 'Bad Request' })
@@ -115,5 +109,15 @@ export class CallController {
     } else {
       return res.status(500).json('Failed to set translated');
     }
+  }
+
+  @Get('calls')
+  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
+  async calls(@Body() body: { amount : number}): Promise<any> {
+    const callList = await this.audioStorageService.getLastCalls(body.amount);
+    return {  calls : callList,
+              amount : callList.length};
   }
 }

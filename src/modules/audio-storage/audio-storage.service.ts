@@ -30,6 +30,7 @@ export class AudioStorageService {
     try {
       this.upload(req, res, (error: string) => {
         if (error) {
+          console.log(error);
           return res.status(400).json(`Upload failed: ${error}`);
         }
 
@@ -65,6 +66,16 @@ export class AudioStorageService {
     } else {
       return false;
     }
+  }
+
+  async getLastCalls(amount: number){
+    const audioFiles: AudioFile[] = await this.audioRepo.createQueryBuilder()
+                                      .orderBy("AudioFile.uploaded", "DESC")
+                                      .where("AudioFile.isUploaded = true")
+                                      .limit(amount)
+                                      .getMany();
+
+    return audioFiles;
   }
 
   upload = multer({
