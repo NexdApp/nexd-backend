@@ -1,15 +1,12 @@
 {
-  "ipcMode": null,
   "executionRoleArn": "arn:aws:iam::367176527025:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
-      "dnsSearchDomains": null,
       "logConfiguration": {
         "logDriver": "awslogs",
-        "secretOptions": null,
         "options": {
           "awslogs-group": "/ecs/nexd-api",
-          "awslogs-region": "us-east-2",
+          "awslogs-region": "eu-central-1",
           "awslogs-stream-prefix": "ecs"
         }
       },
@@ -27,51 +24,22 @@
       "command": [
         "npm run docs && npm run start:prod"
       ],
-      "linuxParameters": null,
-      "cpu": 1024,
+      "cpu": 512,
       "environment": [],
-      "resourceRequirements": null,
-      "ulimits": null,
-      "dnsServers": null,
       "mountPoints": [],
-      "workingDirectory": null,
-      "secrets": null,
-      "dockerSecurityOptions": null,
-      "memory": null,
-      "memoryReservation": 4096,
+      "memoryReservation": 1024,
       "volumesFrom": [],
-      "stopTimeout": null,
-      "image": "httpd:2.4",
-      "startTimeout": null,
-      "firelensConfiguration": null,
-      "dependsOn": null,
-      "disableNetworking": null,
-      "interactive": null,
-      "healthCheck": null,
-      "essential": true,
-      "links": [],
-      "hostname": null,
-      "extraHosts": null,
-      "pseudoTerminal": null,
-      "user": null,
-      "readonlyRootFilesystem": null,
-      "dockerLabels": null,
-      "systemControls": null,
-      "privileged": null,
-      "name": "sample-app"
+      "image": "367176527025.dkr.ecr.eu-central-1.amazonaws.com/nexd-api:620b252e4bb0ecadcbc2329938a38b722e0609a3",
+      "name": "nexd-api-staging"
     }
   ],
   "placementConstraints": [],
-  "memory": "4096",
-  "taskRoleArn": null,
-  "family": "nexd-api",
-  "pidMode": null,
+  "memory": "1024",
+  "family": "nexd-api-staging",
   "requiresCompatibilities": [
     "FARGATE"
   ],
   "networkMode": "awsvpc",
-  "cpu": "1024",
-  "inferenceAccelerators": null,
-  "proxyConfiguration": null,
+  "cpu": "512",
   "volumes": []
 }

@@ -28,10 +28,10 @@ on:
   # but only for the master branch
   push:
     branches:
-      - master
+      - develop
   pull_request:
     branches:
-      - master
+      - develop
 
 name: Deploy to Amazon ECS
 
@@ -83,6 +83,6 @@ jobs:
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: nexd-api
-        cluster: default
+        service: nexd-api-staging
+        cluster: Nexd
         wait-for-service-stability: true
