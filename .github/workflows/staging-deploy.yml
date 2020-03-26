@@ -76,7 +76,7 @@ jobs:
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: aws-task-def.json
-        container-name: sample-app
+        container-name: next-api-staging
         image: ${{ steps.build-image.outputs.image }}
 
     - name: Deploy Amazon ECS task definition
