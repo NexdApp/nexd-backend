@@ -25,6 +25,10 @@ export class ConfigService {
     return process.env.NODE_ENV === 'test';
   }
 
+  public get isStaging() {
+    return process.env.NODE_ENV === 'staging';
+  }
+
   public get databaseType() {
     return this.envConfig.DATABASE_TYPE;
   }
@@ -87,7 +91,7 @@ export class ConfigService {
   private validateInput(parsedConfig: DotenvParseOutput) {
     const envVarsSchema: Joi.ObjectSchema = Joi.object({
       NODE_ENV: Joi.string()
-        .valid(['development', 'production', 'test', 'provision'])
+        .valid(['development', 'production', 'test', 'provision', 'staging'])
         .default('development'),
       DATABASE_TYPE: Joi.string()
         .valid([

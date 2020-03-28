@@ -18,7 +18,7 @@
         {
           "hostPort": 81,
           "protocol": "tcp",
-          "containerPort": 80
+          "containerPort": 81
         }
       ],
       "command": [

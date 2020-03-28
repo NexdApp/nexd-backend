@@ -25,7 +25,7 @@ import { AudioFile } from '../audio-storage/audio-storage.entity';
           username: config.databaseUsername,
           password: config.databasePassword,
           extra: {
-            ssl: config.isProd,
+            ssl: config.isProd || config.isStaging,
           },
           // importing entities directly because Webpack + glob path pattern + ts file = crash
           // https://github.com/nestjs/nest/issues/711
