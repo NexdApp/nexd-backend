@@ -11,4 +11,11 @@ export class AppConfigService {
       this.configService.get('NODE_ENV') === 'development.local'
     );
   }
+
+  get<T = any>(
+    propertyPath: string,
+    defaultValue: T = undefined,
+  ): T | undefined {
+    return this.configService.get<T | undefined>(propertyPath, defaultValue);
+  }
 }

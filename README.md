@@ -12,9 +12,12 @@
 
 ## TODO
 
+- [ ] Pipes
+- [ ] Guard
+- [ ] role decorators
+- [ ] logger middleware
 - [ ] check migrations
 - [ ] ssl database
-- [ ] role decorators
 - [ ] exclude for password
 - [ ] pgadmin docker command
 - [ ] env config validation
