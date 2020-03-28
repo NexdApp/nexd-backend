@@ -20,17 +20,27 @@ import {
   ApiUnauthorizedResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadCallPayloadDto } from './dto/upload-call-payload.dto';
-import { TranslatedCallPayloadDto } from './dto/translated-call-payload.dto';
+
+import { webhook } from 'twilio/lib/webhooks/webhooks';
+import Twilio, { TwilioClientOptions } from 'twilio/lib/rest/Twilio';
+import  VoiceResponse  from 'twilio/lib/twiml/VoiceResponse';
 import { AudioStorageService } from '../audio-storage/audio-storage.service';
 import { AudioFile } from '../audio-storage/audio-storage.entity';
+import { ConfigService } from 'modules/config/config.service';
+
 
 @Controller('call')
 @ApiTags('Calls')
 @ApiUnauthorizedResponse({ description: 'Unauthorized' })
 export class CallController {
-  constructor(private readonly audioStorageService: AudioStorageService) {}
+  readonly clientOps : TwilioClientOptions;
+
+  constructor(private readonly audioStorageService: AudioStorageService,
+              private readonly configService: ConfigService) {
+                this.clientOps = {
+                  
+                }
+              }
 
   @Get('download/:id')
   @ApiOkResponse({ description: 'Successful' })
@@ -54,11 +64,31 @@ export class CallController {
     };
   }
 
-  @Get('webhook')
+  @Get('twilio/webhook')
   @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
-  async webhook(): Promise<any> {}
+  async webhook(@Req() req: any, @Res() res: any): Promise<any> {   
+    const twiml: VoiceResponse = new VoiceResponse();
+    
+    twiml.say("Willkommen bei nexd, der modernen Nachbarschaftshilfe");
+
+    twiml.record({  transcribe: true, 
+                    maxLength: 600, 
+                    recordingStatusCallback: "" });
+    twiml.hangup();
+
+    res.type('text/xml');
+    res.send(twiml.toString());
+  }
+
+  @Get('twilio/recorded')
+  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
+  async call_recorde(@Req() req: any, @Res() res: any): Promise<any> {   
+    Twilio()
+  }
 
   @Get('upload')
   @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
