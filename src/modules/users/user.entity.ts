@@ -1,10 +1,10 @@
 // import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
 
-import { PasswordTransformer } from './password.transformer';
 import { UserRole } from './user-role';
 import { ApiProperty } from '@nestjs/swagger';
 import { AddressModel } from '../../models/address.model';
+import * as bcrypt from 'bcrypt';
 
 @Entity({
   name: 'users',
@@ -40,23 +40,17 @@ export class User extends AddressModel {
   })
   telephone?: string;
 
-  @Column({
-    name: 'password',
-    length: 255,
-    transformer: new PasswordTransformer(),
-  })
-  // @Exclude()
-  password!: string;
-}
+  @Column()
+  password: string;
 
-export class UserFillableFields {
-  email!: string;
-  firstName!: string;
-  lastName!: string;
-  role?: string;
-  telephone?: string;
-  address?: string;
-  password!: string;
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  async comparePassword(attempt: string): Promise<boolean> {
+    return await bcrypt.compare(attempt, this.password);
+  }
 }
 
 export class UserID {

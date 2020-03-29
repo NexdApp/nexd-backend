@@ -38,6 +38,14 @@ export class UserController {
     return await this.userService.getAll();
   }
 
+  @Get('/me')
+  @ApiOkResponse({ description: 'Successful', type: User })
+  @ApiNotFoundResponse({ description: 'User not found' })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
+  async findMe(@ReqUser() user: UserID): Promise<User> {
+    return await this.userService.getById(user.userId);
+  }
+
   @Get(':id')
   @ApiOkResponse({ description: 'Successful', type: User })
   @ApiNotFoundResponse({ description: 'User not found' })
