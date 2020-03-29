@@ -30,6 +30,7 @@ With an automatic reload:
 
 ## TODO
 
+- [ ] Token content
 - [ ] Pipes
 - [ ] Guard
 - [ ] role decorators

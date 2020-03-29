@@ -7,6 +7,8 @@ import {
   Param,
   Put,
   UseGuards,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -24,10 +26,11 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-@ApiBearerAuth()
 @Controller('users')
-@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 @ApiTags('Users')
+@UseGuards(JwtAuthGuard)
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   private readonly logger = new Logger(UserController.name);
 
