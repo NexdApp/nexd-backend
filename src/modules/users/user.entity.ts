@@ -10,8 +10,8 @@ import { AddressModel } from '../../models/address.model';
   name: 'users',
 })
 export class User extends AddressModel {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @ApiProperty({ required: true })
   @Column({ length: 255 })
@@ -60,5 +60,5 @@ export class UserFillableFields {
 }
 
 export class UserID {
-  userId!: number;
+  userId!: string;
 }

@@ -3,21 +3,23 @@ import { AppModule } from './app.module';
 import * as helmet from 'helmet';
 import { Logger } from '@nestjs/common';
 
-import { AppConfigService } from './configuration/configuration.service';
+import { ConfigurationService } from './configuration/configuration.service';
 
 async function bootstrap() {
   const logger = new Logger('Main', true);
 
   const app = await NestFactory.create(AppModule);
 
-  const appConfigService: AppConfigService = app.get('AppConfigService');
+  const appConfigService: ConfigurationService = app.get(
+    'ConfigurationService',
+  );
   const port = appConfigService.get('API_PORT');
   const rootUrl = appConfigService.get('API_ROOT_URL');
 
   app.enableCors();
   app.use(helmet());
 
-  const globalPrefix = '/api';
+  const globalPrefix = '/api/v1';
   app.setGlobalPrefix(globalPrefix);
 
   const url = `${rootUrl}:${port}${globalPrefix}`;

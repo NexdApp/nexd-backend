@@ -17,15 +17,15 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+
 import { ReqUser } from '../../decorators/user.decorator';
 import { User, UserID } from './user.entity';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-// import {JwtAuthGuard} from '../common/guards/jwt-guard';
 
 @ApiBearerAuth()
 @Controller('users')
-// @UseGuards(JwtAuthGuard)
+@UseGuards() // jwt by default
 @ApiTags('Users')
 export class UserController {
   static LOGGER = new Logger('Users', true);
@@ -45,10 +45,21 @@ export class UserController {
   @ApiParam({
     name: 'id',
     description: 'user id',
-    type: 'integer',
   })
-  async findOne(@Param('id') id: number): Promise<User> {
-    return await this.userService.get(id);
+  async findOne(@Param('id') id: string): Promise<User> {
+    return await this.userService.getById(id);
+  }
+
+  @Put('/me')
+  @ApiOkResponse({ description: 'Successful', type: User })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
+  @ApiForbiddenResponse({ description: 'Forbidden' })
+  async updateMyself(
+    @Body() updateUserDto: UpdateUserDto,
+    @ReqUser() user: UserID,
+  ): Promise<User> {
+    const userToUpdate = await this.userService.getById(user.userId);
+    return this.userService.update(updateUserDto, userToUpdate);
   }
 
   @Put(':id')
@@ -59,14 +70,13 @@ export class UserController {
   @ApiParam({
     name: 'id',
     description: 'user id',
-    type: 'integer',
   })
   async update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
     @ReqUser() user: UserID,
   ): Promise<User> {
-    const userToUpdate = await this.userService.get(id);
+    const userToUpdate = await this.userService.getById(id);
     if (userToUpdate.id !== user.userId) {
       throw new ForbiddenException('You cannot edit other users!');
     }

@@ -7,8 +7,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Roles } from '../../decorators/roles.decorator';
-import { User, UserFillableFields } from './user.entity';
+import { User } from './user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { RegisterDto } from '../auth/dto/register.dto';
 
 @Injectable()
 @Roles('admin')
@@ -18,8 +19,8 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async get(id: number) {
-    const user = await this.userRepository.findOne(id);
+  async getById(userId: string) {
+    const user = await this.userRepository.findOne(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -28,25 +29,13 @@ export class UsersService {
 
   async getByEmail(email: string) {
     return await this.userRepository.findOne({ email });
-    // return await this.userRepository
-    //   .createQueryBuilder('users')
-    //   .where('users.email = :email')
-    //   .setParameter('email', email)
-    //   .getOne();
   }
 
   async getByEmailAndPass(email: string, password: string) {
-    // const passHash = createHmac('sha256', password).digest('hex');
     return await this.userRepository.findOne({ email, password });
-    // return await this.userRepository
-    //   .createQueryBuilder('users')
-    //   .where('users.email = :email and users.password = :password')
-    //   .setParameter('email', email)
-    //   .setParameter('password', passHash)
-    //   .getOne();
   }
 
-  async create(payload: UserFillableFields) {
+  async create(payload: RegisterDto) {
     const checkUserExistence = await this.getByEmail(payload.email);
 
     if (checkUserExistence) {
