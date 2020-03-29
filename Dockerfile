@@ -10,6 +10,8 @@ RUN npm clean-install
 # Bundle app source
 COPY . .
 
+RUN npm run docs
+
 # Expose port and start application
 EXPOSE 8080
 

@@ -53,11 +53,15 @@ export class RequestEntity extends AddressModel {
   })
   phoneNumber?: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    enum: RequestStatus,
+    default: RequestStatus.PENDING,
+    type: RequestStatus,
+  })
   @Column({
     type: 'enum',
     enum: RequestStatus,
-    default: RequestStatus.NEW,
+    default: RequestStatus.PENDING,
   })
   status!: string;
 

@@ -24,9 +24,14 @@
 #    and best practices on handling the access key credentials.
 
 on:
+  # Trigger the workflow on push or pull request,
+  # but only for the master branch
   push:
-    branch:
-    - develop
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
 
 name: Deploy to Amazon ECS
 
@@ -56,7 +61,7 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: nexd-api
+        ECR_REPOSITORY: nexd-api-staging
         IMAGE_TAG: ${{ github.sha }}
       run: |
         # Build a docker container and
@@ -70,14 +75,14 @@ jobs:
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: aws-task-def.json
-        container-name: sample-app
+        task-definition: aws-task-def-staging.json
+        container-name: nexd-api-staging
         image: ${{ steps.build-image.outputs.image }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: nexd-api
-        cluster: default
+        service: nexd-api-staging
+        cluster: NexD
         wait-for-service-stability: true
