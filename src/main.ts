@@ -3,12 +3,15 @@ import { AppModule } from './app.module';
 import * as helmet from 'helmet';
 import { Logger } from '@nestjs/common';
 
+import { setupSwagger } from './swagger';
 import { ConfigurationService } from './configuration/configuration.service';
 
 async function bootstrap() {
   const logger = new Logger('Main', true);
 
   const app = await NestFactory.create(AppModule);
+
+  setupSwagger(app);
 
   const appConfigService: ConfigurationService = app.get(
     'ConfigurationService',
