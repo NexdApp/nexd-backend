@@ -67,8 +67,6 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
     @ReqUser() user: UserID,
   ): Promise<User> {
-    this.logger.log(user);
-    this.logger.log('test');
     const userToUpdate = await this.userService.getById(user.userId);
     return this.userService.update(updateUserDto, userToUpdate);
   }
