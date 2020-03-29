@@ -84,5 +84,5 @@ jobs:
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
         service: nexd-api-staging
-        cluster: Nexd
+        cluster: NexD
         wait-for-service-stability: true
