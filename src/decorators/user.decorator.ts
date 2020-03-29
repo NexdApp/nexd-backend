@@ -1,10 +1,8 @@
-import { createParamDecorator } from '@nestjs/common';
-import { User } from '../modules/users/user.entity';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-export interface IRequestUser extends Request {
-  user?: User;
-}
-
-export const ReqUser = createParamDecorator((data, req: IRequestUser) => {
-  return req.user;
-});
+export const ReqUser = createParamDecorator(
+  (data: unknown, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest();
+    return request.user;
+  },
+);

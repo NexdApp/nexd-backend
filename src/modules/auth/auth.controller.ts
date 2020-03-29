@@ -15,9 +15,9 @@ import {
 
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
-import { User } from '../users/user.entity';
 import { RegisterDto } from './dto/register.dto';
 import { UsersService } from '../users/users.service';
+import { TokenDto } from './dto/token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -31,38 +31,38 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @ApiOkResponse({
-    description: 'Successful Registration',
-    type: User,
+    description: 'Successful Login',
+    type: TokenDto,
   })
-  async login(@Request() req) {
-    this.logger.log(req);
-    return this.authService.login(req.user);
+  async login(@Request() req): Promise<TokenDto> {
+    this.logger.log(`User login`);
+    return await this.authService.createToken(req.user);
   }
 
   @Post('register')
   @ApiCreatedResponse({
     description: 'Successful Registration',
-    type: User,
+    type: TokenDto,
   })
   @ApiBadRequestResponse({ description: 'Bad Request' })
   @ApiNotAcceptableResponse({ description: 'Already exists' })
-  async register(@Body() payload: RegisterDto): Promise<any> {
+  async register(@Body() payload: RegisterDto): Promise<TokenDto> {
     const user = await this.usersService.create(payload);
     this.logger.log(`User registered: ${user.id}`);
     this.logger.debug(`Email: ${payload.email}`);
-    return await this.authService.login(user);
+    return await this.authService.createToken(user);
   }
 
   @Post('refresh')
   @ApiCreatedResponse({
     description: 'Successful token refresh',
-    type: User,
+    type: TokenDto,
   })
   @ApiBadRequestResponse({ description: 'Bad Request' })
-  async refreshToken(@Body() payload: RegisterDto): Promise<any> {
+  async refreshToken(@Body() payload: RegisterDto): Promise<TokenDto> {
     const user = await this.usersService.create(payload);
     this.logger.log(`User registered: ${user.id}`);
     this.logger.debug(`Email: ${payload.email}`);
-    return await this.authService.login(user);
+    return await this.authService.createToken(user);
   }
 }

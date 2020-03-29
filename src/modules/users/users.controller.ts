@@ -22,13 +22,14 @@ import { ReqUser } from '../../decorators/user.decorator';
 import { User, UserID } from './user.entity';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiBearerAuth()
 @Controller('users')
-@UseGuards() // jwt by default
+@UseGuards(JwtAuthGuard)
 @ApiTags('Users')
 export class UserController {
-  static LOGGER = new Logger('Users', true);
+  private readonly logger = new Logger(UserController.name);
 
   constructor(private readonly userService: UsersService) {}
 
@@ -66,6 +67,8 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
     @ReqUser() user: UserID,
   ): Promise<User> {
+    this.logger.log(user);
+    this.logger.log('test');
     const userToUpdate = await this.userService.getById(user.userId);
     return this.userService.update(updateUserDto, userToUpdate);
   }

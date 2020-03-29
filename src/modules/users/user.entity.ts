@@ -1,4 +1,4 @@
-// import { Exclude } from 'class-transformer';
+import { Exclude } from 'class-transformer';
 import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
 
 import { UserRole } from './user-role';
@@ -41,6 +41,7 @@ export class User extends AddressModel {
   telephone?: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @BeforeInsert()

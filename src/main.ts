@@ -35,7 +35,7 @@ async function bootstrap() {
   logger.log(`Listening to ${url}`);
 
   if (appConfigService.isDev) {
-    Logger.log(`API Documentation available at ${url}/docs`);
+    logger.log(`API Documentation available at ${url}/docs`);
   }
 }
 bootstrap();

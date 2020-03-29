@@ -10,7 +10,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(userId: string, pass: string): Promise<any> {
+  async validateUserById(userId: string, pass: string): Promise<any> {
     const user = await this.usersService.getById(userId);
     if (user && user.comparePassword(pass)) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -20,7 +20,21 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User) {
+  async validateUserByEmail(email: string, pass: string): Promise<any> {
+    const user = await this.usersService.getByEmail(email);
+
+    if (!user) return null;
+
+    const confirmed = await user.comparePassword(pass);
+
+    if (!confirmed) return null;
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = user;
+    return result;
+  }
+
+  async createToken(user: User) {
     const payload = { email: user.email, sub: user.id };
     return {
       // eslint-disable-next-line @typescript-eslint/camelcase

@@ -21,3 +21,4 @@
 - [ ] exclude for password
 - [ ] pgadmin docker command
 - [ ] env config validation
+- [ ] HMR
