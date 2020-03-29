@@ -25,10 +25,6 @@ export class ConfigService {
     return process.env.NODE_ENV === 'test';
   }
 
-  public get isStaging() {
-    return process.env.NODE_ENV === 'staging';
-  }
-
   public get databaseType() {
     return this.envConfig.DATABASE_TYPE;
   }
