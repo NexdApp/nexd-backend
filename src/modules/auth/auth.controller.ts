@@ -35,6 +35,7 @@ export class AuthController {
     type: User,
   })
   async login(@Request() req) {
+    this.logger.log(req);
     return this.authService.login(req.user);
   }
 

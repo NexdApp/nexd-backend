@@ -5,11 +5,14 @@ import { Logger } from '@nestjs/common';
 
 import { setupSwagger } from './swagger';
 import { ConfigurationService } from './configuration/configuration.service';
+import { requestLoggerMiddleware } from './middlewares/requestLogger.middleware';
 
 async function bootstrap() {
   const logger = new Logger('Main', true);
 
   const app = await NestFactory.create(AppModule);
+
+  app.use(requestLoggerMiddleware);
 
   setupSwagger(app);
 
