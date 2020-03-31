@@ -1,4 +1,6 @@
-FROM node:alpine
+FROM node:12.16.1-alpine3.9
+
+RUN apk add g++ make python
 
 WORKDIR /usr/src/app
 
@@ -10,9 +12,12 @@ RUN npm clean-install
 # Bundle app source
 COPY . .
 
-RUN npm run docs
+# Add docs later
+#RUN npm run docs
 
-# Expose port and start application
 EXPOSE 8080
+
+RUN adduser -D localuser
+USER localuser
 
 CMD [ "npm", "run", "start:prod" ]
