@@ -61,7 +61,7 @@ export class RequestService {
   async getAll(user: any, onlyMine: string, zipCode: string) {
     const conditions: any = {};
     if (onlyMine === 'true') {
-      conditions.requester = user.userId;
+      conditions.requesterId = user.userId;
     }
     if (zipCode) {
       conditions.zipCode = zipCode;

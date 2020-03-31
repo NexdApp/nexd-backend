@@ -63,9 +63,9 @@ export class RequestController {
   ): Promise<RequestEntity[]> {
     const requests = await this.requestService.getAll(user, onlyMine, zipCode);
     if (onlyMine !== 'true')
-      requests.map(async r => {
+      for (const r of requests) {
         r.requester = await this.userService.get(r.requesterId);
-      });
+      }
     return requests;
   }
 
