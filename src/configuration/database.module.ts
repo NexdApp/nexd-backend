@@ -2,6 +2,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigurationService } from './configuration.service';
+import { User } from 'src/modules/users/user.entity';
+import { Article } from 'src/modules/articles/article.entity';
+import { HelpRequest } from 'src/modules/helpRequests/help-request.entity';
+import { HelpRequestArticle } from 'src/modules/helpRequests/help-request-article.entity';
 
 @Module({
   imports: [
@@ -15,7 +19,8 @@ import { ConfigurationService } from './configuration.service';
         username: configService.get<string>('DATABASE_USERNAME'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
-        autoLoadEntities: true,
+        // autoLoadEntities: true,
+        entities: [User, Article, HelpRequest, HelpRequestArticle],
         synchronize: true,
         // migrations: [__dirname + '/../../src/migrations/*.ts'],
         // cli: {

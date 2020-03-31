@@ -23,8 +23,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "docker:postgis": "docker run -d --name postgis-nexd -p 5432:5432 --env-file .env.postgis.local -v postgis-data:/var/lib/postgresql/data postgis/postgis:12-2.5",
-    "docker:pgadmin": "docker run -d --name postgis-pgadmin -p 3010:80 --env-file .env.postgis.local dpage/pgadmin4"
+    "docker:postgis": "docker run -d --name postgis-nexd --rm -p 5432:5432 --env-file .env.postgis.local -v postgis-data:/var/lib/postgresql/data postgis/postgis:12-2.5",
+    "docker:pgadmin": "docker run -d --name postgis-pgadmin --rm -p 3010:80 --env-file .env.postgis.local dpage/pgadmin4"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",

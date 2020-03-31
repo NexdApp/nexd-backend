@@ -11,6 +11,7 @@ import {
   ApiCreatedResponse,
   ApiNotAcceptableResponse,
   ApiOkResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 
 import { LocalAuthGuard } from './local-auth.guard';
@@ -19,6 +20,7 @@ import { RegisterDto } from './dto/register.dto';
 import { UsersService } from '../users/users.service';
 import { TokenDto } from './dto/token.dto';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);

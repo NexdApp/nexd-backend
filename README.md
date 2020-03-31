@@ -31,9 +31,10 @@ With an automatic reload:
 ## TODO
 
 - [ ] Token content
-- [ ] Pipes
-- [ ] Guard
-- [ ] role decorators
+- [ ] Pipes (validation...)
+- [ ] Same user or admin guard
+- [ ] permission role model
+- [ ] permission role decorators
 - [ ] logger middleware
 - [ ] check migrations
 - [ ] ssl database
