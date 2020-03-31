@@ -41,7 +41,6 @@ export class HelpRequestsService {
     if (createRequestDto.articles) {
       createRequestDto.articles.forEach(art => {
         const newArticle = new HelpRequestArticle();
-        // newArticle.article = new Article().id = art.articleId;
         newArticle.articleId = art.articleId;
         newArticle.articleCount = art.articleCount;
         newArticle.articleDone = false;
@@ -104,6 +103,7 @@ export class HelpRequestsService {
 
   async update(requestId: number, requestEntity: HelpRequestCreateDto) {
     const request: HelpRequest = await this.findRequest(requestId);
+    console.log(request);
     this.populateRequest(request, requestEntity);
 
     return await this.helpRequestRepository.save(request);

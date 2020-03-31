@@ -99,19 +99,17 @@ export class HelpRequestsController {
       createHelpRequestDto,
       user.userId,
     );
-    // no need to cascade the user
-    // entity.requester = await this.usersService.getById(entity.requesterId);
     return entity;
   }
 
-  @Get(':shoppingRequestId')
+  @Get(':helpRequestId')
   @ApiOkResponse({ description: 'Successful', type: HelpRequest })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiNotFoundResponse({ description: 'Request not found' })
   async getSingleRequest(
-    @Param('shoppingRequestId') shoppingRequestId: number,
+    @Param('helpRequestId') helpRequestId: number,
   ): Promise<HelpRequest> {
-    const entity = await this.helpRequestsService.get(shoppingRequestId);
+    const entity = await this.helpRequestsService.get(helpRequestId);
     if (!entity) {
       throw new NotFoundException('This shopping request does not exist');
     }
@@ -119,35 +117,33 @@ export class HelpRequestsController {
     return entity;
   }
 
-  @Put(':shoppingRequestId')
+  @Put(':helpRequestId')
   @ApiOkResponse({ description: 'Successful', type: HelpRequest })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiNotFoundResponse({ description: 'Shopping request not found' })
   async updateRequest(
-    @Param('shoppingRequestId') shoppingRequestId: number,
-    @Body() requestFormDto: HelpRequestCreateDto,
-    @ReqUser() user: UserID,
+    @Param('helpRequestId') helpRequestId: number,
+    @Body() helpRequestCreateDto: HelpRequestCreateDto,
   ): Promise<HelpRequest> {
     const entity = await this.helpRequestsService.update(
-      shoppingRequestId,
-      requestFormDto,
+      helpRequestId,
+      helpRequestCreateDto,
     );
-    entity.requester = await this.usersService.getById(entity.requesterId);
     return entity;
   }
 
-  // @Put(':shoppingRequestId/:articleId')
+  // @Put(':helpRequestId/:articleId')
   // @ApiOkResponse({ description: 'Successful', type: HelpRequest })
   // @ApiBadRequestResponse({ description: 'Bad request' })
   // @ApiNotFoundResponse({ description: 'Request not found' })
   // async markArticleAsDone(
-  //   @Param('shoppingRequestId') shoppingRequestId: number,
+  //   @Param('helpRequestId') helpRequestId: number,
   //   @Param('articleId') articleId: number,
   //   @Body() articleStatus: RequestArticleStatusDto,
   //   @ReqUser() user: UserID,
   // ): Promise<HelpRequest> {
   //   const entity = await this.helpRequestsService.updateRequestArticle(
-  //     shoppingRequestId,
+  //     helpRequestId,
   //     articleId,
   //     articleStatus,
   //   );
