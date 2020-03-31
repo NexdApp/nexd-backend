@@ -54,16 +54,35 @@ export class HelpRequestsController {
     required: false,
     description: 'Filter by zipCode',
   })
+  @ApiQuery({
+    name: 'includeRequester',
+    required: false,
+    description:
+      'If "true", the requester object is included in each help request',
+  })
+  @ApiQuery({
+    name: 'status',
+    isArray: true,
+    required: false,
+    description: 'Array of status to filter for',
+  })
   async getAll(
     @Query('userId') userId: string,
     @Query('zipCode') zipCode: string,
+    @Query('includeRequester') includeRequester: string,
+    @Query('status') status: string[],
     @ReqUser() user: any,
   ): Promise<HelpRequest[]> {
-    const requests = await this.helpRequestsService.getAll(
-      user,
-      userId,
+    let userIdFilter = userId;
+    if (userId === 'me') {
+      userIdFilter = user.userId;
+    }
+    const requests = await this.helpRequestsService.getAll({
+      userId: userIdFilter,
       zipCode,
-    );
+      includeRequester: includeRequester === 'true',
+      status,
+    });
     return requests;
   }
 

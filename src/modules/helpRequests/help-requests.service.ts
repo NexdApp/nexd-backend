@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, createQueryBuilder, In } from 'typeorm';
 
 import { HelpRequest } from './help-request.entity';
 import { HelpRequestCreateDto } from './dto/help-request-create.dto';
@@ -57,17 +57,30 @@ export class HelpRequestsService {
     helpRequest.zipCode = createRequestDto.zipCode;
   }
 
-  async getAll(user: any, onlyMine: string, zipCode: string) {
-    const conditions: any = {};
-    if (onlyMine === 'true') {
-      conditions.requester = user.userId;
+  async getAll(filters: {
+    userId?: string;
+    zipCode?: string;
+    includeRequester?: boolean;
+    status?: string[];
+  }) {
+    const where: any = {};
+    const relations = ['articles'];
+
+    if (filters.userId) {
+      where.requesterId = filters.userId;
     }
-    if (zipCode) {
-      conditions.zipCode = zipCode;
+    if (filters.zipCode) {
+      where.zipCode = filters.zipCode;
+    }
+    if (filters.status) {
+      where.status = In(filters.status);
+    }
+    if (filters.includeRequester) {
+      relations.push('requester');
     }
     return await this.helpRequestRepository.find({
-      where: conditions,
-      relations: ['articles'],
+      where,
+      relations,
     });
   }
 
