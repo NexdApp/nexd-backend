@@ -12,6 +12,13 @@ export class ConfigurationService {
     );
   }
 
+  get APIPort(): number {
+    if (this.configService.get('PORT')) {
+      return this.configService.get('PORT');
+    }
+    return this.configService.get('API_PORT');
+  }
+
   get<T = any>(
     propertyPath: string,
     defaultValue: T = undefined,

@@ -19,7 +19,7 @@ async function bootstrap() {
   const appConfigService: ConfigurationService = app.get(
     'ConfigurationService',
   );
-  const port = appConfigService.get('API_PORT');
+  const port = appConfigService.APIPort;
   const rootUrl = appConfigService.get('API_ROOT_URL');
 
   app.enableCors();

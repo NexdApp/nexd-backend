@@ -12,7 +12,7 @@ import { ConfigurationService } from '../configuration/configuration.service';
 export const setupSwagger = (app: INestApplication) => {
   const configService = app.get(ConfigurationService);
   const apiRootUrl = configService.get('API_ROOT_URL');
-  const apiPort = configService.get('API_PORT');
+  const apiPort = configService.APIPort;
 
   const options = new DocumentBuilder()
     .setTitle(SWAGGER_API_NAME)
