@@ -12,6 +12,8 @@ RUN npm clean-install
 # Bundle app source
 COPY . .
 
+RUN npm run build
+
 # Add docs later
 #RUN npm run docs
 

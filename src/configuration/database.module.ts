@@ -12,22 +12,32 @@ import { HelpRequestArticle } from 'src/modules/helpRequests/help-request-articl
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigurationService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DATABASE_HOST'),
-        port: Number(configService.get<string>('DATABASE_PORT')),
-        username: configService.get<string>('DATABASE_USERNAME'),
-        password: configService.get<string>('DATABASE_PASSWORD'),
-        database: configService.get<string>('DATABASE_NAME'),
-        // autoLoadEntities: true,
-        entities: [User, Article, HelpRequest, HelpRequestArticle],
-        synchronize: true,
-        // migrations: [__dirname + '/../../src/migrations/*.ts'],
-        // cli: {
-        //   migrationsDir: __dirname + '/../../src/migrations',
-        // },
-        ssl: false,
-      }),
+      useFactory: (configService: ConfigurationService) => {
+        let dbConfig: any = {
+          host: configService.get<string>('DATABASE_HOST'),
+          port: Number(configService.get<string>('DATABASE_PORT')),
+          username: configService.get<string>('DATABASE_USERNAME'),
+          password: configService.get<string>('DATABASE_PASSWORD'),
+          database: configService.get<string>('DATABASE_NAME'),
+        };
+        if (configService.get<string>('DATABASE_URL')) {
+          dbConfig = {
+            url: configService.get<string>('DATABASE_URL'),
+          };
+        }
+        return {
+          type: 'postgres',
+          ...dbConfig,
+          // autoLoadEntities: true,
+          entities: [User, Article, HelpRequest, HelpRequestArticle],
+          synchronize: true,
+          // migrations: [__dirname + '/../../src/migrations/*.ts'],
+          // cli: {
+          //   migrationsDir: __dirname + '/../../src/migrations',
+          // },
+          ssl: true,
+        };
+      },
     }),
   ],
 })
