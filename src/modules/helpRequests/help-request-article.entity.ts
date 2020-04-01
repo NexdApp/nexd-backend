@@ -27,7 +27,7 @@ export class HelpRequestArticle {
   @JoinColumn({ name: 'articleId' })
   article!: Article;
 
-  @ApiProperty({ type: 'integer' })
+  @ApiProperty({ type: 'long' })
   @Column()
   articleCount!: number;
 

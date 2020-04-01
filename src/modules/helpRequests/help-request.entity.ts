@@ -17,7 +17,7 @@ import { User } from '../users/user.entity';
   name: 'helpRequest',
 })
 export class HelpRequest extends AddressModel {
-  @ApiProperty({ type: 'integer' })
+  @ApiProperty({ type: 'long' })
   @PrimaryGeneratedColumn()
   id!: number;
 
