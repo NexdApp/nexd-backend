@@ -28,7 +28,10 @@ async function bootstrap() {
   const globalPrefix = '/api/v1';
   app.setGlobalPrefix(globalPrefix);
 
-  const url = `${rootUrl}:${port}${globalPrefix}`;
+  // in case of heroku, the listen port is not exposed
+  const externalAPIPort = appConfigService.get('API_PORT');
+
+  const url = `${rootUrl}:${externalAPIPort}${globalPrefix}`;
 
   await app.listen(port);
 
