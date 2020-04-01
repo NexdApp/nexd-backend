@@ -35,7 +35,7 @@ import { HelpRequestArticle } from 'src/modules/helpRequests/help-request-articl
           // cli: {
           //   migrationsDir: __dirname + '/../../src/migrations',
           // },
-          ssl: true,
+          ssl: configService.get<string>('DATABASE_NAME') === 'true',
         };
       },
     }),

@@ -19,6 +19,7 @@ import {
   ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
+  ApiOperation,
 } from '@nestjs/swagger';
 import { HelpRequestsService } from './help-requests.service';
 import { HelpRequest } from './help-request.entity';
@@ -28,6 +29,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 // import { RequestArticleStatusDto } from '../helpList/dto/shopping-list-form.dto';
 import { UserID } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
+import { HelpRequestStatus } from './help-request-status';
 
 @ApiBearerAuth()
 @ApiTags('Help Requests')
@@ -43,6 +45,7 @@ export class HelpRequestsController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get and filter for various help requests' })
   @ApiOkResponse({ description: 'Successful', type: [HelpRequest] })
   @ApiQuery({
     name: 'userId',
@@ -64,6 +67,7 @@ export class HelpRequestsController {
     name: 'status',
     isArray: true,
     required: false,
+    enum: HelpRequestStatus,
     description: 'Array of status to filter for',
   })
   async getAll(
@@ -86,11 +90,12 @@ export class HelpRequestsController {
     return requests;
   }
 
+  @Post()
+  @ApiOperation({ summary: 'Add a help request' })
   @ApiCreatedResponse({
     description: 'Add a complete request including articles.',
     type: HelpRequest,
   })
-  @Post()
   async insertRequestWithArticles(
     @Body() createHelpRequestDto: HelpRequestCreateDto,
     @ReqUser() user: UserID,
@@ -103,6 +108,7 @@ export class HelpRequestsController {
   }
 
   @Get(':helpRequestId')
+  @ApiOperation({ summary: 'Get a single help request by id' })
   @ApiOkResponse({ description: 'Successful', type: HelpRequest })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiNotFoundResponse({ description: 'Request not found' })
@@ -118,6 +124,7 @@ export class HelpRequestsController {
   }
 
   @Put(':helpRequestId')
+  @ApiOperation({ summary: 'Modify a help request (e.g. address or articles)' })
   @ApiOkResponse({ description: 'Successful', type: HelpRequest })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiNotFoundResponse({ description: 'Shopping request not found' })
@@ -133,6 +140,7 @@ export class HelpRequestsController {
   }
 
   // @Put(':helpRequestId/:articleId')
+  // @ApiOperation({ summary: 'Taken out?' })
   // @ApiOkResponse({ description: 'Successful', type: HelpRequest })
   // @ApiBadRequestResponse({ description: 'Bad request' })
   // @ApiNotFoundResponse({ description: 'Request not found' })

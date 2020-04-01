@@ -18,6 +18,7 @@ export class UserResourceOrAdminsecretGuard implements CanActivate {
       return true;
     }
 
-    // check if a resource is requested
+    // check if a resource is requested that is owned by a user
+    // care about query and params with the name userId
   }
 }

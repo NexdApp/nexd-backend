@@ -12,6 +12,7 @@ import {
   ApiNotAcceptableResponse,
   ApiOkResponse,
   ApiTags,
+  ApiOperation,
 } from '@nestjs/swagger';
 
 import { LocalAuthGuard } from './local-auth.guard';
@@ -32,6 +33,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
+  @ApiOperation({ summary: 'Login by email and password ' })
   @ApiOkResponse({
     description: 'Successful Login',
     type: TokenDto,
@@ -42,6 +44,7 @@ export class AuthController {
   }
 
   @Post('register')
+  @ApiOperation({ summary: 'Register with email and password ' })
   @ApiCreatedResponse({
     description: 'Successful Registration',
     type: TokenDto,
@@ -56,6 +59,7 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @ApiOperation({ summary: 'Not yet implemented, token refresh' })
   @ApiCreatedResponse({
     description: 'Successful token refresh',
     type: TokenDto,

@@ -31,6 +31,7 @@ With an automatic reload:
 ## TODO
 
 - [ ] Token content
+- [ ] use class-validator
 - [ ] Pipes (validation...)
 - [ ] Same user or admin guard
 - [ ] permission role model

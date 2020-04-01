@@ -19,20 +19,18 @@ export class HelpRequestArticle {
   @Exclude() // nobody needs to know the relation id
   id!: number;
 
-  @ApiProperty({ type: 'integer' })
+  @ApiProperty({ type: 'long' })
   @Column({ nullable: true })
   articleId: number;
 
-  @ApiProperty({ required: true })
   @OneToOne(type => Article)
   @JoinColumn({ name: 'articleId' })
   article!: Article;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({ type: 'integer' })
   @Column()
   articleCount!: number;
 
-  @ApiProperty({ required: true })
   @Column({ default: false })
   articleDone!: boolean;
 

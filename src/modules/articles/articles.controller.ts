@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiOperation,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -17,6 +18,7 @@ export class ArticlesController {
 
   @Post()
   @UseGuards(AdminSecretGuard)
+  @ApiOperation({ summary: 'Create an article' })
   @ApiCreatedResponse({ description: 'Created', type: Article })
   @ApiBadRequestResponse({ description: 'Bad Request' })
   async insertOne(
@@ -26,6 +28,7 @@ export class ArticlesController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'List articles' })
   @ApiOkResponse({
     description: 'All existing articles',
     type: [Article],

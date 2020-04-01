@@ -21,12 +21,10 @@ export class HelpRequest extends AddressModel {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ApiProperty()
   @Column()
   @CreateDateColumn()
   created_at!: Date;
 
-  @ApiProperty()
   @Column({
     name: 'priority',
     type: 'enum',
@@ -35,32 +33,24 @@ export class HelpRequest extends AddressModel {
   })
   priority?: string;
 
-  @ApiProperty()
   @Column({ nullable: true })
   additionalRequest?: string;
 
-  @ApiProperty()
   @Column({ nullable: true })
   deliveryComment?: string;
 
-  @ApiProperty()
   @Column({
     length: 255,
     nullable: true,
   })
   phoneNumber?: string;
 
-  @ApiProperty({
-    enum: HelpRequestStatus,
-    default: HelpRequestStatus.PENDING,
-    type: HelpRequestStatus,
-  })
   @Column({
     type: 'enum',
     enum: HelpRequestStatus,
     default: HelpRequestStatus.PENDING,
   })
-  status!: string;
+  status!: HelpRequestStatus;
 
   @ApiProperty({ type: [HelpRequestArticle] })
   @OneToMany(

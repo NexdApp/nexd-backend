@@ -1,11 +1,6 @@
-import {
-  BadRequestException,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, createQueryBuilder, In } from 'typeorm';
+import { Repository, In } from 'typeorm';
 
 import { HelpRequest } from './help-request.entity';
 import { HelpRequestCreateDto } from './dto/help-request-create.dto';
