@@ -12,13 +12,14 @@ import { ConfigurationService } from '../configuration/configuration.service';
 export const setupSwagger = (app: INestApplication) => {
   const configService = app.get(ConfigurationService);
   const apiRootUrl = configService.get('API_ROOT_URL');
-  const apiPort = configService.APIPort;
+  // in case of heroku, the listen port is not exposed
+  const externalAPIPort = configService.get('API_PORT');
 
   const options = new DocumentBuilder()
     .setTitle(SWAGGER_API_NAME)
     .setDescription(SWAGGER_API_DESCRIPTION)
     .setVersion(SWAGGER_API_CURRENT_VERSION)
-    .addServer(`${apiRootUrl}:${apiPort}`)
+    .addServer(`${apiRootUrl}:${externalAPIPort}`)
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
