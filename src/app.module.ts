@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { ArticlesModule } from './modules/articles/articles.modules';
 import { HelpRequestsModule } from './modules/helpRequests/help-requests.module';
+import { HelpListsModule } from './modules/helpLists/help-lists.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { HelpRequestsModule } from './modules/helpRequests/help-requests.module'
     AuthModule,
     ArticlesModule,
     HelpRequestsModule,
+    HelpListsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

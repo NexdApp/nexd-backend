@@ -12,9 +12,10 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
-  app.use(requestLoggerMiddleware);
+  const globalPrefix = '/api/v1';
+  setupSwagger(app, globalPrefix);
 
-  setupSwagger(app);
+  app.use(requestLoggerMiddleware);
 
   const appConfigService: ConfigurationService = app.get(
     'ConfigurationService',
@@ -25,7 +26,6 @@ async function bootstrap() {
   app.enableCors();
   app.use(helmet());
 
-  const globalPrefix = '/api/v1';
   app.setGlobalPrefix(globalPrefix);
 
   // in case of heroku, the listen port is not exposed

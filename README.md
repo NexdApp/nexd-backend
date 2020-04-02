@@ -44,3 +44,4 @@ With an automatic reload:
 - [ ] env config validation
 - [ ] HMR
 - [ ] exception handling
+- [ ] configuration module in database -> use isDev

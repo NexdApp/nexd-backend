@@ -17,7 +17,9 @@ export class HelpRequestsService {
   ) {}
 
   async get(id: number) {
-    return this.helpRequestRepository.findOne(id, { relations: ['articles'] });
+    return this.helpRequestRepository.findOne(id, {
+      relations: ['articles', 'helpList'],
+    });
   }
 
   async create(createRequestDto: HelpRequestCreateDto, userId: string) {
@@ -58,7 +60,7 @@ export class HelpRequestsService {
     status?: string[];
   }) {
     const where: any = {};
-    const relations = ['articles'];
+    const relations = ['articles', 'helpList'];
 
     if (filters.userId) {
       where.requesterId = filters.userId;

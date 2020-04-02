@@ -12,6 +12,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { HelpRequestStatus } from './help-request-status';
 import { AddressModel } from '../../models/address.model';
 import { User } from '../users/user.entity';
+import { HelpList } from '../helpLists/help-list.entity';
 
 @Entity({
   name: 'helpRequest',
@@ -19,11 +20,11 @@ import { User } from '../users/user.entity';
 export class HelpRequest extends AddressModel {
   @ApiProperty({ type: 'long' })
   @PrimaryGeneratedColumn()
-  id!: number;
+  id?: number;
 
   @Column()
   @CreateDateColumn()
-  created_at!: Date;
+  created_at?: Date;
 
   @Column({
     name: 'priority',
@@ -50,26 +51,25 @@ export class HelpRequest extends AddressModel {
     enum: HelpRequestStatus,
     default: HelpRequestStatus.PENDING,
   })
-  status!: HelpRequestStatus;
+  status?: HelpRequestStatus;
 
-  @ApiProperty({ type: [HelpRequestArticle] })
   @OneToMany(
     type => HelpRequestArticle,
     helpRequestArticle => helpRequestArticle.helpRequest,
     { cascade: true },
   )
-  articles!: HelpRequestArticle[];
+  articles?: HelpRequestArticle[];
 
-  @ApiProperty()
   @Column({ nullable: true })
-  requesterId: string;
+  requesterId?: string;
 
-  @ApiProperty({ type: User })
   @ManyToOne(type => User)
   @JoinColumn({ name: 'requesterId' })
-  requester!: User;
-}
+  requester?: User;
 
-export class RequestFillableFields {
-  requesterId!: number;
+  @ManyToOne(
+    type => HelpList,
+    helpList => helpList.helpRequests,
+  )
+  helpList?: HelpList;
 }

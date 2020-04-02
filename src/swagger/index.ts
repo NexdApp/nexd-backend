@@ -9,7 +9,7 @@ import {
 
 import { ConfigurationService } from '../configuration/configuration.service';
 
-export const setupSwagger = (app: INestApplication) => {
+export const setupSwagger = (app: INestApplication, globalPrefix: string) => {
   const configService = app.get(ConfigurationService);
   const apiRootUrl = configService.get('API_ROOT_URL');
   // in case of heroku, the listen port is not exposed
@@ -19,7 +19,7 @@ export const setupSwagger = (app: INestApplication) => {
     .setTitle(SWAGGER_API_NAME)
     .setDescription(SWAGGER_API_DESCRIPTION)
     .setVersion(SWAGGER_API_CURRENT_VERSION)
-    .addServer(`${apiRootUrl}:${externalAPIPort}`)
+    .addServer(`${apiRootUrl}:${externalAPIPort}${globalPrefix}`)
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);

@@ -6,6 +6,7 @@ import { User } from 'src/modules/users/user.entity';
 import { Article } from 'src/modules/articles/article.entity';
 import { HelpRequest } from 'src/modules/helpRequests/help-request.entity';
 import { HelpRequestArticle } from 'src/modules/helpRequests/help-request-article.entity';
+import { HelpList } from 'src/modules/helpLists/help-list.entity';
 
 @Module({
   imports: [
@@ -29,13 +30,14 @@ import { HelpRequestArticle } from 'src/modules/helpRequests/help-request-articl
           type: 'postgres',
           ...dbConfig,
           // autoLoadEntities: true,
-          entities: [User, Article, HelpRequest, HelpRequestArticle],
+          entities: [User, Article, HelpRequest, HelpRequestArticle, HelpList],
           synchronize: true,
           // migrations: [__dirname + '/../../src/migrations/*.ts'],
           // cli: {
           //   migrationsDir: __dirname + '/../../src/migrations',
           // },
-          ssl: configService.get<string>('DATABASE_NAME') === 'true',
+          ssl: configService.get<string>('DATABASE_SSL') === 'true',
+          logging: true,
         };
       },
     }),
