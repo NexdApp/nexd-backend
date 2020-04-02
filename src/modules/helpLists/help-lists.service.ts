@@ -26,7 +26,7 @@ export class HelpListsService {
   async get(userId: string, helpListId: number) {
     const helpLists = await this.helpListsRepository.findOne(helpListId, {
       where: { ownerId: userId },
-      relations: ['helpRequests'],
+      relations: ['helpRequests', 'helpRequests.articles'],
     });
     if (!helpLists) {
       throw new NotFoundException('Shopping List not found');

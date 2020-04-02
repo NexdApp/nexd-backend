@@ -55,7 +55,3 @@ export class HelpList {
   @RelationId((helpList: HelpList) => helpList.helpRequests)
   helpRequestsIds!: number[];
 }
-
-export class HelpListsFillableFields {
-  owner!: number;
-}

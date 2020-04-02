@@ -67,9 +67,13 @@ export class HelpRequest extends AddressModel {
   @JoinColumn({ name: 'requesterId' })
   requester?: User;
 
+  @Column({ nullable: true })
+  helpListId?: string;
+
   @ManyToOne(
     type => HelpList,
     helpList => helpList.helpRequests,
   )
+  @JoinColumn({ name: 'helpListId' })
   helpList?: HelpList;
 }
