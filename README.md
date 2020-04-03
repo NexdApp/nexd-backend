@@ -45,3 +45,4 @@ With an automatic reload:
 - [ ] HMR
 - [ ] exception handling
 - [ ] configuration module in database -> use isDev
+- [ ] use query builder for upsert of help list request ids

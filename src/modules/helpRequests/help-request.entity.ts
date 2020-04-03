@@ -15,7 +15,7 @@ import { User } from '../users/user.entity';
 import { HelpList } from '../helpLists/help-list.entity';
 
 @Entity({
-  name: 'helpRequest',
+  name: 'helpRequests',
 })
 export class HelpRequest extends AddressModel {
   @ApiProperty({ type: 'long' })

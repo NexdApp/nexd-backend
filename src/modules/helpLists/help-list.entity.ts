@@ -15,7 +15,7 @@ import { HelpRequest } from '../helpRequests/help-request.entity';
 import { User } from '../users/user.entity';
 
 @Entity({
-  name: 'helpList',
+  name: 'helpLists',
 })
 export class HelpList {
   @ApiProperty({ type: 'long' })
@@ -47,7 +47,7 @@ export class HelpList {
   @OneToMany(
     type => HelpRequest,
     helpRequest => helpRequest.helpList,
-    { cascade: true },
+    { cascade: false },
   )
   @JoinColumn({ name: 'helpRequestsIds' })
   helpRequests!: HelpRequest[];

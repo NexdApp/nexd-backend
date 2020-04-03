@@ -18,7 +18,7 @@ export class HelpRequestsService {
 
   async get(id: number) {
     return this.helpRequestRepository.findOne(id, {
-      relations: ['articles', 'helpList'],
+      relations: ['articles', 'helpLists'],
     });
   }
 
@@ -60,7 +60,7 @@ export class HelpRequestsService {
     status?: string[];
   }) {
     const where: any = {};
-    const relations = ['articles', 'helpList'];
+    const relations = ['articles', 'helpLists'];
 
     if (filters.userId) {
       where.requesterId = filters.userId;

@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -21,6 +22,7 @@ import {
   ApiUnauthorizedResponse,
   ApiOperation,
   ApiParam,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { HelpListsService } from './help-lists.service';
 import { HelpList } from './help-list.entity';
@@ -43,25 +45,38 @@ export class HelpListsController {
     private readonly helpRequestService: HelpRequestsService,
   ) {}
 
-  @Get('me')
+  @Get()
   @ApiOperation({ summary: 'Get help lists of the requesting user' })
   @ApiOkResponse({ description: 'Successful', type: [HelpList] })
-  async getUserLists(@ReqUser() user: UserID): Promise<HelpList[]> {
-    return await this.helpListsService.getAllByUser(user.userId);
+  @ApiQuery({
+    name: 'userId',
+    required: false,
+    description: 'If included, filter by userId, otherwise by requesting user.',
+  })
+  async getUserLists(
+    @Query() userId: string,
+    @ReqUser() user: UserID,
+  ): Promise<HelpList[]> {
+    let userIdFilter = userId;
+    if (!userId) {
+      userIdFilter = user.userId;
+    }
+    return await this.helpListsService.getAllByUser(userIdFilter);
   }
 
-  @Get('me/:helpListId')
+  @Get(':helpListId')
+  @ApiOperation({ summary: 'Get a specific help list' })
   @ApiOkResponse({ description: 'Successful', type: HelpList })
   @ApiNotFoundResponse({ description: 'Help list not found' })
   @ApiForbiddenResponse({ description: 'This is not your help list' })
   async findOne(
-    @Param('helpListId') helpListId: number,
+    @Param() helpListId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
     return await this.helpListsService.get(user.userId, helpListId);
   }
 
-  @Post('me')
+  @Post()
   @ApiOperation({ summary: 'Add a new help list for the current user' })
   @ApiCreatedResponse({
     description: 'Added a new help list',
@@ -75,58 +90,90 @@ export class HelpListsController {
     return this.helpListsService.create(user.userId, createRequestDto);
   }
 
-  // @Put(':id')
-  // @ApiOkResponse({ description: 'Successful', type: HelpLists })
-  // @ApiBadRequestResponse({ description: 'Bad request' })
-  // @ApiNotFoundResponse({ description: 'Shopping list not found' })
-  // @ApiForbiddenResponse({ description: 'This is not your shopping list' })
-  // async updateHelpLists(
-  //   @Param('id') id: number,
-  //   @Body() updateHelpLists: HelpListsFormDto,
-  //   @ReqUser() user: UserID,
-  // ): Promise<HelpLists> {
-  //   const HelpLists = await this.findHelpLists(id, user.userId);
-  //   return this.HelpListsService.update(updateHelpLists, HelpLists);
-  // }
+  @Put(':helpListId')
+  @ApiOperation({ summary: 'Modify a help list' })
+  @ApiOkResponse({ description: 'Successful', type: HelpList })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiNotFoundResponse({ description: 'Shopping list not found' })
+  @ApiForbiddenResponse({ description: 'This is not your shopping list' })
+  async updateHelpLists(
+    @Param() helpListId: number,
+    @Body() updateHelpList: HelpListCreateDto,
+    @ReqUser() user: UserID,
+  ): Promise<HelpList> {
+    return this.helpListsService.update(
+      user.userId,
+      helpListId,
+      updateHelpList,
+    );
+  }
 
-  // @Put(':HelpListsId/:requestId')
-  // @ApiOkResponse({ description: 'Successful', type: HelpLists })
-  // @ApiBadRequestResponse({ description: 'Bad request' })
-  // @ApiForbiddenResponse({ description: 'This is not your shopping list' })
-  // @ApiNotFoundResponse({ description: 'Shopping list not found' })
-  // async addRequestToList(
-  //   @Param('HelpListsId') HelpListsId: number,
-  //   @Param('requestId') requestId: number,
-  //   @ReqUser() user: UserID,
-  // ): Promise<HelpLists> {
-  //   const HelpLists = await this.findHelpLists(HelpListsId, user.userId);
-  //   const updateDto = new HelpListsFormDto();
-  //   updateDto.requests = HelpLists.requests.map(r => r.requestId);
-  //   updateDto.requests.push(requestId);
-  //   return this.HelpListsService.update(updateDto, HelpLists);
-  // }
+  @Put(':helpListId/help-request/:helpRequestId')
+  @ApiOperation({ summary: 'Add a help request to a help list' })
+  @ApiOkResponse({ description: 'Successful', type: HelpList })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiForbiddenResponse({ description: 'This is not your shopping list' })
+  @ApiNotFoundResponse({ description: 'Shopping list not found' })
+  async addHelpRequestToList(
+    @Param() helpListsId: number,
+    @Param() helpRequestId: number,
+    @ReqUser() user: UserID,
+  ): Promise<HelpList> {
+    return;
+  }
 
-  // @Delete(':HelpListsId/:requestId')
-  // @ApiOkResponse({ description: 'Successful', type: HelpLists })
-  // @ApiBadRequestResponse({ description: 'Bad request' })
-  // @ApiForbiddenResponse({ description: 'This is not your shopping list' })
-  // @ApiNotFoundResponse({ description: 'Shopping list not found' })
-  // async deleteRequestFromList(
-  //   @Param('HelpListsId') HelpListsId: number,
-  //   @Param('requestId') requestId: number,
-  //   @ReqUser() user: UserID,
-  // ): Promise<HelpLists> {
-  //   const HelpLists = await this.findHelpLists(HelpListsId, user.userId);
-  //   return this.HelpListsService.removeRequest(requestId, HelpLists);
-  // }
+  @Delete(':helpListId/help-request/:helpRequestId')
+  @ApiOperation({ summary: 'Delete a help request from help list' })
+  @ApiOkResponse({ description: 'Successful', type: HelpList })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiForbiddenResponse({ description: 'This is not your shopping list' })
+  @ApiNotFoundResponse({ description: 'Shopping list not found' })
+  async deleteHelpRequestFromHelpList(
+    @Param() helpListId: number,
+    @Param() helpRequestId: number,
+    @ReqUser() user: UserID,
+  ): Promise<HelpList> {
+    return;
+  }
 
-  // private async findHelpLists(id: number, userId: number) {
-  //   const HelpLists = await this.HelpListsService.get(id);
-  //   if (HelpLists.owner !== userId) {
-  //     throw new ForbiddenException(
-  //       'You can only see or edit your own shopping lists!',
-  //     );
-  //   }
-  //   return HelpLists;
-  // }
+  @Put(':helpListId/help-request/:helpRequestId/article/:articleId')
+  @ApiOperation({
+    summary: 'Set/unset articleDone of an article in a specific help request',
+  })
+  @ApiOkResponse({ description: 'Successful', type: HelpList })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiForbiddenResponse({ description: 'This is not your shopping list' })
+  @ApiNotFoundResponse({ description: 'Shopping list not found' })
+  @ApiQuery({
+    name: 'articleDone',
+    description: 'true to set the article as "bought"',
+  })
+  async modifyArticleInHelpRequest(
+    @Query() articleDone: boolean,
+    @Param() helpListId: number,
+    @Param() helpRequestId: number,
+    @ReqUser() user: UserID,
+  ): Promise<HelpList> {
+    console.log(articleDone);
+    return;
+  }
+
+  @Put(':helpListId/article/:articleId')
+  @ApiOperation({ summary: 'Set/unset article done in all help requests' })
+  @ApiOkResponse({ description: 'Successful', type: HelpList })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiForbiddenResponse({ description: 'This is not your shopping list' })
+  @ApiNotFoundResponse({ description: 'Shopping list not found' })
+  @ApiQuery({
+    name: 'articleDone',
+    description: 'true to set the article as "bought"',
+  })
+  async modifyArticleInAllHelpRequests(
+    @Query() articleDone: boolean,
+    @Param() helpListId: number,
+    @Param() articleId: number,
+    @ReqUser() user: UserID,
+  ): Promise<HelpList> {
+    return;
+  }
 }

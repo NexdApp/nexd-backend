@@ -50,7 +50,8 @@ export class HelpRequestsController {
   @ApiQuery({
     name: 'userId',
     required: false,
-    description: 'Filter by userId',
+    description:
+      'If included, filter by userId, "me" for the requesting user, otherwise all users are replied.',
   })
   @ApiQuery({
     name: 'zipCode',
@@ -138,24 +139,4 @@ export class HelpRequestsController {
     );
     return entity;
   }
-
-  // @Put(':helpRequestId/:articleId')
-  // @ApiOperation({ summary: 'Taken out?' })
-  // @ApiOkResponse({ description: 'Successful', type: HelpRequest })
-  // @ApiBadRequestResponse({ description: 'Bad request' })
-  // @ApiNotFoundResponse({ description: 'Request not found' })
-  // async markArticleAsDone(
-  //   @Param('helpRequestId') helpRequestId: number,
-  //   @Param('articleId') articleId: number,
-  //   @Body() articleStatus: RequestArticleStatusDto,
-  //   @ReqUser() user: UserID,
-  // ): Promise<HelpRequest> {
-  //   const entity = await this.helpRequestsService.updateRequestArticle(
-  //     helpRequestId,
-  //     articleId,
-  //     articleStatus,
-  //   );
-  //   entity.requester = await this.usersService.getById(entity.requesterId);
-  //   return entity;
-  // }
 }

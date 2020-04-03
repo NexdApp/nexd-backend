@@ -36,14 +36,13 @@ export class HelpListsService {
 
   async create(userId: string, createRequestDto: HelpListCreateDto) {
     const helpList = new HelpList();
-    console.log(createRequestDto.helpRequestsIds);
     if (createRequestDto.helpRequestsIds) {
+      // take the help requests and update them
+
       helpList.helpRequests = createRequestDto.helpRequestsIds.map(h => ({
         id: h,
       }));
     }
-    console.log(helpList.helpRequests);
-    // this.populateHelpList(createRequestDto, helpList);
     helpList.ownerId = userId;
     helpList.status = HelpListStatus.ACTIVE;
 
@@ -57,10 +56,15 @@ export class HelpListsService {
     });
   }
 
-  // async update(form: HelpListsFormDto, HelpLists: HelpLists) {
-  //   this.populateHelpLists(form, HelpLists);
-  //   return await this.helpListsRepository.save(HelpLists);
-  // }
+  async update(
+    userId: string,
+    helpListId: number,
+    helpList: HelpListCreateDto,
+  ): Promise<HelpList> {
+    return;
+    // this.populateHelpLists(form, HelpLists);
+    // return await this.helpListsRepository.save(HelpLists);
+  }
 
   // async removeRequest(requestId: number, HelpLists: HelpLists) {
   //   const index = HelpLists.requests.findIndex(
@@ -80,8 +84,9 @@ export class HelpListsService {
   //   }
   // }
 
-  // private populateHelpLists(helpListCreateDto: HelpListCreateDto, helpList: HelpList) {
-  //   helpList.status = helpListCreateDto.status;
+  // private populateHelpLists(
+  //   requestIds:
+  // ) {
   //   if (helpListCreateDto.helpRequestIds) {
   //     helpListCreateDto.helpRequestIds.forEach(async reqId => {
   //       await this.addRequestToList(reqId, to);
