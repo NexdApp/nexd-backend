@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -73,10 +74,10 @@ export class HelpRequestsController {
     description: 'Array of status to filter for',
   })
   async getAll(
-    @Query('userId') userId: string,
-    @Query('zipCode') zipCode: string[],
-    @Query('includeRequester') includeRequester: string,
-    @Query('status') status: string[],
+    @Query() userId: string,
+    @Query() zipCode: string[],
+    @Query() includeRequester: string,
+    @Query() status: string[],
     @ReqUser() user: any,
   ): Promise<HelpRequest[]> {
     let userIdFilter = userId;
@@ -114,9 +115,7 @@ export class HelpRequestsController {
   @ApiOkResponse({ description: 'Successful', type: HelpRequest })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiNotFoundResponse({ description: 'Request not found' })
-  async getSingleRequest(
-    @Param('helpRequestId') helpRequestId: number,
-  ): Promise<HelpRequest> {
+  async getSingleRequest(@Param() helpRequestId: number): Promise<HelpRequest> {
     const entity = await this.helpRequestsService.get(helpRequestId);
     if (!entity) {
       throw new NotFoundException('This shopping request does not exist');
@@ -129,15 +128,40 @@ export class HelpRequestsController {
   @ApiOperation({ summary: 'Modify a help request (e.g. address or articles)' })
   @ApiOkResponse({ description: 'Successful', type: HelpRequest })
   @ApiBadRequestResponse({ description: 'Bad request' })
-  @ApiNotFoundResponse({ description: 'Shopping request not found' })
+  @ApiNotFoundResponse({ description: 'Help request not found' })
   async updateRequest(
-    @Param('helpRequestId') helpRequestId: number,
+    @Param() helpRequestId: number,
     @Body() helpRequestCreateDto: HelpRequestCreateDto,
   ): Promise<HelpRequest> {
-    const entity = await this.helpRequestsService.update(
-      helpRequestId,
-      helpRequestCreateDto,
-    );
-    return entity;
+    // TODO
+    return;
+  }
+
+  @Put(':helpRequestId/article/:articleId')
+  @ApiOperation({ summary: 'Put an article to a help request' })
+  @ApiOkResponse({ description: 'Successful', type: HelpRequest })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiNotFoundResponse({ description: 'Help request not found' })
+  async addArticleInHelpRequest(
+    @Param() helpRequestId: number,
+    @Param() articleId: number,
+    @Body() helpRequestCreateDto: HelpRequestCreateDto,
+  ): Promise<HelpRequest> {
+    // TODO
+    return;
+  }
+
+  @Delete(':helpRequestId/article/:articleId')
+  @ApiOperation({ summary: 'Remove an article from a help request' })
+  @ApiOkResponse({ description: 'Successful', type: HelpRequest })
+  @ApiBadRequestResponse({ description: 'Bad request' })
+  @ApiNotFoundResponse({ description: 'Help request not found' })
+  async removeArticleInHelpRequest(
+    @Param() helpRequestId: number,
+    @Param() articleId: number,
+    @Body() helpRequestCreateDto: HelpRequestCreateDto,
+  ): Promise<HelpRequest> {
+    // TODO
+    return;
   }
 }
