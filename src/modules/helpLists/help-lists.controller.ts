@@ -54,7 +54,7 @@ export class HelpListsController {
     description: 'If included, filter by userId, otherwise by requesting user.',
   })
   async getUserLists(
-    @Query() userId: string,
+    @Query('userId') userId: string,
     @ReqUser() user: UserID,
   ): Promise<HelpList[]> {
     let userIdFilter = userId;
@@ -70,7 +70,7 @@ export class HelpListsController {
   @ApiNotFoundResponse({ description: 'Help list not found' })
   @ApiForbiddenResponse({ description: 'This is not your help list' })
   async findOne(
-    @Param() helpListId: number,
+    @Param('helpListId') helpListId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
     return await this.helpListsService.get(user.userId, helpListId);
@@ -97,7 +97,7 @@ export class HelpListsController {
   @ApiNotFoundResponse({ description: 'Shopping list not found' })
   @ApiForbiddenResponse({ description: 'This is not your shopping list' })
   async updateHelpLists(
-    @Param() helpListId: number,
+    @Param('helpListId') helpListId: number,
     @Body() updateHelpList: HelpListCreateDto,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
@@ -115,10 +115,11 @@ export class HelpListsController {
   @ApiForbiddenResponse({ description: 'This is not your shopping list' })
   @ApiNotFoundResponse({ description: 'Shopping list not found' })
   async addHelpRequestToList(
-    @Param() helpListsId: number,
-    @Param() helpRequestId: number,
+    @Param('helpListId') helpListId: number,
+    @Param('helpRequestId') helpRequestId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
+    // TODO
     return;
   }
 
@@ -129,10 +130,11 @@ export class HelpListsController {
   @ApiForbiddenResponse({ description: 'This is not your shopping list' })
   @ApiNotFoundResponse({ description: 'Shopping list not found' })
   async deleteHelpRequestFromHelpList(
-    @Param() helpListId: number,
-    @Param() helpRequestId: number,
+    @Param('helpListId') helpListId: number,
+    @Param('helpRequestId') helpRequestId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
+    // TODO
     return;
   }
 
@@ -149,12 +151,13 @@ export class HelpListsController {
     description: 'true to set the article as "bought"',
   })
   async modifyArticleInHelpRequest(
-    @Query() articleDone: boolean,
-    @Param() helpListId: number,
-    @Param() helpRequestId: number,
+    @Query('articleDone') articleDone: string,
+    @Param('helpListId') helpListId: number,
+    @Param('helpRequestId') helpRequestId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    console.log(articleDone);
+    console.log(typeof articleDone);
+    // TODO
     return;
   }
 
@@ -170,7 +173,7 @@ export class HelpListsController {
   })
   async modifyArticleInAllHelpRequests(
     @Query() articleDone: boolean,
-    @Param() helpListId: number,
+    @Param('helpListId') helpListId: number,
     @Param() articleId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
