@@ -55,8 +55,9 @@ export class HelpRequestsController {
   })
   @ApiQuery({
     name: 'zipCode',
+    isArray: true,
     required: false,
-    description: 'Filter by zipCode',
+    description: 'Filter by an array of zipCodes',
   })
   @ApiQuery({
     name: 'includeRequester',
@@ -73,7 +74,7 @@ export class HelpRequestsController {
   })
   async getAll(
     @Query('userId') userId: string,
-    @Query('zipCode') zipCode: string,
+    @Query('zipCode') zipCode: string[],
     @Query('includeRequester') includeRequester: string,
     @Query('status') status: string[],
     @ReqUser() user: any,

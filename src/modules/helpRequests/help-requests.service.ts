@@ -18,7 +18,7 @@ export class HelpRequestsService {
 
   async get(id: number) {
     return this.helpRequestRepository.findOne(id, {
-      relations: ['articles', 'helpLists'],
+      relations: ['articles'],
     });
   }
 
@@ -55,18 +55,18 @@ export class HelpRequestsService {
 
   async getAll(filters: {
     userId?: string;
-    zipCode?: string;
+    zipCode?: string[];
     includeRequester?: boolean;
     status?: string[];
   }) {
     const where: any = {};
-    const relations = ['articles', 'helpLists'];
+    const relations = ['articles'];
 
     if (filters.userId) {
       where.requesterId = filters.userId;
     }
     if (filters.zipCode) {
-      where.zipCode = filters.zipCode;
+      where.zipCode = In(filters.zipCode);
     }
     if (filters.status) {
       where.status = In(filters.status);
