@@ -7,7 +7,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class Article {
   @ApiProperty({
     description: 'Auto-incremented id of an article.',
-    type: 'long',
+    type: 'integer',
   })
   @PrimaryGeneratedColumn()
   id!: number;

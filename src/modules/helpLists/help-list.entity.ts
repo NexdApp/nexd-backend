@@ -18,7 +18,7 @@ import { User } from '../users/user.entity';
   name: 'helpLists',
 })
 export class HelpList {
-  @ApiProperty({ type: 'long' })
+  @ApiProperty({ type: 'integer' })
   @PrimaryGeneratedColumn()
   id!: number;
 

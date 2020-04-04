@@ -65,10 +65,8 @@ export class AuthController {
     type: TokenDto,
   })
   @ApiBadRequestResponse({ description: 'Bad Request' })
-  async refreshToken(@Body() payload: RegisterDto): Promise<TokenDto> {
-    const user = await this.usersService.create(payload);
-    this.logger.log(`User registered: ${user.id}`);
-    this.logger.debug(`Email: ${payload.email}`);
-    return await this.authService.createToken(user);
+  async refreshToken(@Body() token: TokenDto): Promise<TokenDto> {
+    // TODO
+    return;
   }
 }

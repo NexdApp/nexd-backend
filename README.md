@@ -1,5 +1,7 @@
 # Nexd project
 
+![Push Container to Heroku](https://github.com/NexdApp/nexd-backend/workflows/Push%20Container%20to%20Heroku/badge.svg)
+
 ## Introduction
 
 ## Getting started
@@ -32,7 +34,7 @@ With an automatic reload:
 
 - [ ] Token content
 - [ ] use class-validator
-- [ ] Pipes (validation...)
+- [x] Pipes (validation...)
 - [ ] Same user or admin guard
 - [ ] permission role model
 - [ ] permission role decorators
