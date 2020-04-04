@@ -4,6 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
 import { UserRole } from './user-role';
 import { AddressModel } from '../../models/address.model';
 import * as bcrypt from 'bcrypt';
+import { ApiHideProperty } from '@nestjs/swagger';
 
 @Entity({
   name: 'users',
@@ -34,6 +35,7 @@ export class User extends AddressModel {
   })
   telephone?: string;
 
+  @ApiHideProperty()
   @Column()
   @Exclude()
   password: string;
