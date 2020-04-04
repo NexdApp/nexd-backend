@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigurationService } from './configuration.service';
-import { User } from 'src/modules/users/user.entity';
-import { Article } from 'src/modules/articles/article.entity';
-import { HelpRequest } from 'src/modules/helpRequests/help-request.entity';
-import { HelpRequestArticle } from 'src/modules/helpRequests/help-request-article.entity';
-import { HelpList } from 'src/modules/helpLists/help-list.entity';
+import { User } from '../modules/users/user.entity';
+import { Article } from '../modules/articles/article.entity';
+import { HelpRequest } from '../modules/helpRequests/help-request.entity';
+import { HelpRequestArticle } from '../modules/helpRequests/help-request-article.entity';
+import { HelpList } from '../modules/helpLists/help-list.entity';
 
 @Module({
   imports: [
@@ -32,9 +32,9 @@ import { HelpList } from 'src/modules/helpLists/help-list.entity';
           // autoLoadEntities: true,
           entities: [User, Article, HelpRequest, HelpRequestArticle, HelpList],
           synchronize: true,
-          // migrations: [__dirname + '/../../src/migrations/*.ts'],
+          // migrations: [__dirname + '/../../../migrations/*.ts'],
           // cli: {
-          //   migrationsDir: __dirname + '/../../src/migrations',
+          //   migrationsDir: __dirname + '/../../../migrations',
           // },
           ssl: configService.get<string>('DATABASE_SSL') === 'true',
           logging: true,

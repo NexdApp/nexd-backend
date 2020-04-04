@@ -5,13 +5,15 @@ import { HelpRequestStatus } from '../help-request-status';
 export class CreateHelpRequestArticleDto {
   @ApiProperty({
     description: 'Article ID received from the article list',
-    type: 'long',
+    type: 'integer',
+    format: 'int64',
   })
   readonly articleId!: number;
 
   @ApiProperty({
     description: 'Number of items',
-    type: 'long',
+    type: 'integer',
+    format: 'int64',
   })
   readonly articleCount!: number;
 }

@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { ConfigurationService } from 'src/configuration/configuration.service';
+import { ConfigurationService } from '../../configuration/configuration.service';
 import { Request } from 'express';
 
 @Injectable()

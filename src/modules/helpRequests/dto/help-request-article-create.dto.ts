@@ -5,7 +5,8 @@ export class CreateOrUpdateHelpRequestArticleDto {
 
   @ApiProperty({
     description: 'Number of items',
-    type: 'long',
+    type: 'integer',
+    format: 'int64',
   })
   readonly articleCount!: number;
 }

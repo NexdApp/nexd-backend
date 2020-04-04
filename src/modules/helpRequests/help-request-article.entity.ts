@@ -1,10 +1,9 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  JoinColumn,
-  OneToOne,
 } from 'typeorm';
 import { HelpRequest } from './help-request.entity';
 import { ApiProperty } from '@nestjs/swagger';
@@ -19,7 +18,10 @@ export class HelpRequestArticle {
   @Exclude() // nobody needs to know the relation id
   id!: number;
 
-  @ApiProperty({ type: 'long' })
+  @ApiProperty({
+    type: 'integer',
+    format: 'int64',
+  })
   @Column({ nullable: true })
   articleId!: number;
 
@@ -27,7 +29,10 @@ export class HelpRequestArticle {
   @JoinColumn({ name: 'articleId' })
   article!: Article;
 
-  @ApiProperty({ type: 'long' })
+  @ApiProperty({
+    type: 'integer',
+    format: 'int64',
+  })
   @Column()
   articleCount!: number;
 
