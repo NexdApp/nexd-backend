@@ -180,6 +180,7 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpListId',
     description: 'Id of the help list',
+    type: 'integer',
   })
   @ApiParam({
     name: 'helpRequestId',
@@ -197,16 +198,14 @@ export class HelpListsController {
   async modifyArticleInHelpRequest(
     @Query('articleDone', ParseBoolPipe) articleDone: boolean,
     @Param('helpListId', HelpListByIdPipe) helpList: HelpList,
-    @Param('helpRequestId', HelpRequestByIdPipe) helpRequest: HelpRequest,
+    @Param('helpRequestId', ParseIntPipe) helpRequestId: number,
     @Param('articleId', ParseIntPipe) articleId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    console.log(typeof articleDone);
-    console.log(articleDone);
     return this.helpListsService.changeArticleDone(
       user.userId,
       helpList,
-      helpRequest,
+      helpRequestId,
       articleId,
       articleDone,
     );

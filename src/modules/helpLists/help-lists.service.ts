@@ -65,7 +65,12 @@ export class HelpListsService {
   async getAllByUser(userId: string) {
     return await this.helpListsRepository.find({
       where: { ownerId: userId },
-      relations: ['helpRequests', 'helpRequests.requester'],
+      relations: [
+        'helpRequests',
+        'helpRequests.requester',
+        'helpRequests.articles',
+        'helpRequests.articles.article',
+      ],
     });
   }
 
@@ -119,7 +124,7 @@ export class HelpListsService {
   async changeArticleDone(
     userId: string,
     helpList: HelpList,
-    helpRequest: HelpRequest,
+    helpRequestId: number,
     articleId: number,
     articleDone: boolean,
   ) {
@@ -127,6 +132,22 @@ export class HelpListsService {
       throw new ForbiddenException('The help list does not belong to you');
     }
 
+    const helpRequest = helpList.helpRequests.find(
+      request => request.id === helpRequestId,
+    );
+
+    if (!helpRequest) {
+      throw new NotFoundException('The help request is not in this help list');
+    }
+
+    const article = helpRequest.articles.find(
+      art => art.articleId === articleId,
+    );
+
+    if (!article) {
+      throw new NotFoundException('Article not found in request');
+    }
+    article.articleDone = articleDone;
     return await this.helpListsRepository.save(helpList);
   }
 }
