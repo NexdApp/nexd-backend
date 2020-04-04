@@ -107,10 +107,12 @@ export class HelpRequestsService {
   }
 
   async removeArticle(helpRequest: HelpRequest, articleId: number) {
-    helpRequest.articles.splice(
-      helpRequest.articles.findIndex(art => (art.articleId = articleId)),
-      1,
+    const index = helpRequest.articles.findIndex(
+      art => art.articleId == articleId,
     );
+    if (index > -1) {
+      helpRequest.articles.splice(index, 1);
+    }
     return await this.helpRequestRepository.save(helpRequest);
   }
 
