@@ -3,6 +3,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -23,9 +24,19 @@ export class HelpListsService {
     private readonly requestRepository: Repository<HelpRequest>,
   ) {}
 
-  async getById(userId: string, helpListId: number) {
+  async getById(
+    userId: string,
+    helpListId: number,
+    options: {
+      checkOwner: boolean;
+    } = { checkOwner: true },
+  ) {
+    const where: any = {};
+    if (options.checkOwner) {
+      where.ownerId = userId;
+    }
     const helpLists = await this.helpListsRepository.findOne(helpListId, {
-      where: { ownerId: userId },
+      where,
       relations: ['helpRequests', 'helpRequests.articles'],
     });
     if (!helpLists) {
@@ -58,12 +69,23 @@ export class HelpListsService {
 
   async update(
     userId: string,
-    helpListId: number,
-    helpList: HelpListCreateDto,
+    helpList: HelpList,
+    helpListUpdate: HelpListCreateDto,
   ): Promise<HelpList> {
-    return;
-    // this.populateHelpLists(form, HelpLists);
-    // return await this.helpListsRepository.save(HelpLists);
+    if (userId !== helpList.ownerId) {
+      throw new ForbiddenException('The help list does not belong to you');
+    }
+    if (helpListUpdate.status) {
+      helpList.status = helpListUpdate.status;
+    }
+    if (helpListUpdate.helpRequestsIds) {
+      helpList.helpRequests = helpListUpdate.helpRequestsIds.map(id => {
+        const re = new HelpRequest();
+        re.id = id;
+        return re;
+      });
+    }
+    return await this.helpListsRepository.save(helpList);
   }
 
   // async removeRequest(requestId: number, HelpLists: HelpLists) {

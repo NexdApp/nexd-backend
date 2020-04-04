@@ -31,6 +31,9 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { HelpRequestsService } from '../helpRequests/help-requests.service';
 import { ReqUser } from 'src/decorators/user.decorator';
 import { UserID } from '../users/user.entity';
+import { HelpRequestByIdPipe } from '../helpRequests/help-request-by-id.pipe';
+import { HelpRequest } from '../helpRequests/help-request.entity';
+import { HelpListByIdPipe } from './help-list-by-id.pipe';
 
 @ApiBearerAuth()
 @ApiTags('Help Lists')
@@ -103,17 +106,14 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpListId',
     description: 'Id of the help list',
+    type: 'number',
   })
   async updateHelpLists(
-    @Param('helpListId') helpListId: number,
+    @Param('helpListId', HelpListByIdPipe) helpList: HelpList,
     @Body() updateHelpList: HelpListCreateDto,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    return this.helpListsService.update(
-      user.userId,
-      helpListId,
-      updateHelpList,
-    );
+    return this.helpListsService.update(user.userId, helpList, updateHelpList);
   }
 
   @Put(':helpListId/help-request/:helpRequestId')
