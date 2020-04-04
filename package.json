@@ -35,9 +35,14 @@
     "@nestjs/platform-express": "^7.0.0",
     "@nestjs/swagger": "^4.5.1",
     "@nestjs/typeorm": "^7.0.0",
+    "@types/multer": "^1.4.2",
+    "@types/multer-s3": "^2.7.7",
+    "aws-sdk": "^2.653.0",
     "bcrypt": "^4.0.1",
     "class-transformer": "^0.2.3",
     "helmet": "^3.22.0",
+    "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
@@ -46,6 +51,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
     "swagger-ui-express": "^4.1.4",
+    "twilio": "^3.42.0",
     "typeorm": "^0.2.24"
   },
   "devDependencies": {

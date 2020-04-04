@@ -9,6 +9,7 @@ import { ConfigurationModule } from './configuration/configuration.module';
 import { ArticlesModule } from './modules/articles/articles.modules';
 import { HelpRequestsModule } from './modules/helpRequests/help-requests.module';
 import { HelpListsModule } from './modules/helpLists/help-lists.module';
+import { CallsModule } from './modules/calls/calls.module';
 
 @Module({
   imports: [
@@ -19,8 +20,9 @@ import { HelpListsModule } from './modules/helpLists/help-lists.module';
     ArticlesModule,
     HelpRequestsModule,
     HelpListsModule,
+    CallsModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
