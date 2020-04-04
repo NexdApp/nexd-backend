@@ -19,7 +19,7 @@ export class HelpRequestsService {
 
   async get(id: number) {
     return this.helpRequestRepository.findOne(id, {
-      relations: ['articles'],
+      relations: ['articles', 'articles.article'],
     });
   }
 
@@ -61,7 +61,7 @@ export class HelpRequestsService {
     status?: string[];
   }) {
     const where: any = {};
-    const relations = ['articles'];
+    const relations = ['articles', 'articles.article'];
 
     if (filters.userId) {
       where.requesterId = filters.userId;

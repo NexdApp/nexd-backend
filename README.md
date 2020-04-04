@@ -4,6 +4,8 @@
 
 ## Introduction
 
+The backend for nexd is build using [nest.js](https://nestjs.com/).
+
 ## Getting started
 
 Please install the node modules:
@@ -26,9 +28,17 @@ With an automatic reload:
 
 ## Environments
 
+### Local development
+
 ## CI/CD
 
+For the sake of simplicity, a single docker container is build using the github actions.
+
+Currently, this container is pushed directly to heroku. Later on, it is supposed to be pushed to the github container registry as well.
+
 ## Database
+
+Postgres is used.
 
 ## TODO
 

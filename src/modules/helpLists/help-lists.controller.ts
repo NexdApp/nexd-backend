@@ -77,7 +77,7 @@ export class HelpListsController {
     @Param('helpListId') helpListId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    return await this.helpListsService.get(user.userId, helpListId);
+    return await this.helpListsService.getById(user.userId, helpListId);
   }
 
   @Post()
