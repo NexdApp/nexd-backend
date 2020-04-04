@@ -164,8 +164,21 @@ export class HelpListsService {
   async changeArticleDoneForAll(
     userId: string,
     helpList: HelpList,
-    helpRequestId: number,
     articleId: number,
     articleDone: boolean,
-  ) {}
+  ) {
+    if (userId !== helpList.ownerId) {
+      throw new ForbiddenException('The help list does not belong to you');
+    }
+
+    helpList.helpRequests.forEach(request => {
+      request.articles.forEach(article => {
+        if (article.articleId === articleId) {
+          article.articleDone = articleDone;
+        }
+      });
+    });
+
+    return await this.helpListsRepository.save(helpList);
+  }
 }

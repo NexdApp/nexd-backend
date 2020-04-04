@@ -232,6 +232,11 @@ export class HelpListsController {
     @Param('articleId', ParseIntPipe) articleId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    return;
+    return this.helpListsService.changeArticleDoneForAll(
+      user.userId,
+      helpList,
+      articleId,
+      articleDone,
+    );
   }
 }
