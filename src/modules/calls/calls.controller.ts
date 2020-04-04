@@ -4,7 +4,6 @@ import {
   Body,
   HttpStatus,
   UseInterceptors,
-  Req,
   Res,
   Param,
   Put,
