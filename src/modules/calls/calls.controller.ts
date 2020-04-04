@@ -10,10 +10,12 @@ import {
   ClassSerializerInterceptor,
   Post,
   UseGuards,
+  Redirect,
 } from '@nestjs/common';
 import {
   ApiResponse,
   ApiParam,
+  ApiOperation,
   ApiUnauthorizedResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -35,6 +37,7 @@ export class CallsController {
   ) { }
 
   @Post('twilio/call')
+  @ApiOperation({ summary: 'Enpoint for incoming call webhook from twilio' })
   @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
@@ -62,6 +65,7 @@ export class CallsController {
   }
 
   @Post('twilio/recorded')
+  @ApiOperation({ summary: 'Enpoint for finished call recording from twilio ' })
   async receiveRecording(@Res() res: any, @Body() body: any): Promise<any> {
     this.callService.recorded(body.CallSid, body.RecordingUrl);
     res.status(200).send('Successful');
@@ -69,6 +73,7 @@ export class CallsController {
 
   @UseGuards(JwtAuthGuard)
   @Put('converted/:sid')
+  @ApiOperation({ summary: 'Sets a call as converted to shopping list' })
   @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
@@ -89,6 +94,7 @@ export class CallsController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('calls')
+  @ApiOperation({ summary: 'Returns all calls with the given parameters' })
   @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
@@ -96,17 +102,20 @@ export class CallsController {
     return await this.callService.queryCalls(body);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('calls/:sid/record')
+  @ApiOperation({ summary: 'Redirects the request to the stored record file' })
   @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
+  @Redirect('')
   async getCallUrl(@Param('sid') sid: string): Promise<any> {
-    return await this.callService.getCallRecord(sid);
+    const url = await this.callService.getCallRecord(sid);
+    return { statusCode: HttpStatus.FOUND, url };
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('calls/:sid/transcription')
+  @ApiOperation({ summary: 'Redirects the request to the stored transcription file' })
   @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
