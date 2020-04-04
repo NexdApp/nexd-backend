@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  ForbiddenException,
   Get,
   Logger,
   Param,
@@ -30,7 +29,6 @@ import { HelpListsService } from './help-lists.service';
 import { HelpList } from './help-list.entity';
 import { HelpListCreateDto } from './dto/help-list-create.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { HelpRequestsService } from '../helpRequests/help-requests.service';
 import { ReqUser } from 'src/decorators/user.decorator';
 import { UserID } from '../users/user.entity';
 import { HelpRequestByIdPipe } from '../helpRequests/help-request-by-id.pipe';
@@ -45,10 +43,7 @@ import { HelpListByIdPipe } from './help-list-by-id.pipe';
 export class HelpListsController {
   static LOGGER = new Logger('HelpLists', true);
 
-  constructor(
-    private readonly helpListsService: HelpListsService,
-    private readonly helpRequestService: HelpRequestsService,
-  ) {}
+  constructor(private readonly helpListsService: HelpListsService) {}
 
   @Get()
   @ApiOperation({ summary: 'Get help lists of the requesting user' })

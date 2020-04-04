@@ -23,11 +23,11 @@ export class HelpList {
   id!: number;
 
   @Column({ nullable: true })
-  ownerId!: string;
+  ownerId?: string;
 
   @ManyToOne(type => User)
   @JoinColumn({ name: 'ownerId' })
-  owner!: User;
+  owner?: User;
 
   @Column()
   @CreateDateColumn()
