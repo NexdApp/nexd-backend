@@ -2,7 +2,7 @@ import { NestApplication } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { readFileSync } from 'fs';
 import * as path from 'path';
-import { Connection } from 'typeorm';
+import { Connection, createConnection } from 'typeorm';
 import { AppModule } from '../src/app.module';
 
 let app: NestApplication;
@@ -17,7 +17,29 @@ export const prepareApp = async () => {
     imports: [AppModule],
   }).compile();
 
-  connection = await module.get<Connection>(Connection);
+  // connection = await module.get<Connection>(Connection);
+
+  let dbConfig: any = {
+    host: process.env.DATABASE_HOST,
+    port: Number(process.env.DATABASE_PORT),
+    username: process.env.DATABASE_USERNAME,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME,
+  };
+  if (process.env.DATABASE_URL) {
+    dbConfig = {
+      url: process.env.DATABASE_URL,
+    };
+  }
+  testConnection = await createConnection({
+    type: 'postgres',
+    ...dbConfig,
+    schema: 'public',
+    logging: false,
+    synchronize: true,
+    name: 'testConnection',
+    entities: ['src/**/**.entity{.ts,.js}'],
+  });
 
   app = module.createNestApplication();
   await app.init();
@@ -26,9 +48,9 @@ export const prepareApp = async () => {
 
 export const prepareConnection = async () => {
   await testConnection.synchronize(true);
-  await connection.synchronize(true);
+  // await connection.synchronize(true);
 
-  let sql: string = readFileSync(
+  const sql: string = readFileSync(
     path.join(__dirname, './../sql/articles_commands.sql'),
     {
       flag: 'r',

@@ -1,16 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  ForbiddenException,
-  Get,
-  Logger,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -18,19 +6,19 @@ import {
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiTags,
-  ApiUnauthorizedResponse,
   ApiOperation,
   ApiParam,
   ApiQuery,
+  ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { HelpListsService } from './help-lists.service';
 import { HelpList } from './help-list.entity';
 import { HelpListCreateDto } from './dto/help-list-create.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { HelpRequestsService } from '../helpRequests/help-requests.service';
-import { ReqUser } from 'src/decorators/user.decorator';
 import { UserID } from '../users/user.entity';
+import { ReqUser } from '../../decorators/user.decorator';
 
 @ApiBearerAuth()
 @ApiTags('Help Lists')
