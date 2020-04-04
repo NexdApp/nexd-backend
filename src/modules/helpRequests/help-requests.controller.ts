@@ -11,6 +11,7 @@ import {
   UseGuards,
   Delete,
   ParseIntPipe,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -59,6 +60,12 @@ export class HelpRequestsController {
       'If included, filter by userId, "me" for the requesting user, otherwise all users are replied.',
   })
   @ApiQuery({
+    name: 'excludeUserId',
+    required: false,
+    description:
+      'If true, the given userId is excluded (and not filtered for as default)',
+  })
+  @ApiQuery({
     name: 'zipCode',
     type: [String],
     required: false,
@@ -79,6 +86,7 @@ export class HelpRequestsController {
   })
   async getAll(
     @Query('userId') userId: string,
+    @Query('excludeUserId') excludeUserId: string,
     @Query('zipCode') zipCode: string[],
     @Query('includeRequester') includeRequester: string,
     @Query('status') status: string[],
@@ -90,6 +98,7 @@ export class HelpRequestsController {
     }
     const requests = await this.helpRequestsService.getAll({
       userId: userIdFilter,
+      excludeUserId: excludeUserId === 'true',
       zipCode,
       includeRequester: includeRequester === 'true',
       status,

@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Repository, In, Not } from 'typeorm';
 
 import { HelpRequest } from './help-request.entity';
 import { HelpRequestCreateDto } from './dto/help-request-create.dto';
@@ -58,13 +58,18 @@ export class HelpRequestsService {
     userId?: string;
     zipCode?: string[];
     includeRequester?: boolean;
+    excludeUserId?: boolean;
     status?: string[];
   }) {
     const where: any = {};
     const relations = ['articles', 'articles.article'];
 
     if (filters.userId) {
-      where.requesterId = filters.userId;
+      if (filters.excludeUserId) {
+        where.requesterId = Not(filters.userId);
+      } else {
+        where.requesterId = filters.userId;
+      }
     }
     if (filters.zipCode) {
       where.zipCode = In(filters.zipCode);

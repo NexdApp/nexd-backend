@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as helmet from 'helmet';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 import { setupSwagger } from './swagger';
 import { ConfigurationService } from './configuration/configuration.service';
@@ -25,6 +25,8 @@ async function bootstrap() {
 
   app.enableCors();
   app.use(helmet());
+
+  app.useGlobalPipes(new ValidationPipe());
 
   app.setGlobalPrefix(globalPrefix);
 
