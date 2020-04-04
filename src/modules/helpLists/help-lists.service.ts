@@ -87,9 +87,16 @@ export class HelpListsService {
       helpList.status = helpListUpdate.status;
     }
     if (helpListUpdate.helpRequestsIds) {
+      // remove old ones
+      helpList.helpRequests.forEach(
+        r => (r.status = HelpRequestStatus.PENDING),
+      );
+      await this.helpListsRepository.save(helpList);
+
       helpList.helpRequests = helpListUpdate.helpRequestsIds.map(id => {
         const re = new HelpRequest();
         re.id = id;
+        re.status = HelpRequestStatus.ONGOING;
         return re;
       });
     }
