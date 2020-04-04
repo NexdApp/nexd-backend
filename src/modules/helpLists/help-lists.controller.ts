@@ -216,6 +216,7 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpListId',
     description: 'Id of the help list',
+    type: 'integer',
   })
   @ApiParam({
     name: 'articleId',
