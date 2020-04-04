@@ -120,6 +120,7 @@ export class HelpListsService {
     userId: string,
     helpList: HelpList,
     helpRequest: HelpRequest,
+    articleId: number,
     articleDone: boolean,
   ) {
     if (userId !== helpList.ownerId) {

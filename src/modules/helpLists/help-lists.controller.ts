@@ -10,6 +10,8 @@ import {
   Put,
   UseGuards,
   Query,
+  ParseBoolPipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -106,7 +108,7 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpListId',
     description: 'Id of the help list',
-    type: 'number',
+    type: 'integer',
   })
   async updateHelpLists(
     @Param('helpListId', HelpListByIdPipe) helpList: HelpList,
@@ -125,6 +127,7 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpListId',
     description: 'Id of the help list',
+    type: 'integer',
   })
   @ApiParam({
     name: 'helpRequestId',
@@ -187,19 +190,26 @@ export class HelpListsController {
     description: 'Id of the article',
   })
   @ApiQuery({
+    required: true,
     name: 'articleDone',
     description: 'true to set the article as "bought"',
   })
   async modifyArticleInHelpRequest(
-    @Query('articleDone') articleDone: boolean,
-    @Param('helpListId') helpListId: number,
-    @Param('helpRequestId') helpRequestId: number,
-    @Param('articleId') articleId: number,
+    @Query('articleDone', ParseBoolPipe) articleDone: boolean,
+    @Param('helpListId', HelpListByIdPipe) helpList: HelpList,
+    @Param('helpRequestId', HelpRequestByIdPipe) helpRequest: HelpRequest,
+    @Param('articleId', ParseIntPipe) articleId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
     console.log(typeof articleDone);
-    // TODO
-    return;
+    console.log(articleDone);
+    return this.helpListsService.changeArticleDone(
+      user.userId,
+      helpList,
+      helpRequest,
+      articleId,
+      articleDone,
+    );
   }
 
   @Put(':helpListId/article/:articleId')
