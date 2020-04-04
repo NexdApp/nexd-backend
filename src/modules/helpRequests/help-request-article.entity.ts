@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { HelpRequest } from './help-request.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Article } from '../articles/article.entity';

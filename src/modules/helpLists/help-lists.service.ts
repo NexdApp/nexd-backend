@@ -23,13 +23,13 @@ export class HelpListsService {
     private readonly requestRepository: Repository<HelpRequest>,
   ) {}
 
-  async get(userId: string, helpListId: number) {
+  async getById(userId: string, helpListId: number) {
     const helpLists = await this.helpListsRepository.findOne(helpListId, {
       where: { ownerId: userId },
       relations: ['helpRequests', 'helpRequests.articles'],
     });
     if (!helpLists) {
-      throw new NotFoundException('Shopping List not found');
+      throw new NotFoundException('Help List not found');
     }
     return helpLists;
   }

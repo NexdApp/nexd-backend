@@ -1,6 +1,10 @@
 # Nexd project
 
+![Push Container to Heroku](https://github.com/NexdApp/nexd-backend/workflows/Push%20Container%20to%20Heroku/badge.svg)
+
 ## Introduction
+
+The backend for nexd is build using [nest.js](https://nestjs.com/).
 
 ## Getting started
 
@@ -24,15 +28,23 @@ With an automatic reload:
 
 ## Environments
 
+### Local development
+
 ## CI/CD
 
+For the sake of simplicity, a single docker container is build using the github actions.
+
+Currently, this container is pushed directly to heroku. Later on, it is supposed to be pushed to the github container registry as well.
+
 ## Database
+
+Postgres is used.
 
 ## TODO
 
 - [ ] Token content
 - [ ] use class-validator
-- [ ] Pipes (validation...)
+- [x] Pipes (validation...)
 - [ ] Same user or admin guard
 - [ ] permission role model
 - [ ] permission role decorators

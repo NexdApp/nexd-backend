@@ -20,6 +20,7 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { UsersService } from '../users/users.service';
 import { TokenDto } from './dto/token.dto';
+import { LoginDto } from './dto/login.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -38,7 +39,7 @@ export class AuthController {
     description: 'Successful Login',
     type: TokenDto,
   })
-  async login(@Request() req): Promise<TokenDto> {
+  async login(@Request() req, @Body() _: LoginDto): Promise<TokenDto> {
     this.logger.log(`User login`);
     return await this.authService.createToken(req.user);
   }
@@ -65,10 +66,8 @@ export class AuthController {
     type: TokenDto,
   })
   @ApiBadRequestResponse({ description: 'Bad Request' })
-  async refreshToken(@Body() payload: RegisterDto): Promise<TokenDto> {
-    const user = await this.usersService.create(payload);
-    this.logger.log(`User registered: ${user.id}`);
-    this.logger.debug(`Email: ${payload.email}`);
-    return await this.authService.createToken(user);
+  async refreshToken(@Body() token: TokenDto): Promise<TokenDto> {
+    // TODO
+    return;
   }
 }

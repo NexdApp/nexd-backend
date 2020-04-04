@@ -65,7 +65,7 @@ export class HelpListsController {
     @Param('helpListId') helpListId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    return await this.helpListsService.get(user.userId, helpListId);
+    return await this.helpListsService.getById(user.userId, helpListId);
   }
 
   @Post()
@@ -175,9 +175,10 @@ export class HelpListsController {
     description: 'true to set the article as "bought"',
   })
   async modifyArticleInHelpRequest(
-    @Query('articleDone') articleDone: string,
+    @Query('articleDone') articleDone: boolean,
     @Param('helpListId') helpListId: number,
     @Param('helpRequestId') helpRequestId: number,
+    @Param('articleId') articleId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
     console.log(typeof articleDone);
@@ -194,6 +195,7 @@ export class HelpListsController {
   @ApiQuery({
     name: 'articleDone',
     description: 'true to set the article as "bought"',
+    type: 'boolean',
   })
   @ApiParam({
     name: 'helpListId',
@@ -208,9 +210,9 @@ export class HelpListsController {
     description: 'true to set the article as "bought"',
   })
   async modifyArticleInAllHelpRequests(
-    @Query() articleDone: boolean,
+    @Query('articleDone') articleDone: boolean,
     @Param('helpListId') helpListId: number,
-    @Param() articleId: number,
+    @Param('articleId') articleId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
     return;
