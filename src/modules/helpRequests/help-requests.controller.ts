@@ -60,7 +60,7 @@ export class HelpRequestsController {
   })
   @ApiQuery({
     name: 'zipCode',
-    isArray: true,
+    type: [String],
     required: false,
     description: 'Filter by an array of zipCodes',
   })
