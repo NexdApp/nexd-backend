@@ -173,7 +173,7 @@ export class HelpRequestsController {
   @ApiParam({
     name: 'helpRequestId',
     description: 'Id of the help request',
-    type: 'number',
+    type: 'integer',
   })
   @ApiParam({
     name: 'articleId',
@@ -199,7 +199,7 @@ export class HelpRequestsController {
   @ApiParam({
     name: 'helpRequestId',
     description: 'Id of the help request',
-    type: 'number',
+    type: 'integer',
   })
   @ApiParam({
     name: 'articleId',

@@ -50,7 +50,7 @@ export class HelpList {
   @OneToMany(
     type => HelpRequest,
     helpRequest => helpRequest.helpList,
-    { cascade: false },
+    { cascade: true },
   )
   @JoinColumn({ name: 'helpRequestsIds' })
   helpRequests!: HelpRequest[];

@@ -1,4 +1,18 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  ForbiddenException,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+  Query,
+  ParseBoolPipe,
+  ParseIntPipe,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -19,6 +33,9 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { HelpRequestsService } from '../helpRequests/help-requests.service';
 import { UserID } from '../users/user.entity';
 import { ReqUser } from '../../decorators/user.decorator';
+import { HelpRequestByIdPipe } from '../helpRequests/help-request-by-id.pipe';
+import { HelpRequest } from '../helpRequests/help-request.entity';
+import { HelpListByIdPipe } from './help-list-by-id.pipe';
 
 @ApiBearerAuth()
 @ApiTags('Help Lists')
@@ -91,17 +108,14 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpListId',
     description: 'Id of the help list',
+    type: 'integer',
   })
   async updateHelpLists(
-    @Param('helpListId') helpListId: number,
+    @Param('helpListId', HelpListByIdPipe) helpList: HelpList,
     @Body() updateHelpList: HelpListCreateDto,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    return this.helpListsService.update(
-      user.userId,
-      helpListId,
-      updateHelpList,
-    );
+    return this.helpListsService.update(user.userId, helpList, updateHelpList);
   }
 
   @Put(':helpListId/help-request/:helpRequestId')
@@ -113,18 +127,19 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpListId',
     description: 'Id of the help list',
+    type: 'integer',
   })
   @ApiParam({
     name: 'helpRequestId',
     description: 'Id of the help request',
+    type: 'integer',
   })
   async addHelpRequestToList(
-    @Param('helpListId') helpListId: number,
-    @Param('helpRequestId') helpRequestId: number,
+    @Param('helpListId', HelpListByIdPipe) helpList: HelpList,
+    @Param('helpRequestId', HelpRequestByIdPipe) helpRequest: HelpRequest,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    // TODO
-    return;
+    return this.helpListsService.addRequest(user.userId, helpList, helpRequest);
   }
 
   @Delete(':helpListId/help-request/:helpRequestId')
@@ -136,18 +151,23 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpListId',
     description: 'Id of the help list',
+    type: 'integer',
   })
   @ApiParam({
     name: 'helpRequestId',
     description: 'Id of the help request',
+    type: 'integer',
   })
   async deleteHelpRequestFromHelpList(
-    @Param('helpListId') helpListId: number,
-    @Param('helpRequestId') helpRequestId: number,
+    @Param('helpListId', HelpListByIdPipe) helpList: HelpList,
+    @Param('helpRequestId', HelpRequestByIdPipe) helpRequest: HelpRequest,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    // TODO
-    return;
+    return this.helpListsService.removeRequest(
+      user.userId,
+      helpList,
+      helpRequest,
+    );
   }
 
   @Put(':helpListId/help-request/:helpRequestId/article/:articleId')
@@ -161,6 +181,7 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpListId',
     description: 'Id of the help list',
+    type: 'integer',
   })
   @ApiParam({
     name: 'helpRequestId',
@@ -171,19 +192,24 @@ export class HelpListsController {
     description: 'Id of the article',
   })
   @ApiQuery({
+    required: true,
     name: 'articleDone',
     description: 'true to set the article as "bought"',
   })
   async modifyArticleInHelpRequest(
-    @Query('articleDone') articleDone: boolean,
-    @Param('helpListId') helpListId: number,
-    @Param('helpRequestId') helpRequestId: number,
-    @Param('articleId') articleId: number,
+    @Query('articleDone', ParseBoolPipe) articleDone: boolean,
+    @Param('helpListId', HelpListByIdPipe) helpList: HelpList,
+    @Param('helpRequestId', ParseIntPipe) helpRequestId: number,
+    @Param('articleId', ParseIntPipe) articleId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    console.log(typeof articleDone);
-    // TODO
-    return;
+    return this.helpListsService.changeArticleDoneForRequest(
+      user.userId,
+      helpList,
+      helpRequestId,
+      articleId,
+      articleDone,
+    );
   }
 
   @Put(':helpListId/article/:articleId')
@@ -192,11 +218,6 @@ export class HelpListsController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiForbiddenResponse({ description: 'This is not your shopping list' })
   @ApiNotFoundResponse({ description: 'Shopping list not found' })
-  @ApiQuery({
-    name: 'articleDone',
-    description: 'true to set the article as "bought"',
-    type: 'boolean',
-  })
   @ApiParam({
     name: 'helpListId',
     description: 'Id of the help list',
@@ -210,9 +231,9 @@ export class HelpListsController {
     description: 'true to set the article as "bought"',
   })
   async modifyArticleInAllHelpRequests(
-    @Query('articleDone') articleDone: boolean,
-    @Param('helpListId') helpListId: number,
-    @Param('articleId') articleId: number,
+    @Query('articleDone', ParseBoolPipe) articleDone: boolean,
+    @Param('helpListId', HelpListByIdPipe) helpList: HelpList,
+    @Param('articleId', ParseIntPipe) articleId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
     return;
