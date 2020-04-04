@@ -65,7 +65,7 @@ export class HelpListsService {
   async getAllByUser(userId: string) {
     return await this.helpListsRepository.find({
       where: { ownerId: userId },
-      relations: ['helpRequests'],
+      relations: ['helpRequests', 'helpRequests.requester'],
     });
   }
 
@@ -113,6 +113,19 @@ export class HelpListsService {
     helpList.helpRequests = helpList.helpRequests.filter(
       request => request.id != helpRequest.id,
     );
+    return await this.helpListsRepository.save(helpList);
+  }
+
+  async changeArticleDone(
+    userId: string,
+    helpList: HelpList,
+    helpRequest: HelpRequest,
+    articleDone: boolean,
+  ) {
+    if (userId !== helpList.ownerId) {
+      throw new ForbiddenException('The help list does not belong to you');
+    }
+
     return await this.helpListsRepository.save(helpList);
   }
 }

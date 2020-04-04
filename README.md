@@ -61,10 +61,11 @@ Postgres is used. Locally is already a postgis command available. The postgis ex
 
 ## TODO
 
+- [ ] Help lists owner validation DRY
 - [ ] Token content
 - [ ] use class-validator
 - [x] Pipes (validation...)
-- [ ] Same user or admin guard
+- [ ] Same user or admin guard (`userResourceOrAdminsecret.guard.ts`)
 - [ ] permission role model
 - [ ] permission role decorators
 - [ ] logger middleware
