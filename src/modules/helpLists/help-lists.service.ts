@@ -12,6 +12,7 @@ import { HelpList } from './help-list.entity';
 import { HelpRequest } from '../helpRequests/help-request.entity';
 import { HelpListCreateDto } from './dto/help-list-create.dto';
 import { HelpListStatus } from './help-list-status';
+import { HelpRequestStatus } from '../helpRequests/help-request-status';
 
 @Injectable()
 export class HelpListsService {
@@ -103,6 +104,7 @@ export class HelpListsService {
     if (userId !== helpList.ownerId) {
       throw new ForbiddenException('The help list does not belong to you');
     }
+    helpRequest.status = HelpRequestStatus.ONGOING;
     helpList.helpRequests.push(helpRequest);
     return await this.helpListsRepository.save(helpList);
   }
@@ -115,13 +117,14 @@ export class HelpListsService {
     if (userId !== helpList.ownerId) {
       throw new ForbiddenException('The help list does not belong to you');
     }
+    helpRequest.status = HelpRequestStatus.PENDING;
     helpList.helpRequests = helpList.helpRequests.filter(
       request => request.id != helpRequest.id,
     );
     return await this.helpListsRepository.save(helpList);
   }
 
-  async changeArticleDone(
+  async changeArticleDoneForRequest(
     userId: string,
     helpList: HelpList,
     helpRequestId: number,
@@ -150,4 +153,12 @@ export class HelpListsService {
     article.articleDone = articleDone;
     return await this.helpListsRepository.save(helpList);
   }
+
+  async changeArticleDoneForAll(
+    userId: string,
+    helpList: HelpList,
+    helpRequestId: number,
+    articleId: number,
+    articleDone: boolean,
+  ) {}
 }

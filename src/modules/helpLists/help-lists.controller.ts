@@ -151,6 +151,7 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpListId',
     description: 'Id of the help list',
+    type: 'integer',
   })
   @ApiParam({
     name: 'helpRequestId',
@@ -202,7 +203,7 @@ export class HelpListsController {
     @Param('articleId', ParseIntPipe) articleId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    return this.helpListsService.changeArticleDone(
+    return this.helpListsService.changeArticleDoneForRequest(
       user.userId,
       helpList,
       helpRequestId,
@@ -217,11 +218,6 @@ export class HelpListsController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiForbiddenResponse({ description: 'This is not your shopping list' })
   @ApiNotFoundResponse({ description: 'Shopping list not found' })
-  @ApiQuery({
-    name: 'articleDone',
-    description: 'true to set the article as "bought"',
-    type: 'boolean',
-  })
   @ApiParam({
     name: 'helpListId',
     description: 'Id of the help list',
@@ -235,9 +231,9 @@ export class HelpListsController {
     description: 'true to set the article as "bought"',
   })
   async modifyArticleInAllHelpRequests(
-    @Query('articleDone') articleDone: boolean,
-    @Param('helpListId') helpListId: number,
-    @Param('articleId') articleId: number,
+    @Query('articleDone', ParseBoolPipe) articleDone: boolean,
+    @Param('helpListId', HelpListByIdPipe) helpList: HelpList,
+    @Param('articleId', ParseIntPipe) articleId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
     return;
