@@ -10,6 +10,7 @@ import {
   Query,
   UseGuards,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -21,6 +22,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
   ApiOperation,
+  ApiParam,
 } from '@nestjs/swagger';
 import { HelpRequestsService } from './help-requests.service';
 import { HelpRequest } from './help-request.entity';
@@ -31,6 +33,8 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserID } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
 import { HelpRequestStatus } from './help-request-status';
+import { HelpRequestByIdPipe } from './help-request-by-id.pipe';
+import { CreateOrUpdateHelpRequestArticleDto } from './dto/help-request-article-create.dto';
 
 @ApiBearerAuth()
 @ApiTags('Help Requests')
@@ -38,7 +42,7 @@ import { HelpRequestStatus } from './help-request-status';
 @ApiUnauthorizedResponse({ description: 'Unauthorized' })
 @Controller('help-requests')
 export class HelpRequestsController {
-  static LOGGER = new Logger('Request', true);
+  private readonly logger = new Logger(HelpRequestsController.name);
 
   constructor(
     private readonly helpRequestsService: HelpRequestsService,
@@ -115,6 +119,10 @@ export class HelpRequestsController {
   @ApiOkResponse({ description: 'Successful', type: HelpRequest })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiNotFoundResponse({ description: 'Request not found' })
+  @ApiParam({
+    name: 'helpRequestId',
+    description: 'Id of the help request',
+  })
   async getSingleRequest(
     @Param('helpRequestId') helpRequestId: number,
   ): Promise<HelpRequest> {
@@ -131,6 +139,10 @@ export class HelpRequestsController {
   @ApiOkResponse({ description: 'Successful', type: HelpRequest })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiNotFoundResponse({ description: 'Help request not found' })
+  @ApiParam({
+    name: 'helpRequestId',
+    description: 'Id of the help request',
+  })
   async updateRequest(
     @Param('helpRequestId') helpRequestId: number,
     @Body() helpRequestCreateDto: HelpRequestCreateDto,
@@ -149,13 +161,24 @@ export class HelpRequestsController {
   @ApiOkResponse({ description: 'Successful', type: HelpRequest })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiNotFoundResponse({ description: 'Help request not found' })
+  @ApiParam({
+    name: 'helpRequestId',
+    description: 'Id of the help request',
+  })
+  @ApiParam({
+    name: 'articleId',
+    description: 'Id of the article',
+  })
   async addArticleInHelpRequest(
-    @Param('helpRequestId') helpRequestId: number,
-    @Param() articleId: number,
-    @Body() helpRequestCreateDto: HelpRequestCreateDto,
+    @Param('helpRequestId', HelpRequestByIdPipe) helpRequest: HelpRequest,
+    @Param('articleId', ParseIntPipe) articleId: number,
+    @Body() helpRequestArticleDto: CreateOrUpdateHelpRequestArticleDto,
   ): Promise<HelpRequest> {
-    // TODO
-    return;
+    return this.helpRequestsService.addOrUpdateArticle(
+      helpRequest,
+      articleId,
+      helpRequestArticleDto,
+    );
   }
 
   @Delete(':helpRequestId/article/:articleId')
@@ -163,12 +186,18 @@ export class HelpRequestsController {
   @ApiOkResponse({ description: 'Successful', type: HelpRequest })
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiNotFoundResponse({ description: 'Help request not found' })
+  @ApiParam({
+    name: 'helpRequestId',
+    description: 'Id of the help request',
+  })
+  @ApiParam({
+    name: 'articleId',
+    description: 'Id of the article',
+  })
   async removeArticleInHelpRequest(
-    @Param('helpRequestId') helpRequestId: number,
-    @Param() articleId: number,
-    @Body() helpRequestCreateDto: HelpRequestCreateDto,
+    @Param('helpRequestId', HelpRequestByIdPipe) helpRequest: HelpRequest,
+    @Param('articleId', ParseIntPipe) articleId: number,
   ): Promise<HelpRequest> {
-    // TODO
-    return;
+    return this.helpRequestsService.removeArticle(helpRequest, articleId);
   }
 }

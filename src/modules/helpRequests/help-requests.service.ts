@@ -5,6 +5,7 @@ import { Repository, In } from 'typeorm';
 import { HelpRequest } from './help-request.entity';
 import { HelpRequestCreateDto } from './dto/help-request-create.dto';
 import { HelpRequestArticle } from './help-request-article.entity';
+import { CreateOrUpdateHelpRequestArticleDto } from './dto/help-request-article-create.dto';
 // import { HelpRequestArticleStatusDto } from '../helpList/dto/shopping-list-form.dto';
 
 @Injectable()
@@ -80,27 +81,41 @@ export class HelpRequestsService {
     });
   }
 
-  // async updateHelpRequestArticle(
-  //   requestId: number,
-  //   articleId: number,
-  //   articleStatusDto: HelpRequestArticleStatusDto,
-  // ) {
-  //   const request: HelpRequest = await this.findRequest(requestId);
-  //   const article = request.articles.find(
-  //     v => v.articleId === Number(articleId),
-  //   );
-  //   if (!article) {
-  //     throw new BadRequestException(
-  //       'This article does not exist in the request',
-  //     );
-  //   }
-  //   article.articleDone = articleStatusDto.articleDone;
-  //   return await this.helpRequestRepository.save(request);
-  // }
+  async addOrUpdateArticle(
+    helpRequest: HelpRequest,
+    articleId: number,
+    helpRequestArticleDto: CreateOrUpdateHelpRequestArticleDto,
+  ) {
+    const oldArticle = helpRequest.articles.find(
+      art => art.articleId === articleId,
+    );
+    if (oldArticle) {
+      oldArticle.articleCount = helpRequestArticleDto.articleCount;
+      if (typeof helpRequestArticleDto.articleDone === 'boolean') {
+        oldArticle.articleDone = helpRequestArticleDto.articleDone;
+      }
+    } else {
+      const newArticle = new HelpRequestArticle();
+      newArticle.articleId = articleId;
+      newArticle.articleCount = helpRequestArticleDto.articleCount;
+      if (typeof helpRequestArticleDto.articleDone === 'boolean') {
+        newArticle.articleDone = helpRequestArticleDto.articleDone;
+      }
+      helpRequest.articles.push(newArticle);
+    }
+    return await this.helpRequestRepository.save(helpRequest);
+  }
+
+  async removeArticle(helpRequest: HelpRequest, articleId: number) {
+    helpRequest.articles.splice(
+      helpRequest.articles.findIndex(art => (art.articleId = articleId)),
+      1,
+    );
+    return await this.helpRequestRepository.save(helpRequest);
+  }
 
   async update(requestId: number, requestEntity: HelpRequestCreateDto) {
     const request: HelpRequest = await this.findRequest(requestId);
-    console.log(request);
     this.populateRequest(request, requestEntity);
 
     return await this.helpRequestRepository.save(request);

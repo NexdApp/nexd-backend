@@ -69,6 +69,10 @@ export class HelpListsController {
   @ApiOkResponse({ description: 'Successful', type: HelpList })
   @ApiNotFoundResponse({ description: 'Help list not found' })
   @ApiForbiddenResponse({ description: 'This is not your help list' })
+  @ApiParam({
+    name: 'helpListId',
+    description: 'Id of the help list',
+  })
   async findOne(
     @Param('helpListId') helpListId: number,
     @ReqUser() user: UserID,
@@ -96,6 +100,10 @@ export class HelpListsController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiNotFoundResponse({ description: 'Shopping list not found' })
   @ApiForbiddenResponse({ description: 'This is not your shopping list' })
+  @ApiParam({
+    name: 'helpListId',
+    description: 'Id of the help list',
+  })
   async updateHelpLists(
     @Param('helpListId') helpListId: number,
     @Body() updateHelpList: HelpListCreateDto,
@@ -114,6 +122,14 @@ export class HelpListsController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiForbiddenResponse({ description: 'This is not your shopping list' })
   @ApiNotFoundResponse({ description: 'Shopping list not found' })
+  @ApiParam({
+    name: 'helpListId',
+    description: 'Id of the help list',
+  })
+  @ApiParam({
+    name: 'helpRequestId',
+    description: 'Id of the help request',
+  })
   async addHelpRequestToList(
     @Param('helpListId') helpListId: number,
     @Param('helpRequestId') helpRequestId: number,
@@ -129,6 +145,14 @@ export class HelpListsController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiForbiddenResponse({ description: 'This is not your shopping list' })
   @ApiNotFoundResponse({ description: 'Shopping list not found' })
+  @ApiParam({
+    name: 'helpListId',
+    description: 'Id of the help list',
+  })
+  @ApiParam({
+    name: 'helpRequestId',
+    description: 'Id of the help request',
+  })
   async deleteHelpRequestFromHelpList(
     @Param('helpListId') helpListId: number,
     @Param('helpRequestId') helpRequestId: number,
@@ -146,6 +170,18 @@ export class HelpListsController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiForbiddenResponse({ description: 'This is not your shopping list' })
   @ApiNotFoundResponse({ description: 'Shopping list not found' })
+  @ApiParam({
+    name: 'helpListId',
+    description: 'Id of the help list',
+  })
+  @ApiParam({
+    name: 'helpRequestId',
+    description: 'Id of the help request',
+  })
+  @ApiParam({
+    name: 'articleId',
+    description: 'Id of the article',
+  })
   @ApiQuery({
     name: 'articleDone',
     description: 'true to set the article as "bought"',
@@ -167,6 +203,18 @@ export class HelpListsController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiForbiddenResponse({ description: 'This is not your shopping list' })
   @ApiNotFoundResponse({ description: 'Shopping list not found' })
+  @ApiQuery({
+    name: 'articleDone',
+    description: 'true to set the article as "bought"',
+  })
+  @ApiParam({
+    name: 'helpListId',
+    description: 'Id of the help list',
+  })
+  @ApiParam({
+    name: 'articleId',
+    description: 'Id of the article',
+  })
   @ApiQuery({
     name: 'articleDone',
     description: 'true to set the article as "bought"',

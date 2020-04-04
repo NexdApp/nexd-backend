@@ -21,9 +21,9 @@ export class HelpRequestArticle {
 
   @ApiProperty({ type: 'long' })
   @Column({ nullable: true })
-  articleId: number;
+  articleId!: number;
 
-  @OneToOne(type => Article)
+  @ManyToOne(type => Article)
   @JoinColumn({ name: 'articleId' })
   article!: Article;
 
