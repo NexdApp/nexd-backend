@@ -10,6 +10,8 @@ import { RequestArticle } from '../request/requestArticle.entity';
 import { ShoppingList } from '../shoppingList/shopping-list.entity';
 import { ShoppingListRequest } from '../shoppingList/shopping-list-request.entity';
 import { AudioFile } from 'modules/audio-storage/audio-storage.entity';
+import { Call } from 'modules/call/call.entity';
+import { LocalInfo } from 'modules/local-info/local-info.entity';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { AudioFile } from 'modules/audio-storage/audio-storage.entity';
             ShoppingList,
             ShoppingListRequest,
             AudioFile,
+            Call,
+            LocalInfo
           ], // ['src/modules/**/*.entity{.ts,.js}'],
           migrations: [
             User,
@@ -43,6 +47,8 @@ import { AudioFile } from 'modules/audio-storage/audio-storage.entity';
             ShoppingList,
             ShoppingListRequest,
             AudioFile,
+            Call,
+            LocalInfo
           ], // ['src/modules/**/*.migration{.ts,.js}'],
           synchronize: config.isDev,
           // synchronize: false,

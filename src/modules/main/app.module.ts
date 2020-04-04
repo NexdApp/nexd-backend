@@ -28,6 +28,7 @@ import { AudioStorageModule } from 'modules/audio-storage/audio-storage.module';
 import { AudioStorageService } from 'modules/audio-storage/audio-storage.service';
 import { MulterModule } from '@nestjs/platform-express';
 import { AudioFile } from 'modules/audio-storage/audio-storage.entity';
+import { LocalInfoModule } from 'modules/local-info/local-info.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { AudioFile } from 'modules/audio-storage/audio-storage.entity';
     TypeOrmModule.forFeature([User, Article, Request, ShoppingList, AudioFile]),
     CallModule,
     AudioStorageModule,
+    LocalInfoModule,
     MulterModule.register({
       dest: '../../../tmp/audios',
     }),
