@@ -62,7 +62,7 @@ export class DatabaseTest {
       port: 5531,
       username: 'root',
       password: 'toor',
-      database: 'clock',
+      database: 'dbname',
       entities: [User, Article],
       synchronize: true,
       ...options,

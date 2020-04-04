@@ -6,8 +6,6 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
 import { HelpRequestArticle } from './help-request-article.entity';
 import { ApiProperty } from '@nestjs/swagger';

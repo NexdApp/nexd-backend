@@ -11,8 +11,8 @@ import {
   ApiCreatedResponse,
   ApiNotAcceptableResponse,
   ApiOkResponse,
-  ApiTags,
   ApiOperation,
+  ApiTags,
 } from '@nestjs/swagger';
 
 import { LocalAuthGuard } from './local-auth.guard';
