@@ -102,6 +102,7 @@ export class CallsController {
     return await this.callService.queryCalls(body);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('calls/:sid/record')
   @ApiOperation({ summary: 'Redirects the request to the stored record file' })
   @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
