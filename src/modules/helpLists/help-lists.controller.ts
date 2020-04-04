@@ -129,14 +129,14 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpRequestId',
     description: 'Id of the help request',
+    type: 'integer',
   })
   async addHelpRequestToList(
-    @Param('helpListId') helpListId: number,
-    @Param('helpRequestId') helpRequestId: number,
+    @Param('helpListId', HelpListByIdPipe) helpList: HelpList,
+    @Param('helpRequestId', HelpRequestByIdPipe) helpRequest: HelpRequest,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    // TODO
-    return;
+    return this.helpListsService.addRequest(user.userId, helpList, helpRequest);
   }
 
   @Delete(':helpListId/help-request/:helpRequestId')
@@ -152,14 +152,18 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpRequestId',
     description: 'Id of the help request',
+    type: 'integer',
   })
   async deleteHelpRequestFromHelpList(
-    @Param('helpListId') helpListId: number,
-    @Param('helpRequestId') helpRequestId: number,
+    @Param('helpListId', HelpListByIdPipe) helpList: HelpList,
+    @Param('helpRequestId', HelpRequestByIdPipe) helpRequest: HelpRequest,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    // TODO
-    return;
+    return this.helpListsService.removeRequest(
+      user.userId,
+      helpList,
+      helpRequest,
+    );
   }
 
   @Put(':helpListId/help-request/:helpRequestId/article/:articleId')
