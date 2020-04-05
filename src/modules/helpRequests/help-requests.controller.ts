@@ -12,6 +12,8 @@ import {
   Delete,
   ParseIntPipe,
   ParseBoolPipe,
+  ClassSerializerInterceptor,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -41,6 +43,7 @@ import { CreateOrUpdateHelpRequestArticleDto } from './dto/help-request-article-
 @ApiTags('Help Requests')
 @UseGuards(JwtAuthGuard)
 @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('help-requests')
 export class HelpRequestsController {
   private readonly logger = new Logger(HelpRequestsController.name);
