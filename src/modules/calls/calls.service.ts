@@ -182,7 +182,10 @@ export class CallsService {
    * @param call_sid
    * @param transcription_url
    */
-  async converted(callSid: string, helpRequestId: number): Promise<boolean> {
+  async converted(
+    callSid: string,
+    helpRequestId: number,
+  ): Promise<Call | undefined> {
     const call: Call | undefined = await this.callRepo.findOne({
       sid: callSid,
     });
@@ -194,10 +197,10 @@ export class CallsService {
       call.convertedHelpRequest = helpRequest;
       this.callRepo.save(call);
 
-      return true;
+      return call;
     }
 
-    return false;
+    return undefined;
   }
 
   /**
