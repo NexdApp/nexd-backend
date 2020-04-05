@@ -89,9 +89,9 @@ export class HelpRequestsController {
   })
   async getAll(
     @Query('userId') userId: string,
-    @Query('excludeUserId') excludeUserId: string,
+    @Query('excludeUserId') excludeUserId: boolean,
     @Query('zipCode') zipCode: string[],
-    @Query('includeRequester') includeRequester: string,
+    @Query('includeRequester') includeRequester: boolean,
     @Query('status') status: string[],
     @ReqUser() user: any,
   ): Promise<HelpRequest[]> {
@@ -106,9 +106,9 @@ export class HelpRequestsController {
     }
     const requests = await this.helpRequestsService.getAll({
       userId: userIdFilter,
-      excludeUserId: excludeUserId === 'true',
+      excludeUserId: String(excludeUserId) === 'true',
       zipCode,
-      includeRequester: includeRequester === 'true',
+      includeRequester: String(includeRequester) === 'true',
       status,
     });
     return requests;
