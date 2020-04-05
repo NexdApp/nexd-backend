@@ -19,14 +19,18 @@ import {
   ApiOperation,
   ApiUnauthorizedResponse,
   ApiTags,
+  ApiOkResponse,
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
 } from '@nestjs/swagger';
 
-//import  VoiceResponse  from 'twilio/twiml/VoiceResponse';
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
 import { CallsService } from './calls.service';
 import { CallQueryDto } from './dto/call-query.dto';
 import { ConfigurationService } from 'src/configuration/configuration.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Call } from './call.entity';
+import { ConvertedHelpRequest } from './dto/converted-help-request.dto';
 
 @Controller('call')
 @ApiTags('Calls')
@@ -39,9 +43,8 @@ export class CallsController {
 
   @Post('twilio/call')
   @ApiOperation({ summary: 'Enpoint for incoming call webhook from twilio' })
-  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
+  @ApiOkResponse({ description: 'Success' })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
   async incomingCall(@Res() res: any, @Body() body: any): Promise<any> {
     const twiml: any = new VoiceResponse();
 
@@ -51,7 +54,7 @@ export class CallsController {
         'sprechen Sie Ihre Nachricht nach dem Signalton.',
     );
     twiml.record({
-      action: '/api/v1/call/twilio/recorded',
+      action: '/api/v1/call/calls/recorded',
       method: 'POST',
     });
     twiml.say({ language: 'de-DE' }, 'Ich habe keine Nachricht empfangen.');
@@ -68,7 +71,16 @@ export class CallsController {
     res.send(twiml.toString());
   }
 
-  @Post('twilio/recorded')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get('calls')
+  @ApiOperation({ summary: 'Returns all calls with the given parameters' })
+  @ApiOkResponse({ description: 'Successful', type: Call, isArray: true })
+  async calls(@Body() body: CallQueryDto): Promise<any> {
+    return await this.callService.queryCalls(body);
+  }
+
+  @Post('calls/recorded')
   @ApiOperation({ summary: 'Enpoint for finished call recording from twilio ' })
   async receiveRecording(@Res() res: any, @Body() body: any): Promise<any> {
     this.callService.recorded(body.CallSid, body.RecordingUrl);
@@ -76,42 +88,48 @@ export class CallsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put('converted/:sid')
+  @Put('calls/:sid/converted')
   @ApiOperation({ summary: 'Sets a call as converted to shopping list' })
-  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
+  @ApiOkResponse({ description: 'Successful', type: Call })
+  @ApiNotFoundResponse({ description: "Couldn't find call or help request" })
   @ApiParam({
     name: 'sid',
     description: 'call sid',
     type: 'string',
   })
-  async converted(@Res() res: any, @Param('sid') sid: string): Promise<any> {
-    if (this.callService) {
-      this.callService.converted(sid);
-      return res.status(200).json('Set converted successfull');
-    } else {
-      return res.status(500).json('Failed to set converted');
+  async converted(
+    @Param('sid') sid: string,
+    @Body() convertedHelpRequest: ConvertedHelpRequest,
+  ): Promise<any> {
+    const call: Call | undefined = await this.callService.converted(
+      sid,
+      convertedHelpRequest.helpRequestId,
+    );
+    if (!call) {
+      throw new HttpException(
+        'Call or help request not found.',
+        HttpStatus.NOT_FOUND,
+      );
     }
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(ClassSerializerInterceptor)
-  @Get('calls')
-  @ApiOperation({ summary: 'Returns all calls with the given parameters' })
-  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
-  async calls(@Body() body: CallQueryDto): Promise<any> {
-    return await this.callService.queryCalls(body);
+    return call;
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('calls/:sid/record')
-  @ApiOperation({ summary: 'Redirects the request to the stored record file' })
-  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
+  @ApiOperation({ summary: 'Redirects the request to the stored record file.' })
+  @ApiOkResponse({
+    description: 'Successful',
+    content: {
+      'audio/x-wav': {
+        schema: {
+          type: 'string',
+          format: 'binary',
+          example: 'audio file',
+        },
+      },
+    },
+  })
+  @ApiNotFoundResponse({ description: 'Recording not found.' })
   @Redirect('')
   async getCallUrl(@Res() res: any, @Param('sid') sid: string): Promise<any> {
     const url = await this.callService.getCallRecord(sid);
@@ -121,19 +139,18 @@ export class CallsController {
     throw new HttpException('Recording not found', HttpStatus.NOT_FOUND);
   }
 
-  @UseGuards(JwtAuthGuard)
+  /* @UseGuards(JwtAuthGuard)
   @Get('calls/:sid/transcription')
   @ApiOperation({
     summary: 'Redirects the request to the stored transcription file',
   })
-  @ApiResponse({ status: HttpStatus.ACCEPTED, description: 'Success' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
+  @ApiOkResponse({ description: 'Successful' })
+  @ApiNotFoundResponse({ description: 'Transcription not found.' })
   async getTranscriptionUrl(@Param('sid') sid: string): Promise<any> {
     const url = await this.callService.getCallTranscription(sid);
     if (url) {
       return { statusCode: HttpStatus.FOUND, url };
     }
     throw new HttpException('Transcription not found', HttpStatus.NOT_FOUND);
-  }
+  } */
 }
