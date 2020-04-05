@@ -22,6 +22,7 @@ import {
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiNotFoundResponse,
+  ApiExcludeEndpoint,
 } from '@nestjs/swagger';
 
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
@@ -34,7 +35,6 @@ import { ConvertedHelpRequestDto } from './dto/converted-help-request.dto';
 
 @Controller('call')
 @ApiTags('Calls')
-@ApiUnauthorizedResponse({ description: 'Unauthorized' })
 export class CallsController {
   constructor(
     private readonly callService: CallsService,
@@ -62,8 +62,7 @@ export class CallsController {
   }
 
   @Post('twilio/call')
-  @ApiOperation({ summary: 'Enpoint for incoming call webhook from twilio' })
-  @ApiOkResponse({ description: 'Success' })
+  @ApiExcludeEndpoint()
   async incomingCall(@Res() res: any, @Body() body: any): Promise<any> {
     const twiml: any = new VoiceResponse();
 
@@ -73,7 +72,7 @@ export class CallsController {
         'sprechen Sie Ihre Nachricht nach dem Signalton.',
     );
     twiml.record({
-      action: '/api/v1/call/calls/recorded',
+      action: '/api/v1/call/twilio/recorded',
       method: 'POST',
     });
     twiml.say({ language: 'de-DE' }, 'Ich habe keine Nachricht empfangen.');
@@ -90,24 +89,26 @@ export class CallsController {
     res.send(twiml.toString());
   }
 
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(ClassSerializerInterceptor)
-  @Get('calls')
-  @ApiOperation({ summary: 'Returns all calls with the given parameters' })
-  @ApiOkResponse({ description: 'Successful', type: Call, isArray: true })
-  async calls(@Body() body: CallQueryDto): Promise<any> {
-    return await this.callService.queryCalls(body);
-  }
-
-  @Post('calls/recorded')
-  @ApiOperation({ summary: 'Enpoint for finished call recording from twilio ' })
+  @Post('twilio/recorded')
+  @ApiExcludeEndpoint()
   async receiveRecording(@Res() res: any, @Body() body: any): Promise<any> {
     this.callService.recorded(body.CallSid, body.RecordingUrl);
     res.status(200).send('Successful');
   }
 
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get('calls')
+  @ApiOperation({ summary: 'Returns all calls with the given parameters' })
+  @ApiOkResponse({ description: 'Successful', type: Call, isArray: true })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  async calls(@Body() body: CallQueryDto): Promise<any> {
+    return await this.callService.queryCalls(body);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Put('calls/:sid/converted')
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiOperation({ summary: 'Sets a call as converted to shopping list' })
   @ApiOkResponse({ description: 'Successful', type: Call })
   @ApiNotFoundResponse({ description: "Couldn't find call or help request" })
@@ -137,6 +138,7 @@ export class CallsController {
   @UseGuards(JwtAuthGuard)
   @Get('calls/:sid/record')
   @ApiOperation({ summary: 'Redirects the request to the stored record file.' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiOkResponse({
     description: 'Successful',
     content: {
