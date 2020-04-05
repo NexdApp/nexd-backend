@@ -58,7 +58,7 @@ describe('HelpRequest Controller', () => {
       };
       const result = {
         id: 1,
-        'created_at': new Date(),
+        created_at: new Date(),
         ...request,
         status: HelpRequestStatus.PENDING,
         articles: request.articles.map(v => new HelpRequestArticle()),

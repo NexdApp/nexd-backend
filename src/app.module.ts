@@ -19,9 +19,9 @@ import { CallsModule } from './modules/calls/calls.module';
     ArticlesModule,
     HelpRequestsModule,
     HelpListsModule,
-    CallsModule
+    CallsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

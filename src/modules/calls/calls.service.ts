@@ -18,37 +18,38 @@ import { CallQueryDto } from './dto/call-query.dto';
 
 @Injectable()
 export class CallsService {
-  // default number of calls that get returned by database return querries 
+  // default number of calls that get returned by database return querries
   readonly DEFAULT_RETURN_AMOUNT: number = 20;
 
   /**
-   * 
-   * @param callRepo 
-   * @param configService 
+   *
+   * @param callRepo
+   * @param configService
    */
-  constructor(@InjectRepository(Call)
-  private readonly callRepo: Repository<Call>,
-    private readonly configService: ConfigurationService) {
-  }
+  constructor(
+    @InjectRepository(Call)
+    private readonly callRepo: Repository<Call>,
+    private readonly configService: ConfigurationService,
+  ) {}
 
   /**
-   * Creates new Call object in the database 
-   * 
-   * @param callSid 
+   * Creates new Call object in the database
+   *
+   * @param callSid
    */
-  async create(callSid: string,
+  async create(
+    callSid: string,
     phoneNumber?: string,
     country?: string,
     city?: string,
-    zip?: number
+    zip?: number,
   ): Promise<string> {
-
     const newAudioFile = await this.callRepo.create({
       sid: callSid,
-      phoneNumber: phoneNumber || "",
-      country: country || "",
-      city: city || "",
-      zip: zip || 0
+      phoneNumber: phoneNumber || '',
+      country: country || '',
+      city: city || '',
+      zip: zip || 0,
     });
     await this.callRepo.save(newAudioFile);
     return newAudioFile.sid;
@@ -56,8 +57,8 @@ export class CallsService {
 
   /**
    * Returns the Call from the database with the corresponding sid
-   * 
-   * @param callSid 
+   *
+   * @param callSid
    */
   async getBySid(callSid: string): Promise<Call | undefined> {
     return await this.callRepo.findOne({ sid: callSid });
@@ -65,65 +66,82 @@ export class CallsService {
 
   /**
    * Returns all calls matching the provided query parameters
-   * 
-   * @param queryParameters 
+   *
+   * @param queryParameters
    */
   async queryCalls(queryParameters: CallQueryDto): Promise<Call[]> {
-    const query = this.callRepo.createQueryBuilder().orderBy("Call.created", "DESC");
+    const query = this.callRepo
+      .createQueryBuilder()
+      .orderBy('Call.created', 'DESC');
 
     if (queryParameters.converted)
-      query.andWhere("Call.converted = :conversionState", { conversionState: queryParameters.converted })
+      query.andWhere('Call.converted = :conversionState', {
+        conversionState: queryParameters.converted,
+      });
 
     if (queryParameters.country)
-      query.andWhere("Call.country = :country", { country: queryParameters.country })
+      query.andWhere('Call.country = :country', {
+        country: queryParameters.country,
+      });
 
     if (queryParameters.zip)
-      query.andWhere("Call.zip = :zip", { zip: queryParameters.zip })
+      query.andWhere('Call.zip = :zip', { zip: queryParameters.zip });
 
     if (queryParameters.city)
-      query.andWhere("Call.city = :city", { city: queryParameters.city })
+      query.andWhere('Call.city = :city', { city: queryParameters.city });
 
-
-    query.limit(queryParameters.amount ? queryParameters.amount : this.DEFAULT_RETURN_AMOUNT)
+    query.limit(
+      queryParameters.amount
+        ? queryParameters.amount
+        : this.DEFAULT_RETURN_AMOUNT,
+    );
 
     return await query.getMany();
   }
 
   /**
-   * Returns the url to the record of the call with the specific 
-   * 
-   * @param callSid 
+   * Returns the url to the record of the call with the specific
+   *
+   * @param callSid
    */
   async getCallRecord(callSid: string): Promise<string | undefined> {
-    const call: Call | undefined = await this.callRepo.createQueryBuilder().select("Call.recordUrl")
-      .where("Call.sid = :sid", { sid: callSid })
+    const call: Call | undefined = await this.callRepo
+      .createQueryBuilder()
+      .select('Call.recordUrl')
+      .where('Call.sid = :sid', { sid: callSid })
       .getOne();
 
     return call?.recordUrl;
   }
 
   /**
-   * Returns the url to the transcription of the call with the specific 
-   * 
-   * @param callSid 
+   * Returns the url to the transcription of the call with the specific
+   *
+   * @param callSid
    */
   async getCallTranscription(callSid: string): Promise<string | undefined> {
-    const call: Call | undefined = await this.callRepo.createQueryBuilder().select("Call.transcriptionUrl")
-      .where("Call.sid = :sid", { sid: callSid })
+    const call: Call | undefined = await this.callRepo
+      .createQueryBuilder()
+      .select('Call.transcriptionUrl')
+      .where('Call.sid = :sid', { sid: callSid })
       .getOne();
 
     return call?.transcriptionUrl;
   }
 
-
   /**
-   * Marks the call with the corresponding sid as translated and sets the path to the translation 
-   * 
-   * @param callSid 
-   * @param transcriptionUrl 
+   * Marks the call with the corresponding sid as translated and sets the path to the translation
+   *
+   * @param callSid
+   * @param transcriptionUrl
    */
-  async transcribed(callSid: string, transcriptionUrl: string): Promise<boolean> {
-    const call: Call | undefined = await this.callRepo.findOne({ sid: callSid })
+  async transcribed(
+    callSid: string,
+    transcriptionUrl: string,
+  ): Promise<boolean> {
+    const call: Call | undefined = await this.callRepo.findOne({
+      sid: callSid,
+    });
 
     if (call) {
       call.transcribed = true;
@@ -136,12 +154,14 @@ export class CallsService {
 
   /**
    * Marks an call as recorded and sets the url to the to the audio file
-   * 
-   * @param callSid 
-   * @param recordingUrl 
+   *
+   * @param callSid
+   * @param recordingUrl
    */
   async recorded(callSid: string, recordingUrl: string): Promise<boolean> {
-    const call: Call | undefined = await this.callRepo.findOne({ sid: callSid })
+    const call: Call | undefined = await this.callRepo.findOne({
+      sid: callSid,
+    });
 
     if (call) {
       call.recorded = true;
@@ -153,13 +173,15 @@ export class CallsService {
   }
 
   /**
-  * Marks the call with the corresponding sid as translated and sets the path to the translation 
-  * 
-  * @param call_sid 
-  * @param transcription_url 
-  */
+   * Marks the call with the corresponding sid as translated and sets the path to the translation
+   *
+   * @param call_sid
+   * @param transcription_url
+   */
   async converted(callSid: string): Promise<boolean> {
-    const call: Call | undefined = await this.callRepo.findOne({ sid: callSid })
+    const call: Call | undefined = await this.callRepo.findOne({
+      sid: callSid,
+    });
 
     if (call) {
       call.converted = true;
@@ -171,10 +193,10 @@ export class CallsService {
 
   /**
    * Redirects incoming request containing a file to an AWS S3 Bucket
-   * 
-   * @param req 
-   * @param res 
-   * @param call 
+   *
+   * @param req
+   * @param res
+   * @param call
    */
   /* async uploadRecordToAWS(
     @Req() req: any,

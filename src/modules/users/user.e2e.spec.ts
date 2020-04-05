@@ -44,10 +44,16 @@ xdescribe('Users (e2e)', () => {
       password: 'password2',
     });
 
-    let result = await authService.validateUserByEmail('user1@email.com', 'password1');
+    let result = await authService.validateUserByEmail(
+      'user1@email.com',
+      'password1',
+    );
     if (result) user1Login = result;
 
-    result = await authService.validateUserByEmail('user2@email.com', 'password2');
+    result = await authService.validateUserByEmail(
+      'user2@email.com',
+      'password2',
+    );
     if (result) user2Login = result;
   });
 

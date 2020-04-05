@@ -19,6 +19,6 @@ export class CallsModule {
       .forRoutes(
         { path: 'twilio/call', method: RequestMethod.POST },
         { path: 'twilio/recorded', method: RequestMethod.POST },
-      )
+      );
   }
 }

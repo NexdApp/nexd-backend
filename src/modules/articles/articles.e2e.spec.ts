@@ -53,9 +53,7 @@ describe('Articles Controller', () => {
     return request(app.getHttpServer())
       .get('/articles')
       .expect(200)
-      .expect(
-        articlesService.findAll(),
-      );
+      .expect(articlesService.findAll());
   });
 
   afterAll(async () => {

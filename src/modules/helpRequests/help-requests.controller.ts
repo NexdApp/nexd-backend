@@ -51,7 +51,7 @@ export class HelpRequestsController {
   constructor(
     private readonly helpRequestsService: HelpRequestsService,
     private readonly usersService: UsersService,
-  ) { }
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Get and filter for various help requests' })

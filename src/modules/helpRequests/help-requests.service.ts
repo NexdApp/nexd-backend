@@ -23,7 +23,10 @@ export class HelpRequestsService {
     });
   }
 
-  async create(createRequestDto: HelpRequestCreateDto, userId: string): Promise<HelpRequest> {
+  async create(
+    createRequestDto: HelpRequestCreateDto,
+    userId: string,
+  ): Promise<HelpRequest> {
     const helpRequest = new HelpRequest();
     this.populateRequest(helpRequest, createRequestDto);
     helpRequest.requesterId = userId;

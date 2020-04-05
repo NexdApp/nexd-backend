@@ -17,25 +17,27 @@ describe('HelpRequest Controller', () => {
   let controller: HelpRequestsController;
   let jwtService: JwtService;
 
-  const helpRequest = [{
-    id: 1,
-    'street': 'string',
-    'number': 'string',
-    'zipCode': 'string',
-    'city': 'string',
-    'articles': [
-      {
-        id: 1,
-        'articleId': 1,
-        'articleCount': 1,
-        articleDone: false,
-      },
-    ],
-    'status': HelpRequestStatus.PENDING,
-    'additionalRequest': 'string',
-    'deliveryComment': 'string',
-    'phoneNumber': 'string',
-  }];
+  const helpRequest = [
+    {
+      id: 1,
+      street: 'string',
+      number: 'string',
+      zipCode: 'string',
+      city: 'string',
+      articles: [
+        {
+          id: 1,
+          articleId: 1,
+          articleCount: 1,
+          articleDone: false,
+        },
+      ],
+      status: HelpRequestStatus.PENDING,
+      additionalRequest: 'string',
+      deliveryComment: 'string',
+      phoneNumber: 'string',
+    },
+  ];
 
   const helpRequestCount = 1;
   const getAllResult = helpRequest;
@@ -63,14 +65,19 @@ describe('HelpRequest Controller', () => {
       ],
       controllers: [HelpRequestsController],
     })
-      .overrideProvider(ConfigurationService).useValue(configurationService)
-      .overrideProvider(HelpRequestsService).useValue(helpRequestService)
-      .overrideProvider(UsersService).useValue(mockUserService)
+      .overrideProvider(ConfigurationService)
+      .useValue(configurationService)
+      .overrideProvider(HelpRequestsService)
+      .useValue(helpRequestService)
+      .overrideProvider(UsersService)
+      .useValue(mockUserService)
       .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
-    controller = moduleFixture.get<HelpRequestsController>(HelpRequestsController);
+    controller = moduleFixture.get<HelpRequestsController>(
+      HelpRequestsController,
+    );
   });
 
   it('should be defined', () => {
@@ -81,9 +88,7 @@ describe('HelpRequest Controller', () => {
     return request(app.getHttpServer())
       .get('/help-requests')
       .expect(200)
-      .expect(
-        helpRequestService.getAll(),
-      );
+      .expect(helpRequestService.getAll());
   });
 
   afterAll(async () => {
