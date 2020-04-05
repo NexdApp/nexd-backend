@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Call } from './call.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -70,39 +70,44 @@ export class CallsService {
    *
    * @param queryParameters
    */
-  async queryCalls(queryParameters: CallQueryDto): Promise<Call[]> {
+  async queryCalls(queryParameters): Promise<Call[]> {
     const query = this.callRepo
-      .createQueryBuilder()
-      .orderBy('Call.created', 'DESC');
+      .createQueryBuilder('calls')
+      .orderBy('calls.created', 'DESC');
 
-    if (queryParameters.converted)
-      query.andWhere('Call.converted = :conversionState', {
+    if (queryParameters.converted === 'true') {
+      query.andWhere('calls.convertedHelpRequest IS NOT NULL', {
         conversionState: queryParameters.converted,
       });
+    } else if (queryParameters.converted === 'false') {
+      query.andWhere('calls.convertedHelpRequest IS NULL', {
+        conversionState: queryParameters.converted,
+      });
+    }
 
-    if (queryParameters.country)
-      query.andWhere('Call.country = :country', {
+    if (queryParameters.country) {
+      query.andWhere('calls.country = :country', {
         country: queryParameters.country,
       });
+    }
 
-    if (queryParameters.zip)
-      query.andWhere('Call.zip = :zip', { zip: queryParameters.zip });
+    if (queryParameters.zip) {
+      query.andWhere('calls.zip = :zip', { zip: queryParameters.zip });
+    }
 
-    if (queryParameters.city)
-      query.andWhere('Call.city = :city', { city: queryParameters.city });
+    if (queryParameters.city) {
+      query.andWhere('calls.city = :city', { city: queryParameters.city });
+    }
 
     query.limit(
-      queryParameters.amount
-        ? queryParameters.amount
+      queryParameters.limit
+        ? queryParameters.limit
         : this.DEFAULT_RETURN_AMOUNT,
     );
 
-    query.leftJoinAndSelect('Call.convertedHelpRequest', 'helpRequests');
+    query.leftJoinAndSelect('calls.convertedHelpRequest', 'helpRequests');
 
-    const calls = await query.getMany();
-    console.log(calls);
-
-    return await calls;
+    return await query.getMany();
   }
 
   /**
@@ -182,13 +187,18 @@ export class CallsService {
    * @param call_sid
    * @param transcription_url
    */
-  async converted(
-    callSid: string,
-    helpRequestId: number,
-  ): Promise<Call | undefined> {
-    const call: Call | undefined = await this.callRepo.findOne({
-      sid: callSid,
-    });
+  async converted(callSid: string, helpRequestId: number): Promise<Call> {
+    const call: Call | undefined = await this.callRepo.findOne(
+      {
+        sid: callSid,
+      },
+      { relations: ['convertedHelpRequest'] },
+    );
+
+    if (call.convertedHelpRequest) {
+      throw new HttpException('Call already converted', HttpStatus.BAD_REQUEST);
+    }
+
     const helpRequest:
       | HelpRequest
       | undefined = await this.helpRequestRepo.findOne(helpRequestId);
@@ -200,7 +210,10 @@ export class CallsService {
       return call;
     }
 
-    return undefined;
+    throw new HttpException(
+      'Call or help request not found',
+      HttpStatus.NOT_FOUND,
+    );
   }
 
   /**

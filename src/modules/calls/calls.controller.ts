@@ -12,6 +12,7 @@ import {
   UseGuards,
   Redirect,
   HttpException,
+  Query,
 } from '@nestjs/common';
 import {
   ApiResponse,
@@ -24,6 +25,7 @@ import {
   ApiNotFoundResponse,
   ApiExcludeEndpoint,
   ApiBearerAuth,
+  ApiQuery,
 } from '@nestjs/swagger';
 
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
@@ -104,7 +106,55 @@ export class CallsController {
   @ApiOperation({ summary: 'Returns all calls with the given parameters' })
   @ApiOkResponse({ description: 'Successful', type: Call, isArray: true })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  async calls(@Body() body: CallQueryDto): Promise<any> {
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'converted',
+    required: false,
+    description:
+      'True if you only want to query calls which are already converted to a ' +
+      'help request, false otherwise. Returns all calls if undefined.',
+  })
+  @ApiQuery({
+    name: 'country',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'zip',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'city',
+    required: false,
+  })
+  async calls(
+    @Query('limit') limit: number,
+    @Query('converted') converted: string,
+    @Query('country') country: string,
+    @Query('zip') zip: number,
+    @Query('city') city: string,
+  ): Promise<any> {
+    if (
+      converted !== 'true' &&
+      converted !== 'false' &&
+      converted !== undefined
+    ) {
+      throw new HttpException(
+        'Wrong converted query parameter',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const body = {
+      limit: limit,
+      converted: converted,
+      country: country,
+      zip: zip,
+      city: city,
+    };
+
     return await this.callService.queryCalls(body);
   }
 
@@ -124,16 +174,10 @@ export class CallsController {
     @Param('sid') sid: string,
     @Body() convertedHelpRequest: ConvertedHelpRequestDto,
   ): Promise<any> {
-    const call: Call | undefined = await this.callService.converted(
+    const call: Call = await this.callService.converted(
       sid,
       convertedHelpRequest.helpRequestId,
     );
-    if (!call) {
-      throw new HttpException(
-        'Call or help request not found.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
 
     return call;
   }
