@@ -55,6 +55,14 @@ export class HelpList {
   @JoinColumn({ name: 'helpRequestsIds' })
   helpRequests!: HelpRequest[];
 
+  @ApiProperty({
+    description: 'List of help request IDs',
+    type: 'array',
+    items: {
+      type: 'integer',
+      format: 'int64',
+    },
+  })
   @RelationId((helpList: HelpList) => helpList.helpRequests)
   helpRequestsIds!: number[];
 }

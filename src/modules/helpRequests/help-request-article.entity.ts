@@ -14,6 +14,10 @@ import { Exclude } from 'class-transformer';
   name: 'helpRequestArticle',
 })
 export class HelpRequestArticle {
+  @ApiProperty({
+    type: 'integer',
+    format: 'int64',
+  })
   @PrimaryGeneratedColumn()
   @Exclude() // nobody needs to know the relation id
   id?: number;
