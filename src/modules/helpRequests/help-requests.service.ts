@@ -38,8 +38,8 @@ export class HelpRequestsService {
     helpRequest: HelpRequest,
     createRequestDto: HelpRequestCreateDto,
   ) {
-    helpRequest.articles = [];
     if (createRequestDto.articles) {
+      helpRequest.articles = [];
       createRequestDto.articles.forEach(art => {
         const newArticle = new HelpRequestArticle();
         newArticle.articleId = art.articleId;
@@ -48,6 +48,7 @@ export class HelpRequestsService {
         helpRequest.articles.push(newArticle);
       });
     }
+    helpRequest.status = createRequestDto.status;
     helpRequest.additionalRequest = createRequestDto.additionalRequest;
     helpRequest.phoneNumber = createRequestDto.phoneNumber;
     helpRequest.deliveryComment = createRequestDto.deliveryComment;
@@ -125,7 +126,7 @@ export class HelpRequestsService {
   }
 
   async update(requestId: number, requestEntity: HelpRequestCreateDto) {
-    const request: HelpRequest = await this.findRequest(requestId);
+    const request = await this.findRequest(requestId);
     this.populateRequest(request, requestEntity);
 
     return await this.helpRequestRepository.save(request);
