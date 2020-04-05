@@ -18,7 +18,10 @@ export class HelpRequestArticle {
   @Exclude() // nobody needs to know the relation id
   id?: number;
 
-  @ApiProperty({ type: 'integer' })
+  @ApiProperty({
+    type: 'integer',
+    format: 'int64',
+  })
   @Column({ nullable: true })
   articleId?: number;
 
@@ -26,7 +29,10 @@ export class HelpRequestArticle {
   @JoinColumn({ name: 'articleId' })
   article?: Article;
 
-  @ApiProperty({ type: 'integer' })
+  @ApiProperty({
+    type: 'integer',
+    format: 'int64',
+  })
   @Column()
   articleCount?: number;
 

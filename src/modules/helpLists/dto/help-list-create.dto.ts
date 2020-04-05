@@ -7,6 +7,7 @@ export class HelpListCreateDto {
     type: 'array',
     items: {
       type: 'integer',
+      format: 'int64',
     },
   })
   helpRequestsIds?: number[];

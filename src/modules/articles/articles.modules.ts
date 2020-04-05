@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Article } from './article.entity';
 import { ArticlesController } from './articles.controller';
 import { ArticlesService } from './articles.service';
-import { ConfigurationModule } from 'src/configuration/configuration.module';
+import { ConfigurationModule } from '../../configuration/configuration.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Article]), ConfigurationModule],

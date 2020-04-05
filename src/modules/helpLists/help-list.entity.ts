@@ -2,12 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
   RelationId,
+  UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { HelpListStatus } from './help-list-status';
@@ -18,7 +18,10 @@ import { User } from '../users/user.entity';
   name: 'helpLists',
 })
 export class HelpList {
-  @ApiProperty({ type: 'integer' })
+  @ApiProperty({
+    type: 'integer',
+    format: 'int64',
+  })
   @PrimaryGeneratedColumn()
   id!: number;
 

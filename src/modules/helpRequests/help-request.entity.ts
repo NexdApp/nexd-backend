@@ -2,10 +2,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
 import { HelpRequestArticle } from './help-request-article.entity';
 import { ApiProperty } from '@nestjs/swagger';
@@ -18,7 +18,10 @@ import { HelpList } from '../helpLists/help-list.entity';
   name: 'helpRequests',
 })
 export class HelpRequest extends AddressModel {
-  @ApiProperty({ type: 'integer' })
+  @ApiProperty({
+    type: 'integer',
+    format: 'int64',
+  })
   @PrimaryGeneratedColumn()
   id?: number;
 

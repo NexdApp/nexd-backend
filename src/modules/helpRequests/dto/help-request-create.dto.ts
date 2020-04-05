@@ -6,12 +6,14 @@ export class CreateHelpRequestArticleDto {
   @ApiProperty({
     description: 'Article ID received from the article list',
     type: 'integer',
+    format: 'int64',
   })
   readonly articleId!: number;
 
   @ApiProperty({
     description: 'Number of items',
     type: 'integer',
+    format: 'int64',
   })
   readonly articleCount!: number;
 }

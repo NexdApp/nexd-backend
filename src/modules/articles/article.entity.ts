@@ -6,8 +6,9 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 })
 export class Article {
   @ApiProperty({
-    description: 'Auto-incremented id of an article.',
+    description: 'Auto-incremented ID of an article.',
     type: 'integer',
+    format: 'int64',
   })
   @PrimaryGeneratedColumn()
   id!: number;
