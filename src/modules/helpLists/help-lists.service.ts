@@ -85,6 +85,11 @@ export class HelpListsService {
     }
     if (helpListUpdate.status) {
       helpList.status = helpListUpdate.status;
+      if (helpList.status === HelpListStatus.COMPLETED) {
+        helpList.helpRequests.forEach(
+          request => (request.status = HelpRequestStatus.COMPLETED),
+        );
+      }
     }
     if (helpListUpdate.helpRequestsIds) {
       // remove old ones
