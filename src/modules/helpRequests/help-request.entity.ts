@@ -70,8 +70,12 @@ export class HelpRequest extends AddressModel {
   @JoinColumn({ name: 'requesterId' })
   requester?: User;
 
+  @ApiProperty({
+    type: 'integer',
+    format: 'int64',
+  })
   @Column({ nullable: true })
-  helpListId?: string;
+  helpListId?: number;
 
   @ManyToOne(
     type => HelpList,
