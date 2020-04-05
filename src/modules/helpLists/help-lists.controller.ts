@@ -75,6 +75,7 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpListId',
     description: 'Id of the help list',
+    type: 'integer',
   })
   async findOne(
     @Param('helpListId') helpListId: number,

@@ -139,16 +139,12 @@ export class HelpRequestsController {
   @ApiParam({
     name: 'helpRequestId',
     description: 'Id of the help request',
+    type: 'integer',
   })
   async getSingleRequest(
     @Param('helpRequestId') helpRequestId: number,
   ): Promise<HelpRequest> {
-    const entity = await this.helpRequestsService.get(helpRequestId);
-    if (!entity) {
-      throw new NotFoundException('This shopping request does not exist');
-    }
-    entity.requester = await this.usersService.getById(entity.requesterId);
-    return entity;
+    return await this.helpRequestsService.getById(helpRequestId);
   }
 
   @Put(':helpRequestId')
@@ -159,6 +155,7 @@ export class HelpRequestsController {
   @ApiParam({
     name: 'helpRequestId',
     description: 'Id of the help request',
+    type: 'integer',
   })
   async updateRequest(
     @Param('helpRequestId') helpRequestId: number,
@@ -186,6 +183,7 @@ export class HelpRequestsController {
   @ApiParam({
     name: 'articleId',
     description: 'Id of the article',
+    type: 'integer',
   })
   async addArticleInHelpRequest(
     @Param('helpRequestId', HelpRequestByIdPipe) helpRequest: HelpRequest,
@@ -212,6 +210,7 @@ export class HelpRequestsController {
   @ApiParam({
     name: 'articleId',
     description: 'Id of the article',
+    type: 'integer',
   })
   async removeArticleInHelpRequest(
     @Param('helpRequestId', HelpRequestByIdPipe) helpRequest: HelpRequest,

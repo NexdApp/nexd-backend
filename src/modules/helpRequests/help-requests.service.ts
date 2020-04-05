@@ -17,9 +17,9 @@ export class HelpRequestsService {
     private readonly helpRequestRepository: Repository<HelpRequest>,
   ) {}
 
-  async get(id: number) {
+  async getById(id: number) {
     return this.helpRequestRepository.findOne(id, {
-      relations: ['articles', 'articles.article'],
+      relations: ['articles', 'articles.article', 'requester'],
     });
   }
 
@@ -132,7 +132,7 @@ export class HelpRequestsService {
   }
 
   private async findRequest(id: number) {
-    const request: HelpRequest | undefined = await this.get(id);
+    const request: HelpRequest | undefined = await this.getById(id);
     if (!request) {
       throw new NotFoundException('This request does not exist');
     }

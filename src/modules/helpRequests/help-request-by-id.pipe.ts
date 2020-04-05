@@ -6,6 +6,6 @@ export class HelpRequestByIdPipe implements PipeTransform<string> {
   constructor(private readonly helpRequestsService: HelpRequestsService) {}
 
   transform(value: string, metadata: ArgumentMetadata) {
-    return this.helpRequestsService.get(Number(value));
+    return this.helpRequestsService.getById(Number(value));
   }
 }
