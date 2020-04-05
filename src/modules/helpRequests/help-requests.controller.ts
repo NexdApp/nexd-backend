@@ -51,7 +51,7 @@ export class HelpRequestsController {
   constructor(
     private readonly helpRequestsService: HelpRequestsService,
     private readonly usersService: UsersService,
-  ) {}
+  ) { }
 
   @Get()
   @ApiOperation({ summary: 'Get and filter for various help requests' })
@@ -98,6 +98,11 @@ export class HelpRequestsController {
     let userIdFilter = userId;
     if (userId === 'me') {
       userIdFilter = user.userId;
+    }
+    /* The generated api by openapi automatically only sends
+       a string (not an array) */
+    if (typeof status === 'string') {
+      status = [status];
     }
     const requests = await this.helpRequestsService.getAll({
       userId: userIdFilter,

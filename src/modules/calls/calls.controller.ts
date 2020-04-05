@@ -11,6 +11,7 @@ import {
   Post,
   UseGuards,
   Redirect,
+  HttpException,
 } from '@nestjs/common';
 import {
   ApiResponse,
@@ -109,9 +110,12 @@ export class CallsController {
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
   @Redirect('')
-  async getCallUrl(@Param('sid') sid: string): Promise<any> {
+  async getCallUrl(@Res() res: any, @Param('sid') sid: string): Promise<any> {
     const url = await this.callService.getCallRecord(sid);
-    return { statusCode: HttpStatus.FOUND, url };
+    if (url) {
+      return { statusCode: HttpStatus.FOUND, url };
+    }
+    throw new HttpException('Recording not found', HttpStatus.NOT_FOUND);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -121,6 +125,10 @@ export class CallsController {
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
   async getTranscriptionUrl(@Param('sid') sid: string): Promise<any> {
-    return await this.callService.getCallTranscription(sid);
+    const url = await this.callService.getCallTranscription(sid);
+    if (url) {
+      return { statusCode: HttpStatus.FOUND, url };
+    }
+    throw new HttpException('Transcription not found', HttpStatus.NOT_FOUND);
   }
 }
