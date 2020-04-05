@@ -11,6 +11,8 @@ import {
   Query,
   ParseBoolPipe,
   ParseIntPipe,
+  ClassSerializerInterceptor,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -39,6 +41,7 @@ import { HelpListByIdPipe } from './help-list-by-id.pipe';
 @ApiTags('Help Lists')
 @ApiUnauthorizedResponse({ description: 'Unauthorized' })
 @UseGuards(JwtAuthGuard)
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('help-lists')
 export class HelpListsController {
   static LOGGER = new Logger('HelpLists', true);
@@ -181,10 +184,12 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpRequestId',
     description: 'Id of the help request',
+    type: 'integer',
   })
   @ApiParam({
     name: 'articleId',
     description: 'Id of the article',
+    type: 'integer',
   })
   @ApiQuery({
     required: true,
