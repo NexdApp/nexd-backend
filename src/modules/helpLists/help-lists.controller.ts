@@ -181,10 +181,12 @@ export class HelpListsController {
   @ApiParam({
     name: 'helpRequestId',
     description: 'Id of the help request',
+    type: 'integer',
   })
   @ApiParam({
     name: 'articleId',
     description: 'Id of the article',
+    type: 'integer',
   })
   @ApiQuery({
     required: true,
