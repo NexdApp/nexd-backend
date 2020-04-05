@@ -94,9 +94,12 @@ export class CallsController {
 
   @Post('twilio/recorded')
   @ApiExcludeEndpoint()
-  async receiveRecording(@Res() res: any, @Body() body: any): Promise<any> {
+  async receiveRecording(@Body() body: any): Promise<any> {
     this.callService.recorded(body.CallSid, body.RecordingUrl);
-    res.status(200).send('Successful');
+
+    return {
+      message: 'Successful',
+    };
   }
 
   @Get('calls')
