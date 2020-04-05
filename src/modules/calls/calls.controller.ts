@@ -23,6 +23,7 @@ import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiExcludeEndpoint,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
@@ -96,9 +97,10 @@ export class CallsController {
     res.status(200).send('Successful');
   }
 
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(ClassSerializerInterceptor)
   @Get('calls')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({ summary: 'Returns all calls with the given parameters' })
   @ApiOkResponse({ description: 'Successful', type: Call, isArray: true })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -106,12 +108,13 @@ export class CallsController {
     return await this.callService.queryCalls(body);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Put('calls/:sid/converted')
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Sets a call as converted to shopping list' })
   @ApiOkResponse({ description: 'Successful', type: Call })
   @ApiNotFoundResponse({ description: "Couldn't find call or help request" })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiParam({
     name: 'sid',
     description: 'call sid',
@@ -135,8 +138,9 @@ export class CallsController {
     return call;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('calls/:sid/record')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Redirects the request to the stored record file.' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiOkResponse({
