@@ -9,11 +9,7 @@ export class CallQueryDto {
 
   country?: string;
 
-  @ApiProperty({
-    description: '',
-    type: 'integer',
-  })
-  zip?: number;
+  zip?: string;
 
   city?: string;
 

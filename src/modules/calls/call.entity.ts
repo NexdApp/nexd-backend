@@ -1,8 +1,16 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, CreateDateColumn, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  CreateDateColumn,
+  PrimaryColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { HelpRequest } from '../helpRequests/help-request.entity';
 
 @Entity({
-  name: 'call',
+  name: 'calls',
 })
 export class Call {
   // Session id of the call
@@ -13,14 +21,6 @@ export class Call {
   @CreateDateColumn()
   created!: Date;
 
-  // State of the recording of the call, only set when the call was finished stored
-  @Column({
-    type: 'boolean',
-    nullable: false,
-    default: false,
-  })
-  recorded!: boolean;
-
   // URL of the recorded audio file
   @Exclude()
   @Column({
@@ -28,14 +28,6 @@ export class Call {
     nullable: true,
   })
   recordUrl?: string;
-
-  // State of the automatic transcribtion
-  @Column({
-    type: 'boolean',
-    nullable: false,
-    default: false,
-  })
-  transcribed!: boolean;
 
   // URL to a textfile containing the automatic transcribtion of the call
   @Exclude()
@@ -45,13 +37,10 @@ export class Call {
   })
   transcriptionUrl?: string;
 
-  // Marks if call was already converted to an shopping list
-  @Column({
-    type: 'boolean',
-    nullable: false,
-    default: false,
-  })
-  converted!: boolean;
+  // not null if converted
+  @OneToOne(type => HelpRequest)
+  @JoinColumn()
+  convertedHelpRequest?: HelpRequest;
 
   // the phonenumber of the caller if provided
   @Exclude()
@@ -70,10 +59,10 @@ export class Call {
 
   // zip code of the calls origin
   @Column({
-    type: 'int',
+    type: 'varchar',
     nullable: true,
   })
-  zip?: number;
+  zip?: string;
 
   // city associated with the zip code
   @Column({

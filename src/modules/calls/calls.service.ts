@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Call } from './call.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ConfigurationService } from 'src/configuration/configuration.service';
 
 // import { S3, config } from 'aws-sdk';
 //import * as multer from 'multer';
 //import * as multerS3 from 'multer-s3';
 import { CallQueryDto } from './dto/call-query.dto';
+import { HelpRequest } from '../helpRequests/help-request.entity';
 //import * as twilio from 'twilio';
 
 // const s3 = new S3();
@@ -24,12 +24,13 @@ export class CallsService {
   /**
    *
    * @param callRepo
-   * @param configService
+   * @param helpRequestRepo
    */
   constructor(
     @InjectRepository(Call)
     private readonly callRepo: Repository<Call>,
-    private readonly configService: ConfigurationService,
+    @InjectRepository(HelpRequest)
+    private readonly helpRequestRepo: Repository<HelpRequest>,
   ) {}
 
   /**
@@ -42,14 +43,14 @@ export class CallsService {
     phoneNumber?: string,
     country?: string,
     city?: string,
-    zip?: number,
+    zip?: string,
   ): Promise<string> {
     const newAudioFile = await this.callRepo.create({
       sid: callSid,
       phoneNumber: phoneNumber || '',
       country: country || '',
       city: city || '',
-      zip: zip || 0,
+      zip: zip || '',
     });
     await this.callRepo.save(newAudioFile);
     return newAudioFile.sid;
@@ -96,7 +97,12 @@ export class CallsService {
         : this.DEFAULT_RETURN_AMOUNT,
     );
 
-    return await query.getMany();
+    query.leftJoinAndSelect('Call.convertedHelpRequest', 'helpRequests');
+
+    const calls = await query.getMany();
+    console.log(calls);
+
+    return await calls;
   }
 
   /**
@@ -144,7 +150,6 @@ export class CallsService {
     });
 
     if (call) {
-      call.transcribed = true;
       call.transcriptionUrl = transcriptionUrl;
       this.callRepo.save(call);
       return true;
@@ -164,7 +169,6 @@ export class CallsService {
     });
 
     if (call) {
-      call.recorded = true;
       call.recordUrl = recordingUrl;
       this.callRepo.save(call);
       return true;
@@ -178,16 +182,21 @@ export class CallsService {
    * @param call_sid
    * @param transcription_url
    */
-  async converted(callSid: string): Promise<boolean> {
+  async converted(callSid: string, helpRequestId: number): Promise<boolean> {
     const call: Call | undefined = await this.callRepo.findOne({
       sid: callSid,
     });
+    const helpRequest:
+      | HelpRequest
+      | undefined = await this.helpRequestRepo.findOne(helpRequestId);
 
-    if (call) {
-      call.converted = true;
+    if (call && helpRequest) {
+      call.convertedHelpRequest = helpRequest;
       this.callRepo.save(call);
+
       return true;
     }
+
     return false;
   }
 
