@@ -7,6 +7,7 @@ import { Article } from 'src/modules/articles/article.entity';
 import { HelpRequest } from 'src/modules/helpRequests/help-request.entity';
 import { HelpRequestArticle } from 'src/modules/helpRequests/help-request-article.entity';
 import { HelpList } from 'src/modules/helpLists/help-list.entity';
+import { Call } from 'src/modules/calls/call.entity';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { HelpList } from 'src/modules/helpLists/help-list.entity';
           type: 'postgres',
           ...dbConfig,
           // autoLoadEntities: true,
-          entities: [User, Article, HelpRequest, HelpRequestArticle, HelpList],
+          entities: [User, Article, HelpRequest, HelpRequestArticle, HelpList, Call],
           synchronize: true,
           // migrations: [__dirname + '/../../src/migrations/*.ts'],
           // cli: {
@@ -43,4 +44,4 @@ import { HelpList } from 'src/modules/helpLists/help-list.entity';
     }),
   ],
 })
-export class DatabaseModule {}
+export class DatabaseModule { }
