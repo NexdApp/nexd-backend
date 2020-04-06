@@ -60,13 +60,13 @@ export class HelpRequestsController {
     name: 'userId',
     required: false,
     description:
-      'If included, filter by userId, "me" for the requesting user, otherwise all users are replied.',
+      'If included, filter by userId, "me" for the requesting user, otherwise all users are replied. The excludeUserId query inverts the logic and excludes the given userId. ',
   })
   @ApiQuery({
     name: 'excludeUserId',
     required: false,
     description:
-      'If true, the given userId is excluded (and not filtered for as default)',
+      'If true, the given userId (in query) is excluded (and not filtered for as default). Requires the userId query.',
   })
   @ApiQuery({
     name: 'zipCode',
