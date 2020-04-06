@@ -39,9 +39,7 @@ export class UsersService {
     const checkUserExistence = await this.getByEmail(payload.email);
 
     if (checkUserExistence) {
-      throw new NotAcceptableException(
-        'Another user with provided email already exists.',
-      );
+      throw new NotAcceptableException('ERROR_REGISTRATION_ALREADY_EXISTS');
     }
 
     const newUser = this.userRepository.create(payload);
