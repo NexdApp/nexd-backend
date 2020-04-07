@@ -104,6 +104,11 @@ export class HelpRequestsController {
     if (typeof status === 'string') {
       status = [status];
     }
+    // same problem as with status
+    if (typeof zipCode === 'string') {
+      zipCode = [zipCode];
+    }
+
     const requests = await this.helpRequestsService.getAll({
       userId: userIdFilter,
       excludeUserId: String(excludeUserId) === 'true',
