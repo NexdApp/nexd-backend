@@ -5,6 +5,7 @@ import {
   ApiOperation,
   ApiOkResponse,
   ApiTags,
+  ApiHeader,
 } from '@nestjs/swagger';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { ArticlesService } from './articles.service';
@@ -19,6 +20,11 @@ export class ArticlesController {
   @Post()
   @UseGuards(AdminSecretGuard)
   @ApiOperation({ summary: 'Create an article' })
+  @ApiHeader({
+    name: 'x-admin-secret',
+    required: true,
+    description: 'Secret to access the admin functions.',
+  })
   @ApiCreatedResponse({ description: 'Created', type: Article })
   @ApiBadRequestResponse({ description: 'Bad Request' })
   async insertOne(
