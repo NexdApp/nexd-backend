@@ -1,52 +1,73 @@
-import {Body, Controller, Logger, Post} from '@nestjs/common';
+import {
+  Controller,
+  Request,
+  Post,
+  UseGuards,
+  Logger,
+  Body,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiNotAcceptableResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
-import {AuthService} from './auth.service';
-import {LoginPayload} from './login.payload';
-import {RegisterPayload} from './register.payload';
-import {UsersService} from '../user/user.service';
-import {ResponseTokenDto} from './dto/response-token.dt';
+import { LocalAuthGuard } from './local-auth.guard';
+import { AuthService } from './auth.service';
+import { RegisterDto } from './dto/register.dto';
+import { UsersService } from '../users/users.service';
+import { TokenDto } from './dto/token.dto';
+import { LoginDto } from './dto/login.dto';
 
+@ApiTags('Auth')
 @Controller('auth')
-@ApiTags('Authentication')
 export class AuthController {
-  static LOGGER = new Logger('Auth', true);
+  private readonly logger = new Logger(AuthController.name);
 
   constructor(
-    private readonly authService: AuthService,
-    private readonly userService: UsersService,
-  ) {
-  }
+    private authService: AuthService,
+    private usersService: UsersService,
+  ) {}
 
+  @UseGuards(LocalAuthGuard)
   @Post('login')
+  @ApiOperation({ summary: 'Login by email and password ' })
   @ApiOkResponse({
     description: 'Successful Login',
-    type: ResponseTokenDto,
+    type: TokenDto,
   })
-  @ApiBadRequestResponse({description: 'Bad Request'})
-  @ApiUnauthorizedResponse({description: 'Unauthorized'})
-  async login(@Body() credentials: LoginPayload): Promise<any> {
-    const user = await this.authService.validateUser(credentials);
-    return await this.authService.generateToken(user);
+  async login(@Request() req, @Body() _: LoginDto): Promise<TokenDto> {
+    this.logger.log(`User login`);
+    return await this.authService.createToken(req.user);
   }
 
   @Post('register')
+  @ApiOperation({ summary: 'Register with email and password ' })
   @ApiCreatedResponse({
     description: 'Successful Registration',
-    type: ResponseTokenDto,
+    type: TokenDto,
   })
-  @ApiBadRequestResponse({description: 'Bad Request'})
-  @ApiNotAcceptableResponse({description: 'Already exists'})
-  async register(@Body() payload: RegisterPayload): Promise<any> {
-    const user = await this.userService.create(payload);
-    AuthController.LOGGER.log(user);
-    return await this.authService.generateToken(user);
+  @ApiBadRequestResponse({ description: 'Bad Request' })
+  @ApiNotAcceptableResponse({ description: 'Already exists' })
+  async register(@Body() payload: RegisterDto): Promise<TokenDto> {
+    const user = await this.usersService.create(payload);
+    this.logger.log(`User registered: ${user.id}`);
+    this.logger.debug(`Email: ${payload.email}`);
+    return await this.authService.createToken(user);
+  }
+
+  @Post('refresh')
+  @ApiOperation({ summary: 'Not yet implemented, token refresh' })
+  @ApiCreatedResponse({
+    description: 'Successful token refresh',
+    type: TokenDto,
+  })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
+  async refreshToken(@Body() token: TokenDto): Promise<TokenDto> {
+    // TODO
+    return;
   }
 }

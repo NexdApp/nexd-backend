@@ -1,48 +1,46 @@
-import {NestFactory} from '@nestjs/core';
-import {Logger, ValidationPipe} from '@nestjs/common';
-import {getConnection} from 'typeorm';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
 import * as helmet from 'helmet';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
-import {setupSwagger} from './swagger';
-import {AppModule} from './modules/main/app.module';
-import {loggerMiddleware} from './modules/common/middlewares/logger.middleware';
-
-declare const module: any;
+import { setupSwagger } from './swagger';
+import { ConfigurationService } from './configuration/configuration.service';
+import { requestLoggerMiddleware } from './middlewares/requestLogger.middleware';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {cors: true});
   const logger = new Logger('Main', true);
-  const globalPrefix = '/api';
 
-  app.setGlobalPrefix(globalPrefix);
-  setupSwagger(app);
+  const app = await NestFactory.create(AppModule);
+
+  const globalPrefix = '/api/v1';
+  setupSwagger(app, globalPrefix);
+
+  app.use(requestLoggerMiddleware);
+
+  const appConfigService: ConfigurationService = app.get(
+    'ConfigurationService',
+  );
+  const port = appConfigService.APIPort;
+  const rootUrl = appConfigService.get('API_ROOT_URL');
+
+  app.enableCors();
+  app.use(helmet());
 
   app.useGlobalPipes(new ValidationPipe());
-  app.use(helmet());
-  app.use(loggerMiddleware);
 
-  await app.listen(AppModule.port);
+  app.setGlobalPrefix(globalPrefix);
 
-  // for Hot Module Reload
-  if (module.hot) {
-    const connection = getConnection();
-    if (connection.isConnected) {
-      await connection.close();
-    }
-    module.hot.accept();
-    module.hot.dispose(() => app.close());
-  }
+  // in case of heroku, the listen port is not exposed
+  const externalAPIPort = appConfigService.get('API_PORT');
 
-  // Log current url of app and documentation
-  let baseUrl = app.getHttpServer().address().address;
-  if (baseUrl === '0.0.0.0' || baseUrl === '::') {
-    baseUrl = 'localhost';
-  }
-  const url = `http://${baseUrl}:${AppModule.port}${globalPrefix}`;
+  const url = `${rootUrl}:${externalAPIPort}${globalPrefix}`;
+
+  await app.listen(port);
+
   logger.log(`Listening to ${url}`);
-  if (AppModule.isDev) {
+
+  if (appConfigService.isDev) {
     logger.log(`API Documentation available at ${url}/docs`);
   }
 }
-
 bootstrap();

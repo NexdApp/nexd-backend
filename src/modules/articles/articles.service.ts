@@ -22,10 +22,6 @@ export class ArticlesService {
     return this.articlesRepository.find();
   }
 
-  // findOne(id: string): Promise<Article> {
-  //   return this.articlesRepository.findOne(id);
-  // }
-
   async remove(id: string): Promise<void> {
     await this.articlesRepository.delete(id);
   }

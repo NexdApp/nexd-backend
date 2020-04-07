@@ -1,35 +1,32 @@
-import {Module} from '@nestjs/common';
-import {JwtModule} from '@nestjs/jwt';
-import {PassportModule} from '@nestjs/passport';
-
-import {ConfigModule} from '../config/config.module';
-import {ConfigService} from '../config/config.service';
-import {UserModule} from '../user/user.module';
-import {AuthService} from './auth.service';
-import {JwtStrategy} from './jwt.strategy';
-import {AuthController} from './auth.controller';
+import { Module } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { LocalStrategy } from './local.strategy';
+import { UsersModule } from '../users/users.module';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigurationService } from '../../configuration/configuration.service';
+import { JwtStrategy } from './jwt.strategy';
+import { AuthController } from './auth.controller';
+import { ConfigurationModule } from '../../configuration/configuration.module';
 
 @Module({
   imports: [
-    UserModule,
-    ConfigModule,
-    PassportModule.register({defaultStrategy: 'jwt'}),
+    UsersModule,
+    ConfigurationModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => {
-        return {
-          secret: configService.get('JWT_SECRET'),
-          signOptions: {
-            expiresIn: Number(configService.get('JWT_EXPIRATION_TIME')),
-          },
-        };
-      },
-      inject: [ConfigService],
+      imports: [ConfigurationModule],
+      inject: [ConfigurationService],
+      useFactory: (configService: ConfigurationService) => ({
+        secret: configService.get('JWT_SECRET'),
+        signOptions: {
+          expiresIn: `${configService.get('JWT_EXPIRATION_TIME_SECONDS')}s`,
+        },
+      }),
     }),
   ],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [PassportModule.register({defaultStrategy: 'jwt'})],
+  exports: [AuthService],
 })
-export class AuthModule {
-}
+export class AuthModule {}

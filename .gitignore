@@ -1,3 +1,7 @@
+# compiled output
+/dist
+/node_modules
+
 # Logs
 logs
 *.log
@@ -6,31 +10,25 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# dependencies
-node_modules/
-
-# IDE
-/.vscode
-.idea
-
-# misc
+# OS
 .DS_Store
-*.log
 
-# environment
-.env
-
-# build
-/dist
-
-# tests
-/test
+# Tests
 /coverage
 /.nyc_output
-build/config\.gypi
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json

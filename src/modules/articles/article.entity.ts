@@ -6,8 +6,9 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 })
 export class Article {
   @ApiProperty({
-    description: 'Auto-incremented id of an article.',
+    description: 'Auto-incremented ID of an article.',
     type: 'integer',
+    format: 'int64',
   })
   @PrimaryGeneratedColumn()
   id!: number;
@@ -16,9 +17,5 @@ export class Article {
     description: 'Name of the article, should also contain the unit.',
   })
   @Column({ length: 255 })
-  name!: string;
-}
-
-export class ArticleFillableFields {
   name!: string;
 }

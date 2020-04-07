@@ -1,36 +1,44 @@
-import {Injectable, UnauthorizedException} from '@nestjs/common';
-import {JwtService} from '@nestjs/jwt';
-
-import {ConfigService} from '../config/config.service';
-import {User} from '../user/user.entity';
-import {UsersService} from '../user/user.service';
-import {LoginPayload} from './login.payload';
+import { Injectable } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
+import { JwtService } from '@nestjs/jwt';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
-    private readonly userService: UsersService,
-  ) {
-  }
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
-  async generateToken(user: User) {
-    const userPayload = user;
-    delete userPayload.password;
-
-    return {
-      expiresIn: Number(this.configService.get('JWT_EXPIRATION_TIME')),
-      accessToken: this.jwtService.sign({...userPayload}),
-      id: user.id,
-    };
-  }
-
-  async validateUser({email, password}: LoginPayload): Promise<any> {
-    const user = await this.userService.getByEmailAndPass(email, password);
-    if (!user) {
-      throw new UnauthorizedException('Wrong email or password !');
+  async validateUserById(userId: string, pass: string): Promise<any> {
+    const user = await this.usersService.getById(userId);
+    if (user && user.comparePassword(pass)) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...result } = user;
+      return result;
     }
-    return user;
+    return null;
+  }
+
+  async validateUserByEmail(email: string, pass: string): Promise<any> {
+    const user = await this.usersService.getByEmail(email);
+
+    if (!user) return null;
+
+    const confirmed = await user.comparePassword(pass);
+
+    if (!confirmed) return null;
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = user;
+    return result;
+  }
+
+  async createToken(user: User) {
+    const payload = { email: user.email, sub: user.id };
+    return {
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }

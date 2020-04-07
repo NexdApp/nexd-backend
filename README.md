@@ -1,124 +1,81 @@
-## Dependencies
+# Nexd project
 
-- NodeJS
-- Docker
-- PostgreSQL Client
-  - `sudo apt install postgresql postgresql-contrib`
+![Push Container to Heroku](https://github.com/NexdApp/nexd-backend/workflows/Push%20Container%20to%20Heroku/badge.svg)
 
-## Installation
+## Introduction
 
-Install dependencies
+The backend for nexd is build using [nest.js](https://nestjs.com/).
 
-```bash
-npm install
-```
+## Getting started
 
-### Environment Configuration
+Please install the node modules:
 
-Create a `.env` file in the root folder
+`npm install`
 
-Configure PostgreSQL:
+You can use a postgres (postgis extension) installation on your local machine using docker:
 
-```sh
-sudo -i -u postgres # Switch over to the postgres account on your server by typing:
-psql -U postgres # type the default password, usually 'postgres'
-create user username with encrypted password 'secretpassword';
-create database dbname with owner username;
-\l # dbname should appear with username as owner
-```
+`npm run docker:postgis`
 
-then `ctrl + c` to exit the shell, then try to connect with  
-`psql -U username dbname` (it will ask for your password)
+The important environment files for local development are `.env.development.local` and `.env.postgis.local`.
 
-Next, in `.env`, set these vars:
+To start the development:
 
-> DATABASE_TYPE=postgres  
-> DATABASE_HOST=db  
-> DATABASE_PORT=5432  
-> DATABASE_USERNAME=username  
-> DATABASE_PASSWORD=secretpassword  
-> DATABASE_NAME=dbname
-> JWT_SECRET=jwt_awesome_key
+`npm start`
 
-Create a copy of `.env` called `.env.development` and change these vars:
+With an automatic reload:
 
-> DATABASE_HOST=localhost
-> DATABASE_PORT=54321
+`npm run start:dev`
 
-### Docker
+## Environments
 
-To spin up a docker container for local API development, following commands can be used.
-Start the docker postgres container:
-`docker-compose up -d db`
+### Local development
 
----
+### Staging on heroku
 
-To mount the project with Docker, you can use `npm run deploy:local` (which executes `docker-compose up`)
+The environment variables from the `.env.production` file are being used.
+Some secrets of course require to be hidden. These are:
 
-## Usage
+`ADMIN_SECRET` : A secret to be used in the header `x-admin-secret` header to access the `PUT /articles` endpoint. Just a workaround until full user accounts are in place.
 
-```bash
-# development
-npm run start
+`API_ROOT_URL`: URL of the API installation (e.g. https://nexd-backend-staging.herokuapp.com )
 
-# watch mode
-npm run start:dev
+`DATABASE_URL`: The database connection string. If this is set, the other settings (username, password,... ) of the database are not used.
 
-# production mode
-npm run start:prod
-```
+`JWT_SECRET`: The jwt secret.
 
-## Test
+Currently, a staging of the `develop` branch is deployed to AWS and to heroku.
 
-```bash
-# unit tests
-npm run test
+On heroku, the URL is: https://nexd-backend-staging.herokuapp.com/
 
-# e2e tests
-npm run test:e2e
+With the swagger being available at: https://nexd-backend-staging.herokuapp.com/api/v1/docs
 
-# test coverage
-npm run test:cov
-```
+## CI/CD
 
-## Swagger
+For the sake of simplicity, a single docker container is build using the github actions.
 
-RESTful APIs you can describe with already integrated Swagger.
-To see all available endpoints visit `http://localhost:3000/api/docs`
-To get the endpoints in JSON format, visit `http://localhost:3000/api/docs-json`
+Currently, this container is pushed directly to heroku. Later on, it is supposed to be pushed to the github container registry as well.
 
-## TypeORM
+## Database
 
-[TypeORM](http://typeorm.io/) gives you possibility to use next db types:
-`mysql`, `postgres`, `mariadb`, `sqlite`, etc. Please look at docs for more details.
-We have provided working example with `sqlite`, but you have possibility to change
-this through `ormconfig.json`. By default you will get `sqlite-example.sql` file
-created in the root directory, but it's ignored by git.
+Postgres is used. Locally is already a postgis command available. The postgis extension will be used for geo data.
 
-### Seeding
+## TODO
 
-See [TypeORM-Fixtures](https://robinck.github.io/typeorm-fixtures/)
-
-## Authentication - JWT
-
-Already preconfigured JWT authentication.
-It's suggested to change current password hashing to something more secure.
-You can start use already working implementation of `Login` and `Registration`
-endpoints, just take a look at [http://localhost:3000/api/docs](http://localhost:3000/api/docs).
-
-## Sources
-
-- [TypeORM MongoDB Documentation](https://github.com/typeorm/typeorm/blob/master/docs/mongodb.md)
-
-- [Great MongoDB tutorial](https://www.tutorialspoint.com/mongodb/mongodb_quick_guide.htm)
-
-- [Another NestJS boilerplate](https://github.com/unlight/nest-typescript-starter/tree/ad59f3443f347e668f1d6f6c22f78f01bddcfb89)
-
-- [Tutorial to build NestJS API + MongoDB with Mongoose instead of TypeORM](https://scotch.io/tutorials/building-a-modern-app-using-nestjs-mongodb-and-vuejs?utm_source=spotim&utm_medium=spotim_recirculation&spotim_referrer=recirculation&spot_im_comment_id=sp_D7GE1sbz_46694_c_Ta07US)
-
-- [Basic Authentication with JSON Web Tokens and Passport](https://scotch.io/@devGson/api-authentication-with-json-web-tokensjwt-and-passport)
-- [... or this one better integrated with NestJS](https://codebrains.io/jwt-auth-with-nestjs-passport-and-express/)
-
-- [Boilerplate with expiration-based JWT tokens](https://github.com/abouroubi/nestjs-auth-jwt)
-
-- [Variant using Basic auth with cookie in session](http://blog.exceptionfound.com/index.php/2018/06/07/nestjs-basic-auth-and-sessions/#Get_Projects_for_Authenticated_User)
+- [ ] Help lists owner validation DRY
+- [ ] Token content
+- [ ] use class-validator
+- [x] Pipes (validation...)
+- [ ] Same user or admin guard (`userResourceOrAdminsecret.guard.ts`)
+- [ ] permission role model
+- [ ] permission role decorators
+- [ ] logger middleware
+- [ ] check migrations
+- [ ] ssl database
+- [ ] exclude for password
+- [ ] pgadmin docker command
+- [ ] env config validation
+- [ ] HMR
+- [ ] exception handling
+- [ ] configuration module in database -> use isDev
+- [ ] use query builder for upsert of help list request ids
+- [ ] query arrays through comma separation parsing pipe?
