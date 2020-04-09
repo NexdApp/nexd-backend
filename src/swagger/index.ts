@@ -27,14 +27,6 @@ export const setupSwagger = (app: INestApplication, globalPrefix: string) => {
 
   const document = SwaggerModule.createDocument(app, options);
 
-  const metadatas = (getFromContainer(MetadataStorage) as any)
-    .validationMetadatas;
-  document.components.schemas = Object.assign(
-    {},
-    document.components.schemas || {},
-    validationMetadatasToSchemas(metadatas),
-  );
-
   const css = [
     {
       class: 'topbar',
