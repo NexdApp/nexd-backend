@@ -8,8 +8,6 @@ import {
 } from './constants';
 
 import { ConfigurationService } from '../configuration/configuration.service';
-import { getFromContainer, MetadataStorage } from 'class-validator';
-import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 
 export const setupSwagger = (app: INestApplication, globalPrefix: string) => {
   const configService = app.get(ConfigurationService);
