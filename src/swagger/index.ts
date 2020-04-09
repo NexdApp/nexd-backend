@@ -1,4 +1,4 @@
-import { INestApplication, Logger } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import {
   SWAGGER_API_CURRENT_VERSION,
@@ -8,6 +8,8 @@ import {
 } from './constants';
 
 import { ConfigurationService } from '../configuration/configuration.service';
+import { getFromContainer, MetadataStorage } from 'class-validator';
+import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 
 export const setupSwagger = (app: INestApplication, globalPrefix: string) => {
   const configService = app.get(ConfigurationService);
@@ -22,7 +24,16 @@ export const setupSwagger = (app: INestApplication, globalPrefix: string) => {
     .addServer(`${apiRootUrl}:${externalAPIPort}${globalPrefix}`)
     .addBearerAuth()
     .build();
+
   const document = SwaggerModule.createDocument(app, options);
+
+  const metadatas = (getFromContainer(MetadataStorage) as any)
+    .validationMetadatas;
+  document.components.schemas = Object.assign(
+    {},
+    document.components.schemas || {},
+    validationMetadatasToSchemas(metadatas),
+  );
 
   const css = [
     {
@@ -31,7 +42,6 @@ export const setupSwagger = (app: INestApplication, globalPrefix: string) => {
         'background: linear-gradient(180deg, #4EBF96 23.44%, #0C2E45 100%);',
     },
   ];
-  Logger.log(css);
 
   const compiled = css
     .map(value => {

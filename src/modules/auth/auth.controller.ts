@@ -39,7 +39,8 @@ export class AuthController {
     description: 'Successful Login',
     type: TokenDto,
   })
-  async login(@Request() req, @Body() _: LoginDto): Promise<TokenDto> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async login(@Request() req, @Body() loginDto: LoginDto): Promise<TokenDto> {
     this.logger.log(`User login`);
     return await this.authService.createToken(req.user);
   }
