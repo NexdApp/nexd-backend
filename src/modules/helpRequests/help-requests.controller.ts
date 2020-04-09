@@ -111,9 +111,9 @@ export class HelpRequestsController {
 
     const requests = await this.helpRequestsService.getAll({
       userId: userIdFilter,
-      excludeUserId: String(excludeUserId) === 'true',
+      excludeUserId: excludeUserId,
       zipCode,
-      includeRequester: String(includeRequester) === 'true',
+      includeRequester: includeRequester,
       status,
     });
     return requests;
