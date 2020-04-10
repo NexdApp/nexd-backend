@@ -14,6 +14,7 @@
     "build": "cross-env NODE_ENV=production nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "init:db": "ts-node e2e/create-data-fixture.ts",
+    "migrate:local-infos": "python3 src/modules/locationInfos/data/migration.py",
     "start": "cross-env NODE_ENV=development.local nest start",
     "start:dev": "cross-env NODE_ENV=development.local nest start --watch",
     "start:debug": "cross-env NODE_ENV=development.local nest start --debug --watch",
