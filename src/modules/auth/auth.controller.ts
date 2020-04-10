@@ -9,10 +9,10 @@ import {
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
-  ApiNotAcceptableResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiConflictResponse,
 } from '@nestjs/swagger';
 
 import { LocalAuthGuard } from './local-auth.guard';
@@ -21,12 +21,19 @@ import { RegisterDto } from './dto/register.dto';
 import { UsersService } from '../users/users.service';
 import { TokenDto } from './dto/token.dto';
 import { LoginDto } from './dto/login.dto';
-import { HttpBadRequest } from 'src/models/httpBadRequest.model';
+import { HttpBadRequestResponse } from '../../errorHandling/httpBadRequestResponse.model';
+import { HttpConflictResponse } from '../../errorHandling/httpConflictResponse.model';
 
 @ApiTags('Auth')
 @Controller('auth')
-@ApiBadRequestResponse({ description: 'Bad Request', type: HttpBadRequest })
-@ApiNotAcceptableResponse({ description: 'Already exists' })
+@ApiBadRequestResponse({
+  description: 'Bad Request',
+  type: HttpBadRequestResponse,
+})
+@ApiConflictResponse({
+  description: 'Conflict',
+  type: () => HttpConflictResponse,
+})
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 

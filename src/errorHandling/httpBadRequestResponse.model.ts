@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class HttpBadRequest {
+export class HttpBadRequestResponse {
   @ApiProperty({
     type: 'integer',
     format: 'int64',
     example: 400,
   })
-  statusCode = 400;
+  statusCode? = 400;
 
   @ApiProperty({ example: 'Bad Request' })
   error!: string;
