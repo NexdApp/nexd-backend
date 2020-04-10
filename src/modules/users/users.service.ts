@@ -11,6 +11,7 @@ import { User } from './user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RegisterDto } from '../auth/dto/register.dto';
 import { HttpConflictErrors } from '../../errorHandling/httpConflictErrors.type';
+import { HttpNotFoundErrors } from 'src/errorHandling/httpNotFoundErrors.type';
 
 @Injectable()
 @Roles('admin')
@@ -23,7 +24,10 @@ export class UsersService {
   async getById(userId: string): Promise<User> {
     const user = await this.userRepository.findOne(userId);
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException({
+        type: HttpNotFoundErrors.USERS_USER_NOT_FOUND,
+        description: 'user is not found',
+      });
     }
     return user;
   }
