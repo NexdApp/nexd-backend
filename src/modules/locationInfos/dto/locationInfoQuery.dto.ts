@@ -1,4 +1,3 @@
-
 export class LocationInfoQuery {
   zip?: string;
 
@@ -12,5 +11,5 @@ export class LocationInfoQuery {
 
   area?: string;
 
-  location?: { type: string, coordinates: number[] };
+  location?: { type: string; coordinates: number[] };
 }

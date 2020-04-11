@@ -6,6 +6,6 @@ import { LocationInfo } from './locationInfo.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([LocationInfo])],
   exports: [LocationInfosService],
-  providers: [LocationInfosService]
+  providers: [LocationInfosService],
 })
-export class LocalInfosModule { }
+export class LocalInfosModule {}

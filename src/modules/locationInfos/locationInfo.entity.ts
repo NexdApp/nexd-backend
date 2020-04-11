@@ -1,47 +1,43 @@
-import {
-  Column,
-  Entity,
-  PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({
   name: 'locationInfos',
 })
 export class LocationInfo {
   @Column({
-    type: "varchar"
+    type: 'varchar',
   })
   zip!: string;
 
   @Column({
-    type: "varchar"
+    type: 'varchar',
   })
   country!: string;
 
   @Column({
-    type: "varchar"
+    type: 'varchar',
   })
   city!: string;
 
   @Column({
-    type: "varchar"
+    type: 'varchar',
   })
   state!: string;
 
   @Column({
-    type: "varchar"
+    type: 'varchar',
   })
   stateShort!: string;
 
   @Column({
-    type: "varchar"
+    type: 'varchar',
   })
   area!: string;
 
   @PrimaryColumn({
     type: 'geography',
-    spatialFeatureType: "Point",
+    spatialFeatureType: 'Point',
     nullable: false,
   })
-  location: { type: string, coordinates: number[] };
+  location: { type: string; coordinates: number[] };
 }
