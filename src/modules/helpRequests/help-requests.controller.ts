@@ -14,6 +14,7 @@ import {
   ParseBoolPipe,
   ClassSerializerInterceptor,
   UseInterceptors,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -32,12 +33,11 @@ import { HelpRequest } from './help-request.entity';
 import { HelpRequestCreateDto } from './dto/help-request-create.dto';
 import { ReqUser } from '../../decorators/user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-// import { RequestArticleStatusDto } from '../helpList/dto/shopping-list-form.dto';
 import { UserID } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
-import { HelpRequestStatus } from './help-request-status';
 import { HelpRequestByIdPipe } from './help-request-by-id.pipe';
 import { CreateOrUpdateHelpRequestArticleDto } from './dto/help-request-article-create.dto';
+import { GetAllQueryParams } from './dto/get-all-query-params.dto';
 
 @ApiBearerAuth()
 @ApiTags('Help Requests')
@@ -68,53 +68,37 @@ export class HelpRequestsController {
     description:
       'If true, the given userId (in query) is excluded (and not filtered for as default). Requires the userId query.',
   })
-  @ApiQuery({
-    name: 'zipCode',
-    type: [String],
-    required: false,
-    description: 'Filter by an array of zipCodes',
-  })
-  @ApiQuery({
-    name: 'includeRequester',
-    required: false,
-    description:
-      'If "true", the requester object is included in each help request',
-  })
-  @ApiQuery({
-    name: 'status',
-    isArray: true,
-    required: false,
-    enum: HelpRequestStatus,
-    description: 'Array of status to filter for',
-  })
   async getAll(
-    @Query('userId') userId: string,
-    @Query('excludeUserId') excludeUserId: boolean,
-    @Query('zipCode') zipCode: string[],
-    @Query('includeRequester') includeRequester: boolean,
-    @Query('status') status: string[],
+    @Query() query: GetAllQueryParams,
+    // @Query('userId') userId: string,
+    // @Query('excludeUserId') excludeUserId: boolean,
+    // @Query('zipCode') zipCode: string[],
+    // @Query('includeRequester') includeRequester: boolean,
+    // @Query('status') status: StatusQueryParams,
     @ReqUser() user: any,
   ): Promise<HelpRequest[]> {
-    let userIdFilter = userId;
-    if (userId === 'me') {
+    let userIdFilter = query.userId;
+    if (query.userId === 'me') {
       userIdFilter = user.userId;
     }
+
+    console.log('status', query.status);
     /* The generated api by openapi automatically only sends
        a string (not an array) */
     if (typeof status === 'string') {
-      status = [status];
+      // status = [status];
     }
     // same problem as with status
-    if (typeof zipCode === 'string') {
-      zipCode = [zipCode];
+    if (typeof query.zipCode === 'string') {
+      query.zipCode = [query.zipCode];
     }
 
     const requests = await this.helpRequestsService.getAll({
       userId: userIdFilter,
-      excludeUserId: excludeUserId,
-      zipCode,
-      includeRequester: includeRequester,
-      status,
+      excludeUserId: query.excludeUserId,
+      zipCode: query.zipCode,
+      includeRequester: query.includeRequester,
+      status: query.status,
     });
     return requests;
   }

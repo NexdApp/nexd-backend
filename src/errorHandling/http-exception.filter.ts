@@ -3,6 +3,7 @@ import {
   Catch,
   ArgumentsHost,
   HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { HttpConflictResponse } from './httpConflictResponse.model';
@@ -16,7 +17,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
-    if (status === 409) {
+    if (status === HttpStatus.CONFLICT) {
       const errorCodeString: string = this.getErrorType(
         exception.getResponse(),
       );
@@ -29,6 +30,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
         errorDescription: description,
       };
       response.status(status).json(responseJson);
+      return;
+    }
+
+    if (status === HttpStatus.BAD_REQUEST) {
+      response.status(status).json(exception.getResponse());
       return;
     }
 
