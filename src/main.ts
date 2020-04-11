@@ -6,6 +6,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { setupSwagger } from './swagger';
 import { ConfigurationService } from './configuration/configuration.service';
 import { requestLoggerMiddleware } from './middlewares/requestLogger.middleware';
+import { HttpExceptionFilter } from './errorHandling/http-exception.filter';
 
 async function bootstrap() {
   const logger = new Logger('Main', true);
@@ -26,7 +27,13 @@ async function bootstrap() {
   app.enableCors();
   app.use(helmet());
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
+
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   app.setGlobalPrefix(globalPrefix);
 

@@ -9,10 +9,10 @@ import {
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
-  ApiNotAcceptableResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiConflictResponse,
 } from '@nestjs/swagger';
 
 import { LocalAuthGuard } from './local-auth.guard';
@@ -21,9 +21,19 @@ import { RegisterDto } from './dto/register.dto';
 import { UsersService } from '../users/users.service';
 import { TokenDto } from './dto/token.dto';
 import { LoginDto } from './dto/login.dto';
+import { HttpBadRequestResponse } from '../../errorHandling/httpBadRequestResponse.model';
+import { HttpConflictResponse } from '../../errorHandling/httpConflictResponse.model';
 
 @ApiTags('Auth')
 @Controller('auth')
+@ApiBadRequestResponse({
+  description: 'Bad Request',
+  type: HttpBadRequestResponse,
+})
+@ApiConflictResponse({
+  description: 'Conflict',
+  type: () => HttpConflictResponse,
+})
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
@@ -51,8 +61,6 @@ export class AuthController {
     description: 'Successful Registration',
     type: TokenDto,
   })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  @ApiNotAcceptableResponse({ description: 'Already exists' })
   async register(@Body() payload: RegisterDto): Promise<TokenDto> {
     const user = await this.usersService.create(payload);
     this.logger.log(`User registered: ${user.id}`);
@@ -66,7 +74,6 @@ export class AuthController {
     description: 'Successful token refresh',
     type: TokenDto,
   })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
   async refreshToken(@Body() token: TokenDto): Promise<TokenDto> {
     // TODO
     return;

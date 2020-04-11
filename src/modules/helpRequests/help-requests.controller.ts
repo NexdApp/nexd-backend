@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Logger,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -11,7 +10,6 @@ import {
   UseGuards,
   Delete,
   ParseIntPipe,
-  ParseBoolPipe,
   ClassSerializerInterceptor,
   UseInterceptors,
 } from '@nestjs/common';
@@ -21,7 +19,6 @@ import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
   ApiOperation,
@@ -32,12 +29,10 @@ import { HelpRequest } from './help-request.entity';
 import { HelpRequestCreateDto } from './dto/help-request-create.dto';
 import { ReqUser } from '../../decorators/user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-// import { RequestArticleStatusDto } from '../helpList/dto/shopping-list-form.dto';
 import { UserID } from '../users/user.entity';
-import { UsersService } from '../users/users.service';
-import { HelpRequestStatus } from './help-request-status';
 import { HelpRequestByIdPipe } from './help-request-by-id.pipe';
 import { CreateOrUpdateHelpRequestArticleDto } from './dto/help-request-article-create.dto';
+import { GetAllQueryParams } from './dto/get-all-query-params.dto';
 
 @ApiBearerAuth()
 @ApiTags('Help Requests')
@@ -48,73 +43,36 @@ import { CreateOrUpdateHelpRequestArticleDto } from './dto/help-request-article-
 export class HelpRequestsController {
   private readonly logger = new Logger(HelpRequestsController.name);
 
-  constructor(
-    private readonly helpRequestsService: HelpRequestsService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly helpRequestsService: HelpRequestsService) {}
 
   @Get()
   @ApiOperation({ summary: 'Get and filter for various help requests' })
   @ApiOkResponse({ description: 'Successful', type: [HelpRequest] })
-  @ApiQuery({
-    name: 'userId',
-    required: false,
-    description:
-      'If included, filter by userId, "me" for the requesting user, otherwise all users are replied. The excludeUserId query inverts the logic and excludes the given userId. ',
-  })
-  @ApiQuery({
-    name: 'excludeUserId',
-    required: false,
-    description:
-      'If true, the given userId (in query) is excluded (and not filtered for as default). Requires the userId query.',
-  })
-  @ApiQuery({
-    name: 'zipCode',
-    type: [String],
-    required: false,
-    description: 'Filter by an array of zipCodes',
-  })
-  @ApiQuery({
-    name: 'includeRequester',
-    required: false,
-    description:
-      'If "true", the requester object is included in each help request',
-  })
-  @ApiQuery({
-    name: 'status',
-    isArray: true,
-    required: false,
-    enum: HelpRequestStatus,
-    description: 'Array of status to filter for',
-  })
   async getAll(
-    @Query('userId') userId: string,
-    @Query('excludeUserId') excludeUserId: boolean,
-    @Query('zipCode') zipCode: string[],
-    @Query('includeRequester') includeRequester: boolean,
-    @Query('status') status: string[],
+    @Query() query: GetAllQueryParams,
     @ReqUser() user: any,
   ): Promise<HelpRequest[]> {
-    let userIdFilter = userId;
-    if (userId === 'me') {
+    let userIdFilter = query.userId;
+    if (query.userId === 'me') {
       userIdFilter = user.userId;
     }
+
     /* The generated api by openapi automatically only sends
        a string (not an array) */
-    if (typeof status === 'string') {
-      status = [status];
+    if (typeof query.status === 'string') {
+      query.status = [query.status];
     }
     // same problem as with status
-    if (typeof zipCode === 'string') {
-      zipCode = [zipCode];
+    if (typeof query.zipCode === 'string') {
+      query.zipCode = [query.zipCode];
     }
 
     const requests = await this.helpRequestsService.getAll({
       userId: userIdFilter,
-      excludeUserId: String(excludeUserId) === 'true',
-      zipCode,
-      includeRequester: String(includeRequester) === 'true',
-      status,
+      excludeUserId: query.excludeUserId,
+      zipCode: query.zipCode,
+      includeRequester: query.includeRequester,
+      status: query.status as string[],
     });
     return requests;
   }
@@ -147,7 +105,7 @@ export class HelpRequestsController {
     type: 'integer',
   })
   async getSingleRequest(
-    @Param('helpRequestId') helpRequestId: number,
+    @Param('helpRequestId', ParseIntPipe) helpRequestId: number,
   ): Promise<HelpRequest> {
     return await this.helpRequestsService.getById(helpRequestId);
   }
@@ -163,7 +121,7 @@ export class HelpRequestsController {
     type: 'integer',
   })
   async updateRequest(
-    @Param('helpRequestId') helpRequestId: number,
+    @Param('helpRequestId', ParseIntPipe) helpRequestId: number,
     @Body() helpRequestCreateDto: HelpRequestCreateDto,
   ): Promise<HelpRequest> {
     const entity = await this.helpRequestsService.update(

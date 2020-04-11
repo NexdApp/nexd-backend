@@ -19,6 +19,7 @@ import {
   ApiParam,
   ApiTags,
   ApiOperation,
+  ApiHeader,
 } from '@nestjs/swagger';
 
 import { ReqUser } from '../../decorators/user.decorator';
@@ -26,6 +27,8 @@ import { User, UserID } from './user.entity';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AdminSecretGuard } from '../auth/adminsecret-auth.guard';
+import { UserIdValidationPipe } from './userId-validation.pipe';
 
 @Controller('users')
 @ApiBearerAuth()
@@ -40,6 +43,13 @@ export class UserController {
   @Get()
   @ApiOperation({ summary: 'Get all users' })
   @ApiOkResponse({ description: 'Successful', type: [User] })
+  @UseGuards(AdminSecretGuard)
+  @ApiOperation({ summary: 'Create an article' })
+  @ApiHeader({
+    name: 'x-admin-secret',
+    required: true,
+    description: 'Secret to access the admin functions.',
+  })
   async getAll(): Promise<User[]> {
     return await this.userService.getAll();
   }
@@ -62,7 +72,9 @@ export class UserController {
     name: 'userId',
     description: 'user id',
   })
-  async findOne(@Param('userId') userId: string): Promise<User> {
+  async findOne(
+    @Param('userId', UserIdValidationPipe) userId: string,
+  ): Promise<User> {
     return await this.userService.getById(userId);
   }
 
