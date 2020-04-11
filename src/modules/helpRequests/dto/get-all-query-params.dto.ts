@@ -36,10 +36,9 @@ export class GetAllQueryParams {
   includeRequester?: boolean;
 
   @ApiProperty({
-    name: 'status',
-    isArray: true,
     required: false,
     enum: HelpRequestStatus,
+    enumName: 'HelpRequestStatus',
     description: 'Array of status to filter for',
   })
   @IsEnum(HelpRequestStatus, { each: true })
