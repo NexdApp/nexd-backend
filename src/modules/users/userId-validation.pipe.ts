@@ -21,7 +21,9 @@ export class UserIdValidationPipe implements PipeTransform<string> {
   transform(value: string, metadata: ArgumentMetadata) {
     const valid = this.isUUID(value) || value === 'me';
     if (!valid) {
-      throw new BadRequestException('Validation failed');
+      throw new BadRequestException(
+        'Validation failed (userId is UUID or "me")',
+      );
     }
     return value;
   }
