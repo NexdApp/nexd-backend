@@ -1,6 +1,6 @@
 import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
-import { CallsController } from './calls.controller';
-import { CallsService } from './calls.service';
+import { PhoneController } from './phone.controller';
+import { PhoneService } from './phone.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Call } from './call.entity';
 import { ConfigurationModule } from 'src/configuration/configuration.module';
@@ -9,11 +9,11 @@ import { HelpRequest } from '../helpRequests/help-request.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Call, HelpRequest]), ConfigurationModule],
-  exports: [CallsService],
-  controllers: [CallsController],
-  providers: [CallsService],
+  exports: [PhoneService],
+  controllers: [PhoneController],
+  providers: [PhoneService],
 })
-export class CallsModule {
+export class PhoneModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(twilio.webhook({ validate: true }))

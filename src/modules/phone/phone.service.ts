@@ -17,7 +17,7 @@ import { HelpRequest } from '../helpRequests/help-request.entity';
 }); */
 
 @Injectable()
-export class CallsService {
+export class PhoneService {
   // default number of calls that get returned by database return querries
   readonly DEFAULT_RETURN_AMOUNT: number = 20;
 

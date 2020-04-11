@@ -29,7 +29,7 @@ import {
 } from '@nestjs/swagger';
 
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
-import { CallsService } from './calls.service';
+import { PhoneService } from './phone.service';
 import { CallQueryDto } from './dto/call-query.dto';
 import { ConfigurationService } from 'src/configuration/configuration.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -38,9 +38,9 @@ import { ConvertedHelpRequestDto } from './dto/converted-help-request.dto';
 
 @Controller('call')
 @ApiTags('Calls')
-export class CallsController {
+export class PhoneController {
   constructor(
-    private readonly callService: CallsService,
+    private readonly callService: PhoneService,
     private readonly configService: ConfigurationService,
   ) {}
 
