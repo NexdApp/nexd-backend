@@ -63,19 +63,21 @@ Postgres is used. Locally is already a postgis command available. The postgis ex
 
 - [ ] Help lists owner validation DRY
 - [ ] Token content
-- [ ] use class-validator
+- [x] use class-validator
 - [x] Pipes (validation...)
 - [ ] Same user or admin guard (`userResourceOrAdminsecret.guard.ts`)
 - [ ] permission role model
 - [ ] permission role decorators
-- [ ] logger middleware
+- [x] logger middleware
 - [ ] check migrations
-- [ ] ssl database
-- [ ] exclude for password
+- [x] ssl database
+- [x] exclude for password
 - [ ] pgadmin docker command
 - [ ] env config validation
 - [ ] HMR
-- [ ] exception handling
+- [x] exception handling
 - [ ] configuration module in database -> use isDev
 - [ ] use query builder for upsert of help list request ids
 - [ ] query arrays through comma separation parsing pipe?
+- [ ] rate limiting (for later)
+- [ ] compression

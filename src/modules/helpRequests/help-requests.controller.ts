@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Logger,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -11,10 +10,8 @@ import {
   UseGuards,
   Delete,
   ParseIntPipe,
-  ParseBoolPipe,
   ClassSerializerInterceptor,
   UseInterceptors,
-  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -22,7 +19,6 @@ import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
   ApiOperation,
@@ -34,7 +30,6 @@ import { HelpRequestCreateDto } from './dto/help-request-create.dto';
 import { ReqUser } from '../../decorators/user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserID } from '../users/user.entity';
-import { UsersService } from '../users/users.service';
 import { HelpRequestByIdPipe } from './help-request-by-id.pipe';
 import { CreateOrUpdateHelpRequestArticleDto } from './dto/help-request-article-create.dto';
 import { GetAllQueryParams } from './dto/get-all-query-params.dto';
@@ -48,33 +43,13 @@ import { GetAllQueryParams } from './dto/get-all-query-params.dto';
 export class HelpRequestsController {
   private readonly logger = new Logger(HelpRequestsController.name);
 
-  constructor(
-    private readonly helpRequestsService: HelpRequestsService,
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly helpRequestsService: HelpRequestsService) {}
 
   @Get()
   @ApiOperation({ summary: 'Get and filter for various help requests' })
   @ApiOkResponse({ description: 'Successful', type: [HelpRequest] })
-  @ApiQuery({
-    name: 'userId',
-    required: false,
-    description:
-      'If included, filter by userId, "me" for the requesting user, otherwise all users are replied. The excludeUserId query inverts the logic and excludes the given userId. ',
-  })
-  @ApiQuery({
-    name: 'excludeUserId',
-    required: false,
-    description:
-      'If true, the given userId (in query) is excluded (and not filtered for as default). Requires the userId query.',
-  })
   async getAll(
     @Query() query: GetAllQueryParams,
-    // @Query('userId') userId: string,
-    // @Query('excludeUserId') excludeUserId: boolean,
-    // @Query('zipCode') zipCode: string[],
-    // @Query('includeRequester') includeRequester: boolean,
-    // @Query('status') status: StatusQueryParams,
     @ReqUser() user: any,
   ): Promise<HelpRequest[]> {
     let userIdFilter = query.userId;
@@ -82,11 +57,10 @@ export class HelpRequestsController {
       userIdFilter = user.userId;
     }
 
-    console.log('status', query.status);
     /* The generated api by openapi automatically only sends
        a string (not an array) */
-    if (typeof status === 'string') {
-      // status = [status];
+    if (typeof query.status === 'string') {
+      query.status = [query.status];
     }
     // same problem as with status
     if (typeof query.zipCode === 'string') {
@@ -98,7 +72,7 @@ export class HelpRequestsController {
       excludeUserId: query.excludeUserId,
       zipCode: query.zipCode,
       includeRequester: query.includeRequester,
-      status: query.status,
+      status: query.status as string[],
     });
     return requests;
   }
@@ -131,7 +105,7 @@ export class HelpRequestsController {
     type: 'integer',
   })
   async getSingleRequest(
-    @Param('helpRequestId') helpRequestId: number,
+    @Param('helpRequestId', ParseIntPipe) helpRequestId: number,
   ): Promise<HelpRequest> {
     return await this.helpRequestsService.getById(helpRequestId);
   }
@@ -147,7 +121,7 @@ export class HelpRequestsController {
     type: 'integer',
   })
   async updateRequest(
-    @Param('helpRequestId') helpRequestId: number,
+    @Param('helpRequestId', ParseIntPipe) helpRequestId: number,
     @Body() helpRequestCreateDto: HelpRequestCreateDto,
   ): Promise<HelpRequest> {
     const entity = await this.helpRequestsService.update(

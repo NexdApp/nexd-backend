@@ -3,8 +3,20 @@ import { IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class GetAllQueryParams {
+  @ApiProperty({
+    name: 'userId',
+    required: false,
+    description:
+      'If included, filter by userId, "me" for the requesting user, otherwise all users are replied. The excludeUserId query inverts the logic and excludes the given userId. ',
+  })
   userId?: string;
 
+  @ApiProperty({
+    name: 'excludeUserId',
+    required: false,
+    description:
+      'If true, the given userId (in query) is excluded (and not filtered for as default). Requires the userId query.',
+  })
   excludeUserId?: boolean;
 
   @ApiProperty({
