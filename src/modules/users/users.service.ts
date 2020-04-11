@@ -58,7 +58,7 @@ export class UsersService {
     user.firstName = editRequestDto.firstName;
     user.lastName = editRequestDto.lastName;
     user.role = editRequestDto.role;
-    user.telephone = editRequestDto.telephone;
+    user.phoneNumber = editRequestDto.phoneNumber;
 
     return await this.userRepository.save(user);
   }

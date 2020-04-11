@@ -5,6 +5,7 @@ import { UserRole } from './user-role';
 import { AddressModel } from '../../models/address.model';
 import * as bcrypt from 'bcrypt';
 import { ApiHideProperty } from '@nestjs/swagger';
+import { IsPhoneNumber, IsOptional } from 'class-validator';
 
 @Entity({
   name: 'users',
@@ -33,7 +34,9 @@ export class User extends AddressModel {
     length: 255,
     nullable: true,
   })
-  telephone?: string;
+  @IsOptional()
+  @IsPhoneNumber('ZZ')
+  phoneNumber?: string;
 
   @ApiHideProperty()
   @Column()

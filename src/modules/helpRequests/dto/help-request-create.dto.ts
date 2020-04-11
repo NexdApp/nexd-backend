@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AddressModel } from '../../../models/address.model';
 import { HelpRequestStatus } from '../help-request-status';
+import { IsPhoneNumber, IsOptional } from 'class-validator';
 
 export class CreateHelpRequestArticleDto {
   @ApiProperty({
@@ -25,5 +26,8 @@ export class HelpRequestCreateDto extends AddressModel {
 
   readonly additionalRequest?: string;
   readonly deliveryComment?: string;
+
+  @IsOptional()
+  @IsPhoneNumber('ZZ')
   readonly phoneNumber?: string;
 }
