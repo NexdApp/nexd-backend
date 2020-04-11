@@ -3,9 +3,8 @@ import {
   Injectable,
   ArgumentMetadata,
   BadRequestException,
+  Optional,
 } from '@nestjs/common';
-
-import { UsersService } from './users.service';
 
 const uuid = {
   3: /^[0-9A-F]{8}-[0-9A-F]{4}-3[0-9A-F]{3}-[0-9A-F]{4}-[0-9A-F]{12}$/i,
@@ -14,12 +13,21 @@ const uuid = {
   all: /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i,
 };
 
+export interface UserIdValidationOptions {
+  optional?: boolean;
+}
+
 @Injectable()
 export class UserIdValidationPipe implements PipeTransform<string> {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    @Optional() private readonly options: UserIdValidationOptions = {},
+  ) {}
 
   transform(value: string, metadata: ArgumentMetadata) {
-    const valid = this.isUUID(value) || value === 'me';
+    let valid = this.isUUID(value) || value === 'me';
+    if (this.options.optional) {
+      valid = true;
+    }
     if (!valid) {
       throw new BadRequestException(
         'Validation failed (userId is UUID or "me")',

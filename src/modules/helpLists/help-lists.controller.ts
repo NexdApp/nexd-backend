@@ -58,7 +58,8 @@ export class HelpListsController {
     description: 'If included, filter by userId, otherwise by requesting user.',
   })
   async getUserLists(
-    @Query('userId', UserIdValidationPipe) userId: string,
+    @Query('userId', new UserIdValidationPipe({ optional: true }))
+    userId: string,
     @ReqUser() user: UserID,
   ): Promise<HelpList[]> {
     let userIdFilter = userId;
