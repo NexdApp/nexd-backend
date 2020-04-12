@@ -15,7 +15,7 @@ export class User extends AddressModel {
   id!: string;
 
   @Column({ length: 255 })
-  email!: string;
+  email?: string;
 
   @Column({
     type: 'enum',
