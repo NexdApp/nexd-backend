@@ -31,13 +31,17 @@ import { PhoneService } from './phone.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Call } from './call.entity';
 import { ConvertedHelpRequestDto } from './dto/converted-help-request.dto';
+import {
+  CountryHotlineNumbers,
+  countryHotlineNumberExample,
+} from './interfaces/CountryHotlineNumbers.interface';
 
 @Controller('phone')
 @ApiTags('Phone')
 export class PhoneController {
   constructor(private readonly callService: PhoneService) { }
 
-  @Get('number')
+  @Get('numbers')
   @ApiOperation({ summary: 'Returns available numbers' })
   @ApiOkResponse({
     description: 'Success',
@@ -46,15 +50,13 @@ export class PhoneController {
         schema: {
           type: 'string',
           format: 'json',
-          example: '{\n  "number": "+49 721 98419016"\n}',
+          example: JSON.stringify(countryHotlineNumberExample),
         },
       },
     },
   })
-  async getNumber(): Promise<any> {
-    return {
-      number: '+49 721 98419016',
-    };
+  async getNumber(): Promise<CountryHotlineNumbers> {
+    return countryHotlineNumberExample;
   }
 
   @Post('twilio/call')
