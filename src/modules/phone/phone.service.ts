@@ -30,7 +30,7 @@ export class PhoneService {
     private readonly callRepo: Repository<Call>,
     @InjectRepository(HelpRequest)
     private readonly helpRequestRepo: Repository<HelpRequest>,
-  ) { }
+  ) {}
 
   /**
    * Creates new Call object in the database

@@ -39,7 +39,7 @@ import {
 @Controller('phone')
 @ApiTags('Phone')
 export class PhoneController {
-  constructor(private readonly callService: PhoneService) { }
+  constructor(private readonly callService: PhoneService) {}
 
   @Get('numbers')
   @ApiOperation({ summary: 'Returns available numbers' })
@@ -66,15 +66,18 @@ export class PhoneController {
 
     switch (body.FromCountry) {
       case 'DE':
-        twiml.play({
-          loop: 1,
-        }, "/api/v1/phone/audio/DE/introduction.mp3");
+        twiml.play(
+          {
+            loop: 1,
+          },
+          '/api/v1/phone/audio/DE/introduction.mp3',
+        );
         break;
 
       default:
         twiml.say(
           { language: 'en-US' },
-          'Welcome to nexd, we don\'t know your language but we continue with english'
+          "Welcome to nexd, we don't know your language but we continue with english",
         );
         break;
     }
@@ -108,10 +111,18 @@ export class PhoneController {
   }
 
   @Get('audio/:language/:file')
-  async serveAudioFile(@Res() response: any, @Param() parameters: { language: string, file: string }) {
-    response.setHeader('Content-Type', 'audio/mpeg')
-    response.attachment(parameters.file)
-    return response.download("./src/modules/phone/audio/" + parameters.language + "/" + parameters.file);
+  async serveAudioFile(
+    @Res() response: any,
+    @Param() parameters: { language: string; file: string },
+  ) {
+    response.setHeader('Content-Type', 'audio/mpeg');
+    response.attachment(parameters.file);
+    return response.download(
+      './src/modules/phone/audio/' +
+        parameters.language +
+        '/' +
+        parameters.file,
+    );
   }
 
   @Get('calls')
