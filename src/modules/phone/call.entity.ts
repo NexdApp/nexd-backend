@@ -6,6 +6,7 @@ import {
   PrimaryColumn,
   OneToOne,
   JoinColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { HelpRequest } from '../helpRequests/help-request.entity';
 
@@ -19,7 +20,11 @@ export class Call {
 
   // Timestamp of start  of the call
   @CreateDateColumn()
-  created!: Date;
+  createdAt!: Date;
+
+  @Column()
+  @UpdateDateColumn()
+  updatedAt!: Date;
 
   // URL of the recorded audio file
   @Exclude()

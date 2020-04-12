@@ -35,6 +35,7 @@ import {
   CountryHotlineNumbers,
   countryHotlineNumberExample,
 } from './interfaces/CountryHotlineNumbers.interface';
+import { GetCallsQueryParams } from './dto/get-calls-query-params.dto';
 
 @Controller('phone')
 @ApiTags('Phone')
@@ -131,57 +132,8 @@ export class PhoneController {
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({ summary: 'Returns all calls with the given parameters' })
   @ApiOkResponse({ description: 'Successful', type: Call, isArray: true })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  @ApiQuery({
-    name: 'limit',
-    required: false,
-  })
-  @ApiQuery({
-    name: 'converted',
-    required: false,
-    description:
-      'True if you only want to query calls which are already converted to a ' +
-      'help request, false otherwise. Returns all calls if undefined.',
-  })
-  @ApiQuery({
-    name: 'country',
-    required: false,
-  })
-  @ApiQuery({
-    name: 'zip',
-    required: false,
-  })
-  @ApiQuery({
-    name: 'city',
-    required: false,
-  })
-  async calls(
-    @Query('limit') limit: number,
-    @Query('converted') converted: string,
-    @Query('country') country: string,
-    @Query('zip') zip: number,
-    @Query('city') city: string,
-  ): Promise<any> {
-    if (
-      converted !== 'true' &&
-      converted !== 'false' &&
-      converted !== undefined
-    ) {
-      throw new HttpException(
-        'Wrong converted query parameter',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const body = {
-      limit: limit,
-      converted: converted,
-      country: country,
-      zip: zip,
-      city: city,
-    };
-
-    return await this.callService.queryCalls(body);
+  async calls(@Query() query: GetCallsQueryParams): Promise<Call[]> {
+    return await this.callService.queryCalls(query);
   }
 
   @Put('calls/:sid/converted')

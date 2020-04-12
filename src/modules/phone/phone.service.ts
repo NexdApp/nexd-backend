@@ -69,19 +69,21 @@ export class PhoneService {
    *
    * @param queryParameters
    */
-  async queryCalls(queryParameters): Promise<Call[]> {
+  async queryCalls(queryParameters: {
+    limit?: number;
+    zip?: string;
+    country?: string;
+    city?: string;
+    converted?: boolean;
+  }): Promise<Call[]> {
     const query = this.callRepo
       .createQueryBuilder('calls')
-      .orderBy('calls.created', 'DESC');
+      .orderBy('calls.createdAt', 'DESC');
 
-    if (queryParameters.converted === 'true') {
-      query.andWhere('calls.convertedHelpRequest IS NOT NULL', {
-        conversionState: queryParameters.converted,
-      });
-    } else if (queryParameters.converted === 'false') {
-      query.andWhere('calls.convertedHelpRequest IS NULL', {
-        conversionState: queryParameters.converted,
-      });
+    if (queryParameters.converted) {
+      query.andWhere('calls.convertedHelpRequest IS NOT NULL');
+    } else if (queryParameters.converted) {
+      query.andWhere('calls.convertedHelpRequest IS NULL');
     }
 
     if (queryParameters.country) {
