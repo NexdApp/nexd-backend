@@ -32,8 +32,8 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Call } from './call.entity';
 import { ConvertedHelpRequestDto } from './dto/converted-help-request.dto';
 
-@Controller('call')
-@ApiTags('Calls')
+@Controller('phone')
+@ApiTags('Phone')
 export class PhoneController {
   constructor(
     private readonly callService: PhoneService
