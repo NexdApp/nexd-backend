@@ -42,6 +42,7 @@ export class HelpListsService {
         'helpRequests',
         'helpRequests.articles',
         'helpRequests.articles.article',
+        'helpRequests.requester',
       ],
     });
     if (!helpLists) {
