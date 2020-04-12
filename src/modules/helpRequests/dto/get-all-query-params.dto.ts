@@ -1,6 +1,7 @@
 import { HelpRequestStatus } from '../help-request-status';
-import { IsEnum } from 'class-validator';
+import { IsEnum, IsBoolean, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class GetAllQueryParams {
   @ApiProperty({
@@ -17,6 +18,9 @@ export class GetAllQueryParams {
     description:
       'If true, the given userId (in query) is excluded (and not filtered for as default). Requires the userId query.',
   })
+  @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
   excludeUserId?: boolean;
 
   @ApiProperty({
@@ -33,6 +37,9 @@ export class GetAllQueryParams {
     description:
       'If "true", the requester object is included in each help request',
   })
+  @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
   includeRequester?: boolean;
 
   @ApiProperty({
