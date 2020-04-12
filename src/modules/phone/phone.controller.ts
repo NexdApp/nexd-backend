@@ -38,6 +38,7 @@ import {
 import { GetCallsQueryParams } from './dto/get-calls-query-params.dto';
 import { ReqUser } from 'src/decorators/user.decorator';
 import { UserID } from '../users/user.entity';
+import { HelpRequestCreateDto } from '../helpRequests/dto/help-request-create.dto';
 
 @Controller('phone')
 @ApiTags('Phone')
@@ -144,10 +145,13 @@ export class PhoneController {
     return await this.callService.queryCalls(query);
   }
 
-  @Put('calls/:sid/converted')
+  @Post('calls/:sid/help-request')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Sets a call as converted to shopping list' })
+  @ApiOperation({
+    summary:
+      'Creates a new help request for a call and creates a user for the phoneNumber',
+  })
   @ApiOkResponse({ description: 'Successful', type: Call })
   @ApiNotFoundResponse({ description: "Couldn't find call or help request" })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -158,14 +162,14 @@ export class PhoneController {
   })
   async converted(
     @Param('sid') sid: string,
-    @Body() convertedHelpRequest: ConvertedHelpRequestDto,
+    @Body() createHelpRequestDto: HelpRequestCreateDto,
+    @ReqUser() user: UserID,
   ): Promise<any> {
-    const call: Call = await this.callService.converted(
+    return await this.callService.helpRequestAndUserFromCall(
       sid,
-      convertedHelpRequest.helpRequestId,
+      createHelpRequestDto,
+      user.userId,
     );
-
-    return call;
   }
 
   @Get('calls/:sid/record')

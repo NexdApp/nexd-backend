@@ -6,6 +6,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  OneToOne,
 } from 'typeorm';
 import { HelpRequestArticle } from './help-request-article.entity';
 import { ApiProperty } from '@nestjs/swagger';
@@ -13,6 +14,7 @@ import { HelpRequestStatus } from './help-request-status';
 import { AddressModel } from '../../models/address.model';
 import { User } from '../users/user.entity';
 import { HelpList } from '../helpLists/help-list.entity';
+import { Call } from '../phone/call.entity';
 
 @Entity({
   name: 'helpRequests',
@@ -83,4 +85,7 @@ export class HelpRequest extends AddressModel {
   )
   @JoinColumn({ name: 'helpListId' })
   helpList?: HelpList;
+
+  @OneToOne(type => Call)
+  call?: Call;
 }

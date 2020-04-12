@@ -5,9 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Call } from './call.entity';
 import * as twilio from 'twilio';
 import { HelpRequest } from '../helpRequests/help-request.entity';
+import { HelpRequestsModule } from '../helpRequests/help-requests.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Call, HelpRequest])],
+  imports: [
+    UsersModule,
+    HelpRequestsModule,
+    TypeOrmModule.forFeature([Call, HelpRequest]),
+  ],
   exports: [PhoneService],
   controllers: [PhoneController],
   providers: [PhoneService],

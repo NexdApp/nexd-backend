@@ -1,4 +1,11 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+  ConflictException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Call } from './call.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +14,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 //import * as multer from 'multer';
 //import * as multerS3 from 'multer-s3';
 import { HelpRequest } from '../helpRequests/help-request.entity';
+import { HelpRequestCreateDto } from '../helpRequests/dto/help-request-create.dto';
+import { HelpRequestsService } from '../helpRequests/help-requests.service';
+import { UsersService } from '../users/users.service';
 //import * as twilio from 'twilio';
 
 // const s3 = new S3();
@@ -30,6 +40,8 @@ export class PhoneService {
     private readonly callRepo: Repository<Call>,
     @InjectRepository(HelpRequest)
     private readonly helpRequestRepo: Repository<HelpRequest>,
+    private readonly helpRequestsService: HelpRequestsService,
+    private readonly usersService: UsersService,
   ) {}
 
   /**
@@ -190,6 +202,59 @@ export class PhoneService {
   }
 
   /**
+   * Marks an call as recorded and sets the url to the to the audio file
+   *
+   * @param callSid
+   * @param helpRequest
+   */
+  async helpRequestAndUserFromCall(
+    callSid: string,
+    createHelpRequestDto: HelpRequestCreateDto,
+    userId: string,
+  ): Promise<Call> {
+    const call: Call | undefined = await this.callRepo.findOne({
+      sid: callSid,
+    });
+    if (!call) {
+      throw new NotFoundException('Call not found');
+    }
+    if (call.converterId) {
+      throw new ConflictException('Call already converted to help request');
+    }
+
+    // requesting user converted
+    call.converterId = userId;
+
+    if (!createHelpRequestDto.phoneNumber) {
+      throw new BadRequestException('Phone number needs to be given for calls');
+    }
+
+    // new or existing user by phone number
+    let user = await this.usersService.getByPhoneNumber(
+      createHelpRequestDto.phoneNumber,
+    );
+
+    if (!user) {
+      user = await this.usersService.create({
+        email: null,
+        phoneNumber: createHelpRequestDto.phoneNumber,
+        password: 'unused', // TODO disable user
+      });
+    }
+    console.log(user);
+
+    // create help request
+    const helpRequest = await this.helpRequestsService.create(
+      createHelpRequestDto,
+      user.id,
+    );
+    call.convertedHelpRequest = helpRequest;
+
+    return await this.callRepo.save(call);
+  }
+
+  /**
+   * @deprecated
    * Marks the call with the corresponding sid as translated and sets the path to the translation
    *
    * @param call_sid

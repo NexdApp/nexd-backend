@@ -55,6 +55,8 @@ export class HelpRequestsService {
     helpRequest.city = createRequestDto.city;
     helpRequest.street = createRequestDto.street;
     helpRequest.number = createRequestDto.number;
+    helpRequest.firstName = createRequestDto.firstName;
+    helpRequest.lastName = createRequestDto.lastName;
     helpRequest.zipCode = createRequestDto.zipCode;
   }
 

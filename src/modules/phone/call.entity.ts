@@ -45,7 +45,7 @@ export class Call {
   transcriptionUrl?: string;
 
   // not null if converted
-  @OneToOne(type => HelpRequest)
+  @OneToOne(type => HelpRequest, { cascade: true })
   @JoinColumn()
   convertedHelpRequest?: HelpRequest;
 

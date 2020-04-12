@@ -36,10 +36,14 @@ export class UsersService {
     return await this.userRepository.findOne({ email });
   }
 
+  async getByPhoneNumber(phoneNumber: string) {
+    return await this.userRepository.findOne({ phoneNumber });
+  }
+
   async create(payload: RegisterDto) {
     const checkUserExistence = await this.getByEmail(payload.email);
 
-    if (checkUserExistence) {
+    if (payload.email !== null && checkUserExistence) {
       throw new ConflictException({
         type: HttpConflictErrors.USERS_USER_EXISTS,
         description: 'user is already present',
