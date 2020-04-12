@@ -15,13 +15,11 @@ import {
   Query,
 } from '@nestjs/common';
 import {
-  ApiResponse,
   ApiParam,
   ApiOperation,
   ApiUnauthorizedResponse,
   ApiTags,
   ApiOkResponse,
-  ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiExcludeEndpoint,
   ApiBearerAuth,
@@ -30,8 +28,6 @@ import {
 
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
 import { PhoneService } from './phone.service';
-import { CallQueryDto } from './dto/call-query.dto';
-import { ConfigurationService } from 'src/configuration/configuration.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Call } from './call.entity';
 import { ConvertedHelpRequestDto } from './dto/converted-help-request.dto';
@@ -40,9 +36,8 @@ import { ConvertedHelpRequestDto } from './dto/converted-help-request.dto';
 @ApiTags('Calls')
 export class PhoneController {
   constructor(
-    private readonly callService: PhoneService,
-    private readonly configService: ConfigurationService,
-  ) {}
+    private readonly callService: PhoneService
+  ) { }
 
   @Get('number')
   @ApiOperation({ summary: 'Returns available numbers' })
@@ -72,7 +67,7 @@ export class PhoneController {
     twiml.say(
       { language: 'de-DE' },
       'Willkommen bei nexd, der modernen Nachbarschaftshilfe, ' +
-        'sprechen Sie Ihre Nachricht nach dem Signalton.',
+      'sprechen Sie Ihre Nachricht nach dem Signalton.',
     );
     twiml.record({
       action: '/api/v1/call/twilio/recorded',

@@ -3,12 +3,11 @@ import { PhoneController } from './phone.controller';
 import { PhoneService } from './phone.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Call } from './call.entity';
-import { ConfigurationModule } from 'src/configuration/configuration.module';
 import * as twilio from 'twilio';
 import { HelpRequest } from '../helpRequests/help-request.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Call, HelpRequest]), ConfigurationModule],
+  imports: [TypeOrmModule.forFeature([Call, HelpRequest])],
   exports: [PhoneService],
   controllers: [PhoneController],
   providers: [PhoneService],

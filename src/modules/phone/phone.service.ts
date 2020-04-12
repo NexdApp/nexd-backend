@@ -6,7 +6,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 // import { S3, config } from 'aws-sdk';
 //import * as multer from 'multer';
 //import * as multerS3 from 'multer-s3';
-import { CallQueryDto } from './dto/call-query.dto';
 import { HelpRequest } from '../helpRequests/help-request.entity';
 //import * as twilio from 'twilio';
 
@@ -31,7 +30,7 @@ export class PhoneService {
     private readonly callRepo: Repository<Call>,
     @InjectRepository(HelpRequest)
     private readonly helpRequestRepo: Repository<HelpRequest>,
-  ) {}
+  ) { }
 
   /**
    * Creates new Call object in the database
