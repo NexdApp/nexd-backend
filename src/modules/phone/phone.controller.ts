@@ -35,9 +35,7 @@ import { ConvertedHelpRequestDto } from './dto/converted-help-request.dto';
 @Controller('phone')
 @ApiTags('Phone')
 export class PhoneController {
-  constructor(
-    private readonly callService: PhoneService
-  ) { }
+  constructor(private readonly callService: PhoneService) { }
 
   @Get('number')
   @ApiOperation({ summary: 'Returns available numbers' })
@@ -64,13 +62,23 @@ export class PhoneController {
   async incomingCall(@Res() res: any, @Body() body: any): Promise<any> {
     const twiml: any = new VoiceResponse();
 
-    twiml.say(
-      { language: 'de-DE' },
-      'Willkommen bei nexd, der modernen Nachbarschaftshilfe, ' +
-      'sprechen Sie Ihre Nachricht nach dem Signalton.',
-    );
+    switch (body.FromCountry) {
+      case 'DE':
+        twiml.play({
+          loop: 1,
+        }, "/api/v1/phone/audio/DE/introduction.mp3");
+        break;
+
+      default:
+        twiml.say(
+          { language: 'en-US' },
+          'Welcome to nexd, we don\'t know your language but we continue with english'
+        );
+        break;
+    }
+
     twiml.record({
-      action: '/api/v1/call/twilio/recorded',
+      action: '/api/v1/phone/twilio/recorded',
       method: 'POST',
     });
     twiml.say({ language: 'de-DE' }, 'Ich habe keine Nachricht empfangen.');
@@ -95,6 +103,13 @@ export class PhoneController {
     return {
       message: 'Successful',
     };
+  }
+
+  @Get('audio/:language/:file')
+  async serveAudioFile(@Res() response: any, @Param() parameters: { language: string, file: string }) {
+    response.setHeader('Content-Type', 'audio/mpeg')
+    response.attachment(parameters.file)
+    return response.download("./src/modules/phone/audio/" + parameters.language + "/" + parameters.file);
   }
 
   @Get('calls')
