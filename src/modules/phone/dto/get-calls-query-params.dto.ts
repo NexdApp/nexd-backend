@@ -4,6 +4,14 @@ import { Type } from 'class-transformer';
 
 export class GetCallsQueryParams {
   @ApiProperty({
+    name: 'userId',
+    required: false,
+    description:
+      'If included, filter by userId, "me" for the requesting user, otherwise all users are replied. ',
+  })
+  userId?: string;
+
+  @ApiProperty({
     name: 'limit',
     required: false,
   })

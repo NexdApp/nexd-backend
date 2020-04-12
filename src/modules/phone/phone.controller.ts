@@ -36,6 +36,8 @@ import {
   countryHotlineNumberExample,
 } from './interfaces/CountryHotlineNumbers.interface';
 import { GetCallsQueryParams } from './dto/get-calls-query-params.dto';
+import { ReqUser } from 'src/decorators/user.decorator';
+import { UserID } from '../users/user.entity';
 
 @Controller('phone')
 @ApiTags('Phone')
@@ -132,7 +134,13 @@ export class PhoneController {
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({ summary: 'Returns all calls with the given parameters' })
   @ApiOkResponse({ description: 'Successful', type: Call, isArray: true })
-  async calls(@Query() query: GetCallsQueryParams): Promise<Call[]> {
+  async calls(
+    @Query() query: GetCallsQueryParams,
+    @ReqUser() user: UserID,
+  ): Promise<Call[]> {
+    if (query.userId === 'me') {
+      query.userId = user.userId;
+    }
     return await this.callService.queryCalls(query);
   }
 

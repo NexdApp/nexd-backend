@@ -7,8 +7,10 @@ import {
   OneToOne,
   JoinColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import { HelpRequest } from '../helpRequests/help-request.entity';
+import { User } from '../users/user.entity';
 
 @Entity({
   name: 'calls',
@@ -75,4 +77,11 @@ export class Call {
     nullable: true,
   })
   city?: string;
+
+  @Column({ nullable: true })
+  converterId?: string;
+
+  @ManyToOne(type => User)
+  @JoinColumn({ name: 'converterId' })
+  converter?: User;
 }

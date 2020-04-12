@@ -75,6 +75,7 @@ export class PhoneService {
     country?: string;
     city?: string;
     converted?: boolean;
+    userId?: string;
   }): Promise<Call[]> {
     const query = this.callRepo
       .createQueryBuilder('calls')
@@ -98,6 +99,12 @@ export class PhoneService {
 
     if (queryParameters.city) {
       query.andWhere('calls.city = :city', { city: queryParameters.city });
+    }
+
+    if (queryParameters.userId) {
+      query.andWhere('calls.converterId = :converterId', {
+        converterId: queryParameters.userId,
+      });
     }
 
     query.limit(

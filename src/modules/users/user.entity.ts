@@ -15,12 +15,6 @@ export class User extends AddressModel {
   id!: string;
 
   @Column({ length: 255 })
-  firstName!: string;
-
-  @Column({ length: 255 })
-  lastName!: string;
-
-  @Column({ length: 255 })
   email!: string;
 
   @Column({

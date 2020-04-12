@@ -52,8 +52,6 @@ export class HelpRequestsController {
     @Query() query: GetAllQueryParams,
     @ReqUser() user: any,
   ): Promise<HelpRequest[]> {
-    console.log('query', query);
-    console.log(typeof query.excludeUserId);
     let userIdFilter = query.userId;
     if (query.userId === 'me') {
       userIdFilter = user.userId;
