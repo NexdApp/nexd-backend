@@ -23,23 +23,29 @@ export class VerificationController {
 
   @Post('/request')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Verify phone number via sms' })
+  @ApiOperation({ summary: 'Request phone number verification via SMS' })
   @ApiOkResponse({
-    description: 'Successful Request',
+    description: 'Requested',
   })
   async request(@Body() requestDto: RequestDto): Promise<void> {
-    this.logger.log(`Attempt to verify phone number`);
     return await this.verificationService.requestSMS(requestDto.phoneNumber);
   }
 
   @Post('/verify')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Verify phone number via sms' })
-  @ApiOkResponse({
-    description: 'Successful Verification',
-  })
-  async verify(@Body() verifyDto: VerificationDto): Promise<boolean> {
-    this.logger.log(`Attempt to verify phone number`);
+  @ApiOkResponse({ description: 'Successful Verification' })
+  @ApiBadRequestResponse({ description: 'Could not verify phone number' })
+  async verify(@Body() verifyDto: VerificationDto): Promise<void> {
     return this.verificationService.verifyNumber(verifyDto.phoneNumber, verifyDto.OTP);
+  }
+
+  @Post('/reset')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Reset code verification' })
+  @ApiOkResponse({ description: 'Successful' })
+  @ApiBadRequestResponse({ description: 'Unkown phone number' })
+  async reset(@Body() verifyDto: RequestDto): Promise<void> {
+    return this.verificationService.reset(verifyDto.phoneNumber);
   }
 }

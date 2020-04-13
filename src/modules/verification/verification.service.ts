@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigurationService } from '../../configuration/configuration.service';
 
 const Twilio = require('twilio');
@@ -12,7 +12,7 @@ export class VerificationService {
   private sendingPhoneNumber: string;
   private appHash: string;
 
-  // Replace with Database, Memcache or Redis?
+  // TODO: Replace with Database, Memcache or Redis?
   private verificationMap = new Map<string, number>();
 
   constructor(configService: ConfigurationService) {
@@ -66,15 +66,16 @@ export class VerificationService {
     this.logger.log('Verifying ' + phone + ':' + smsMessage);
     const otp = this.verificationMap.get(phone);
     if (otp == null) {
-      this.logger.log('No cached otp value found for phone: ' + phone);
-      return false;
+      const message = 'No cached otp value found for phone: ' + phone;
+      this.logger.log(message);
+      throw new BadRequestException(message);
     }
-    if (smsMessage.indexOf(otp) > -1) {
-      this.logger.log('Found otp value in cache');
-      return true;
+    if (smsMessage.indexOf(otp) <= -1) {
+      const message = 'Mismatch between otp value found and otp value expected';
+      this.logger.log(message);
+      throw new BadRequestException(message);
     } else {
-      this.logger.log('Mismatch between otp value found and otp value expected');
-      return false;
+      this.logger.log('Found otp value in cache');
     }
   };
 
@@ -82,11 +83,11 @@ export class VerificationService {
     this.logger.log('Resetting code for:  ' + phone);
     const otp = this.verificationMap.get(phone);
     if (otp == null) {
-      this.logger.log('No cached otp value found for phone: ' + phone);
-      return false;
+      const message = 'No cached otp value found for phone: ' + phone;
+      this.logger.log(message);
+      throw new BadRequestException(message);
     }
     this.verificationMap.delete(phone);
-    return true;
   };
 
   private generateOneTimeCode() {
