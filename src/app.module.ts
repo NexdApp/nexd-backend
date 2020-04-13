@@ -10,6 +10,7 @@ import { HelpRequestsModule } from './modules/helpRequests/help-requests.module'
 import { HelpListsModule } from './modules/helpLists/help-lists.module';
 import { CallsModule } from './modules/calls/calls.module';
 import { LocalInfosModule } from './modules/locationInfos/locationInfos.module';
+import { VerificationModule } from './modules/verification/verification.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { LocalInfosModule } from './modules/locationInfos/locationInfos.module';
     HelpListsModule,
     CallsModule,
     LocalInfosModule,
+    VerificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
