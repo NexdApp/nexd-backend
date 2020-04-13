@@ -13,6 +13,7 @@ import {
   Redirect,
   HttpException,
   Query,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiParam,
@@ -24,6 +25,7 @@ import {
   ApiExcludeEndpoint,
   ApiBearerAuth,
   ApiQuery,
+  ApiCreatedResponse,
 } from '@nestjs/swagger';
 
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
@@ -59,15 +61,16 @@ export class PhoneController {
       },
     },
   })
-  async getNumber(): Promise<CountryHotlineNumbers> {
+  async getNumbers(): Promise<CountryHotlineNumbers> {
     return countryHotlineNumberExample;
   }
 
-  @Post('twilio/call')
-  @ApiExcludeEndpoint()
+  // TODO auth
+  @Post('twilio/incoming-call')
   async incomingCall(@Res() res: any, @Body() body: any): Promise<any> {
     const twiml: any = new VoiceResponse();
 
+    // TODO language selection, maybe through incoming number
     switch (body.FromCountry) {
       case 'DE':
         twiml.play(
@@ -87,8 +90,8 @@ export class PhoneController {
     }
 
     twiml.record({
-      action: '/api/v1/phone/twilio/recorded',
-      method: 'POST',
+      action: '/api/v1/phone/twilio/record-callback',
+      method: 'PATCH',
     });
     twiml.say({ language: 'de-DE' }, 'Ich habe keine Nachricht empfangen.');
 
@@ -104,8 +107,8 @@ export class PhoneController {
     res.send(twiml.toString());
   }
 
-  @Post('twilio/recorded')
-  @ApiExcludeEndpoint()
+  // TODO auth
+  @Patch('twilio/record-callback')
   async receiveRecording(@Body() body: any): Promise<any> {
     this.callService.recorded(body.CallSid, body.RecordingUrl);
 
@@ -152,9 +155,8 @@ export class PhoneController {
     summary:
       'Creates a new help request for a call and creates a user for the phoneNumber',
   })
-  @ApiOkResponse({ description: 'Successful', type: Call })
+  @ApiCreatedResponse({ description: 'Successful', type: Call })
   @ApiNotFoundResponse({ description: "Couldn't find call or help request" })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiParam({
     name: 'sid',
     description: 'call sid',
