@@ -117,21 +117,6 @@ export class PhoneController {
     };
   }
 
-  // @Get('audio/:language/:file')
-  // async serveAudioFile(
-  //   @Res() response: any,
-  //   @Param() parameters: { language: string; file: string },
-  // ) {
-  //   response.setHeader('Content-Type', 'audio/mpeg');
-  //   response.attachment(parameters.file);
-  //   return response.download(
-  //     './src/modules/phone/audio/' +
-  //       parameters.language +
-  //       '/' +
-  //       parameters.file,
-  //   );
-  // }
-
   @Get('calls')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
@@ -171,6 +156,21 @@ export class PhoneController {
       sid,
       createHelpRequestDto,
       user.userId,
+    );
+  }
+
+  @Get('calls/:sid/audio/download')
+  async serveAudioFile(
+    @Res() response: any,
+    @Param() parameters: { language: string; file: string },
+  ) {
+    response.setHeader('Content-Type', 'audio/mpeg');
+    response.attachment(parameters.file);
+    return response.download(
+      './src/modules/phone/audio/' +
+        parameters.language +
+        '/' +
+        parameters.file,
     );
   }
 }
