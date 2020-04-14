@@ -86,6 +86,10 @@ export class HelpRequest extends AddressModel {
   @JoinColumn({ name: 'helpListId' })
   helpList?: HelpList;
 
-  @OneToOne(type => Call)
+  @OneToOne(
+    type => Call,
+    call => call.convertedHelpRequest,
+  )
+  @JoinColumn()
   call?: Call;
 }

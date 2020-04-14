@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNumber, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsNumber, IsOptional } from 'class-validator';
+import { Type, Transform } from 'class-transformer';
 
 export class GetCallsQueryParams {
   @ApiProperty({
@@ -27,8 +27,7 @@ export class GetCallsQueryParams {
       'help request, false otherwise. Returns all calls if undefined.`,
   })
   @IsOptional()
-  @IsBoolean()
-  @Type(() => Boolean)
+  @Transform(val => val === 'true')
   converted?: boolean;
 
   @ApiProperty({

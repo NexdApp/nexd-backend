@@ -68,7 +68,7 @@ export class HelpRequestsService {
     status?: string[];
   }) {
     const where: any = {};
-    const relations = ['articles', 'articles.article'];
+    const relations = ['articles', 'articles.article', 'call'];
 
     if (filters.userId) {
       if (filters.excludeUserId) {

@@ -6,14 +6,12 @@ import {
   UseInterceptors,
   Res,
   Param,
-  Put,
   ClassSerializerInterceptor,
   Post,
   UseGuards,
   Redirect,
   HttpException,
   Query,
-  Patch,
 } from '@nestjs/common';
 import {
   ApiParam,
@@ -22,9 +20,7 @@ import {
   ApiTags,
   ApiOkResponse,
   ApiNotFoundResponse,
-  ApiExcludeEndpoint,
   ApiBearerAuth,
-  ApiQuery,
   ApiCreatedResponse,
 } from '@nestjs/swagger';
 
@@ -32,7 +28,6 @@ const VoiceResponse = require('twilio').twiml.VoiceResponse;
 import { PhoneService } from './phone.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Call } from './call.entity';
-import { ConvertedHelpRequestDto } from './dto/converted-help-request.dto';
 import {
   CountryHotlineNumbers,
   countryHotlineNumberExample,
@@ -52,7 +47,7 @@ export class PhoneController {
   @ApiOkResponse({
     description: 'Success',
     content: {
-      'applicaton/json': {
+      'application/json': {
         schema: {
           type: 'string',
           format: 'json',
@@ -68,6 +63,9 @@ export class PhoneController {
   // TODO auth
   @Post('twilio/incoming-call')
   async incomingCall(@Res() res: any, @Body() body: any): Promise<any> {
+    // TODO: body is not really used, it could also be the CallStatus: completed event
+    // TODO: we need to check where a response is needed
+
     const twiml: any = new VoiceResponse();
 
     // TODO language selection, maybe through incoming number
@@ -90,47 +88,49 @@ export class PhoneController {
     }
 
     twiml.record({
-      action: '/api/v1/phone/twilio/record-callback',
-      method: 'PATCH',
+      // uses POST by default
+      recordingStatusCallback: '/api/v1/phone/twilio/record-callback',
     });
     twiml.say({ language: 'de-DE' }, 'Ich habe keine Nachricht empfangen.');
 
-    this.callService.create(
-      body.CallSid,
-      body.From,
-      body.FromCountry,
-      body.FromCity,
-      body.FromZip,
-    );
+    console.log(body);
+    this.callService.createCall({
+      callSid: body.CallSid,
+      phoneNumber: body.From,
+      country: body.FromCountry,
+      city: body.FromCity,
+      zip: body.FromZip,
+    });
 
     res.type('text/xml');
     res.send(twiml.toString());
   }
 
   // TODO auth
-  @Patch('twilio/record-callback')
+  @Post('twilio/record-callback')
   async receiveRecording(@Body() body: any): Promise<any> {
-    this.callService.recorded(body.CallSid, body.RecordingUrl);
+    console.log(body);
+    this.callService.getAndSaveRecord(body.CallSid, body.RecordingUrl);
 
     return {
       message: 'Successful',
     };
   }
 
-  @Get('audio/:language/:file')
-  async serveAudioFile(
-    @Res() response: any,
-    @Param() parameters: { language: string; file: string },
-  ) {
-    response.setHeader('Content-Type', 'audio/mpeg');
-    response.attachment(parameters.file);
-    return response.download(
-      './src/modules/phone/audio/' +
-        parameters.language +
-        '/' +
-        parameters.file,
-    );
-  }
+  // @Get('audio/:language/:file')
+  // async serveAudioFile(
+  //   @Res() response: any,
+  //   @Param() parameters: { language: string; file: string },
+  // ) {
+  //   response.setHeader('Content-Type', 'audio/mpeg');
+  //   response.attachment(parameters.file);
+  //   return response.download(
+  //     './src/modules/phone/audio/' +
+  //       parameters.language +
+  //       '/' +
+  //       parameters.file,
+  //   );
+  // }
 
   @Get('calls')
   @UseGuards(JwtAuthGuard)
@@ -138,7 +138,7 @@ export class PhoneController {
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({ summary: 'Returns all calls with the given parameters' })
   @ApiOkResponse({ description: 'Successful', type: Call, isArray: true })
-  async calls(
+  async getCalls(
     @Query() query: GetCallsQueryParams,
     @ReqUser() user: UserID,
   ): Promise<Call[]> {
@@ -173,46 +173,4 @@ export class PhoneController {
       user.userId,
     );
   }
-
-  @Get('calls/:sid/record')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Redirects the request to the stored record file.' })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  @ApiOkResponse({
-    description: 'Successful',
-    content: {
-      'audio/x-wav': {
-        schema: {
-          type: 'string',
-          format: 'binary',
-          example: 'audio file',
-        },
-      },
-    },
-  })
-  @ApiNotFoundResponse({ description: 'Recording not found.' })
-  @Redirect('')
-  async getCallUrl(@Res() res: any, @Param('sid') sid: string): Promise<any> {
-    const url = await this.callService.getCallRecord(sid);
-    if (url) {
-      return { statusCode: HttpStatus.FOUND, url };
-    }
-    throw new HttpException('Recording not found', HttpStatus.NOT_FOUND);
-  }
-
-  /* @UseGuards(JwtAuthGuard)
-  @Get('calls/:sid/transcription')
-  @ApiOperation({
-    summary: 'Redirects the request to the stored transcription file',
-  })
-  @ApiOkResponse({ description: 'Successful' })
-  @ApiNotFoundResponse({ description: 'Transcription not found.' })
-  async getTranscriptionUrl(@Param('sid') sid: string): Promise<any> {
-    const url = await this.callService.getCallTranscription(sid);
-    if (url) {
-      return { statusCode: HttpStatus.FOUND, url };
-    }
-    throw new HttpException('Transcription not found', HttpStatus.NOT_FOUND);
-  } */
 }

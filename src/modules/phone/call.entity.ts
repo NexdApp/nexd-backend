@@ -36,17 +36,12 @@ export class Call {
   })
   recordUrl?: string;
 
-  // URL to a textfile containing the automatic transcribtion of the call
-  @Exclude()
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  transcriptionUrl?: string;
-
   // not null if converted
-  @OneToOne(type => HelpRequest, { cascade: true })
-  @JoinColumn()
+  @OneToOne(
+    type => HelpRequest,
+    helpRequest => helpRequest.call,
+    { cascade: true },
+  )
   convertedHelpRequest?: HelpRequest;
 
   // the phonenumber of the caller if provided
