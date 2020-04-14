@@ -15,6 +15,7 @@ import { Call } from './call.entity';
 import { HelpRequestCreateDto } from '../helpRequests/dto/help-request-create.dto';
 import { HelpRequestsService } from '../helpRequests/help-requests.service';
 import { UsersService } from '../users/users.service';
+import { User } from '../users/user.entity';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Twilio = require('twilio');
@@ -90,9 +91,9 @@ export class PhoneService {
       .orderBy('calls.createdAt', 'DESC');
 
     if (queryParameters.converted == true) {
-      query.andWhere('"calls"."convertedHelpRequestId" IS NOT NULL');
+      query.andWhere('"helpRequests"."callSid" IS NOT NULL');
     } else if (queryParameters.converted == false) {
-      query.andWhere('"calls"."convertedHelpRequestId" IS NULL');
+      query.andWhere('"helpRequests"."callSid" IS NULL');
     }
 
     if (queryParameters.country) {
@@ -120,6 +121,7 @@ export class PhoneService {
     }
 
     query.leftJoinAndSelect('calls.convertedHelpRequest', 'helpRequests');
+    query.leftJoinAndSelect('calls.converter', 'users');
 
     return await query.getMany();
   }
@@ -163,12 +165,14 @@ export class PhoneService {
     if (!call) {
       throw new NotFoundException('Call not found');
     }
-    if (call.converterId) {
+    if (call.converter) {
       throw new ConflictException('Call already converted to help request');
     }
 
     // requesting user converted
-    call.converterId = userId;
+    const converter = new User();
+    converter.id = userId;
+    call.converter = converter;
 
     if (!createHelpRequestDto.phoneNumber) {
       throw new BadRequestException('Phone number needs to be given for calls');
@@ -214,14 +218,14 @@ export class PhoneService {
 
     // TODO language selection, maybe through incoming number
     switch (body.FromCountry) {
-      // case 'DE':
-      //   voiceResponse.play(
-      //     {
-      //       loop: 1,
-      //     },
-      //     '/api/v1/phone/audio/DE/introduction.mp3',
-      //   );
-      //   break;
+      case 'DE':
+        voiceResponse.play(
+          {
+            loop: 1,
+          },
+          '/api/v1/phone/audio/DE/introduction.mp3',
+        );
+        break;
 
       default:
         voiceResponse.say(

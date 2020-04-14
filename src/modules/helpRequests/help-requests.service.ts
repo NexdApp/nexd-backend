@@ -6,7 +6,6 @@ import { HelpRequest } from './help-request.entity';
 import { HelpRequestCreateDto } from './dto/help-request-create.dto';
 import { HelpRequestArticle } from './help-request-article.entity';
 import { CreateOrUpdateHelpRequestArticleDto } from './dto/help-request-article-create.dto';
-// import { HelpRequestArticleStatusDto } from '../helpList/dto/shopping-list-form.dto';
 
 @Injectable()
 export class HelpRequestsService {
@@ -18,9 +17,15 @@ export class HelpRequestsService {
   ) {}
 
   async getById(id: number) {
-    return this.helpRequestRepository.findOne(id, {
+    const helpRequest:
+      | HelpRequest
+      | undefined = await this.helpRequestRepository.findOne(id, {
       relations: ['articles', 'articles.article', 'requester'],
     });
+    if (!helpRequest) {
+      throw new NotFoundException('Help request not found');
+    }
+    return helpRequest;
   }
 
   async create(

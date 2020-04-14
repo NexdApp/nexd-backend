@@ -68,9 +68,6 @@ export class Call {
   })
   city?: string;
 
-  @Column({ nullable: true })
-  converterId?: string;
-
   @ManyToOne(type => User)
   @JoinColumn({ name: 'converterId' })
   converter?: User;
