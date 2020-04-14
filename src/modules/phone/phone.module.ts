@@ -23,8 +23,8 @@ export class PhoneModule {
     consumer
       .apply(twilio.webhook({ validate: true }))
       .forRoutes(
-        { path: 'twilio/call', method: RequestMethod.POST },
-        { path: 'twilio/recorded', method: RequestMethod.POST },
+        { path: 'twilio/incoming-call', method: RequestMethod.POST },
+        { path: 'twilio/record-callback', method: RequestMethod.POST },
       );
   }
 }

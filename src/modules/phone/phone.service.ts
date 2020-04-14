@@ -1,24 +1,32 @@
 import {
   Injectable,
-  HttpException,
-  HttpStatus,
   NotFoundException,
   ConflictException,
   BadRequestException,
+  Logger,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Call } from './call.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { HelpRequest } from '../helpRequests/help-request.entity';
+import { Response } from 'express';
+
+import { Call } from './call.entity';
+
 import { HelpRequestCreateDto } from '../helpRequests/dto/help-request-create.dto';
 import { HelpRequestsService } from '../helpRequests/help-requests.service';
 import { UsersService } from '../users/users.service';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Twilio = require('twilio');
+
 @Injectable()
 export class PhoneService {
+  private readonly logger = new Logger(PhoneService.name);
+
   // default number of calls that get returned by database return queries
   readonly DEFAULT_RETURN_AMOUNT: number = 20;
+
+  readonly DEFAULT_MIN_CALL_DURATION = 3;
 
   /**
    *
@@ -28,8 +36,6 @@ export class PhoneService {
   constructor(
     @InjectRepository(Call)
     private readonly callRepo: Repository<Call>,
-    @InjectRepository(HelpRequest)
-    private readonly helpRequestRepo: Repository<HelpRequest>,
     private readonly helpRequestsService: HelpRequestsService,
     private readonly usersService: UsersService,
   ) {}
@@ -127,40 +133,25 @@ export class PhoneService {
   async getAndSaveRecord(
     callSid: string,
     recordingUrl: string,
+    recordingDuration: string,
   ): Promise<boolean> {
     const call: Call | undefined = await this.callRepo.findOne({
       sid: callSid,
     });
 
+    if (Number(recordingDuration) < this.DEFAULT_MIN_CALL_DURATION) {
+      this.logger.warn(`Call${callSid} was too short `);
+      return false;
+    }
+
     if (call) {
-      call.recordUrl = recordingUrl;
+      call.recordingUrl = recordingUrl;
       await this.callRepo.save(call);
       return true;
     }
     return false;
   }
 
-  /**
-   * Returns the url to the record of the call with the specific
-   *
-   * @param callSid
-   */
-  async getCallRecord(callSid: string): Promise<string | undefined> {
-    const call: Call | undefined = await this.callRepo
-      .createQueryBuilder()
-      .select('Call.recordUrl')
-      .where('Call.sid = :sid', { sid: callSid })
-      .getOne();
-
-    return call?.recordUrl;
-  }
-
-  /**
-   * Marks an call as recorded and sets the url to the to the audio file
-   *
-   * @param callSid
-   * @param helpRequest
-   */
   async helpRequestAndUserFromCall(
     callSid: string,
     createHelpRequestDto: HelpRequestCreateDto,
@@ -189,13 +180,13 @@ export class PhoneService {
     );
 
     if (!user) {
+      this.logger.log('Create a phoneNumber user');
       user = await this.usersService.create({
         email: null,
         phoneNumber: createHelpRequestDto.phoneNumber,
-        password: 'unused', // TODO disable user
+        password: 'unused',
       });
     }
-    console.log(user);
 
     // create help request
     const helpRequest = await this.helpRequestsService.create(
@@ -205,5 +196,59 @@ export class PhoneService {
     call.convertedHelpRequest = helpRequest;
 
     return await this.callRepo.save(call);
+  }
+
+  handleIncomingCall(
+    res: Response,
+    body: {
+      FromCountry: string;
+      CallSid: string;
+      From: string;
+      FromCity: string;
+      FromZip: string;
+    },
+  ) {
+    // TODO: body is not really used, it could also be the CallStatus: completed event
+    // TODO: we need to check where a response is needed
+    const voiceResponse = new Twilio.twiml.VoiceResponse();
+
+    // TODO language selection, maybe through incoming number
+    switch (body.FromCountry) {
+      // case 'DE':
+      //   voiceResponse.play(
+      //     {
+      //       loop: 1,
+      //     },
+      //     '/api/v1/phone/audio/DE/introduction.mp3',
+      //   );
+      //   break;
+
+      default:
+        voiceResponse.say(
+          { language: 'en-US' },
+          "Welcome to nexd, we don't know your language but we continue with english",
+        );
+        break;
+    }
+
+    voiceResponse.record({
+      // uses POST by default
+      recordingStatusCallback: '/api/v1/phone/twilio/record-callback',
+    });
+    voiceResponse.say(
+      { language: 'de-DE' },
+      'Ich habe keine Nachricht empfangen.',
+    );
+
+    this.createCall({
+      callSid: body.CallSid,
+      phoneNumber: body.From,
+      country: body.FromCountry,
+      city: body.FromCity,
+      zip: body.FromZip,
+    });
+
+    res.type('text/xml');
+    res.send(voiceResponse.toString());
   }
 }

@@ -28,13 +28,8 @@ export class Call {
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  // URL of the recorded audio file
-  @Exclude()
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  recordUrl?: string;
+  @Column({ nullable: true })
+  recordingUrl?: string;
 
   // not null if converted
   @OneToOne(

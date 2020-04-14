@@ -2,21 +2,17 @@ import {
   Controller,
   Get,
   Body,
-  HttpStatus,
   UseInterceptors,
   Res,
   Param,
   ClassSerializerInterceptor,
   Post,
   UseGuards,
-  Redirect,
-  HttpException,
   Query,
 } from '@nestjs/common';
 import {
   ApiParam,
   ApiOperation,
-  ApiUnauthorizedResponse,
   ApiTags,
   ApiOkResponse,
   ApiNotFoundResponse,
@@ -24,7 +20,6 @@ import {
   ApiCreatedResponse,
 } from '@nestjs/swagger';
 
-const VoiceResponse = require('twilio').twiml.VoiceResponse;
 import { PhoneService } from './phone.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Call } from './call.entity';
@@ -62,55 +57,20 @@ export class PhoneController {
 
   // TODO auth
   @Post('twilio/incoming-call')
+  @ApiOperation({ summary: 'Called by twilio' })
   async incomingCall(@Res() res: any, @Body() body: any): Promise<any> {
-    // TODO: body is not really used, it could also be the CallStatus: completed event
-    // TODO: we need to check where a response is needed
-
-    const twiml: any = new VoiceResponse();
-
-    // TODO language selection, maybe through incoming number
-    switch (body.FromCountry) {
-      case 'DE':
-        twiml.play(
-          {
-            loop: 1,
-          },
-          '/api/v1/phone/audio/DE/introduction.mp3',
-        );
-        break;
-
-      default:
-        twiml.say(
-          { language: 'en-US' },
-          "Welcome to nexd, we don't know your language but we continue with english",
-        );
-        break;
-    }
-
-    twiml.record({
-      // uses POST by default
-      recordingStatusCallback: '/api/v1/phone/twilio/record-callback',
-    });
-    twiml.say({ language: 'de-DE' }, 'Ich habe keine Nachricht empfangen.');
-
-    console.log(body);
-    this.callService.createCall({
-      callSid: body.CallSid,
-      phoneNumber: body.From,
-      country: body.FromCountry,
-      city: body.FromCity,
-      zip: body.FromZip,
-    });
-
-    res.type('text/xml');
-    res.send(twiml.toString());
+    this.callService.handleIncomingCall(res, body);
   }
 
   // TODO auth
   @Post('twilio/record-callback')
+  @ApiOperation({ summary: 'Called by twilio' })
   async receiveRecording(@Body() body: any): Promise<any> {
-    console.log(body);
-    this.callService.getAndSaveRecord(body.CallSid, body.RecordingUrl);
+    this.callService.getAndSaveRecord(
+      body.CallSid,
+      body.RecordingUrl,
+      body.RecordingDuration,
+    );
 
     return {
       message: 'Successful',
@@ -156,21 +116,6 @@ export class PhoneController {
       sid,
       createHelpRequestDto,
       user.userId,
-    );
-  }
-
-  @Get('calls/:sid/audio/download')
-  async serveAudioFile(
-    @Res() response: any,
-    @Param() parameters: { language: string; file: string },
-  ) {
-    response.setHeader('Content-Type', 'audio/mpeg');
-    response.attachment(parameters.file);
-    return response.download(
-      './src/modules/phone/audio/' +
-        parameters.language +
-        '/' +
-        parameters.file,
     );
   }
 }

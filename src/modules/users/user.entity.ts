@@ -1,5 +1,11 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  BeforeInsert,
+  Index,
+} from 'typeorm';
 
 import { UserRole } from './user-role';
 import { AddressModel } from '../../models/address.model';
@@ -14,7 +20,7 @@ export class User extends AddressModel {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ nullable: true })
   email?: string;
 
   @Column({
@@ -24,10 +30,8 @@ export class User extends AddressModel {
   })
   role?: UserRole = UserRole.NONE;
 
-  @Column({
-    length: 255,
-    nullable: true,
-  })
+  @Column({ nullable: true })
+  @Index()
   @IsOptional()
   @IsPhoneNumber('ZZ')
   phoneNumber?: string;
