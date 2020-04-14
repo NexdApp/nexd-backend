@@ -34,7 +34,7 @@ export class Call {
   // not null if converted
   @OneToOne(
     type => HelpRequest,
-    helpRequest => helpRequest.call,
+    convertedHelpRequest => convertedHelpRequest.call,
     { cascade: true },
   )
   convertedHelpRequest?: HelpRequest;

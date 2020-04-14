@@ -90,9 +90,9 @@ export class PhoneService {
       .orderBy('calls.createdAt', 'DESC');
 
     if (queryParameters.converted == true) {
-      query.andWhere('calls.convertedHelpRequest IS NOT NULL');
+      query.andWhere('"calls"."convertedHelpRequestId" IS NOT NULL');
     } else if (queryParameters.converted == false) {
-      query.andWhere('calls.convertedHelpRequest IS NULL');
+      query.andWhere('"calls"."convertedHelpRequestId" IS NULL');
     }
 
     if (queryParameters.country) {
