@@ -9,12 +9,13 @@ import {
   OneToOne,
 } from 'typeorm';
 import { HelpRequestArticle } from './help-request-article.entity';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiHideProperty } from '@nestjs/swagger';
 import { HelpRequestStatus } from './help-request-status';
 import { AddressModel } from '../../models/address.model';
 import { User } from '../users/user.entity';
 import { HelpList } from '../helpLists/help-list.entity';
 import { Call } from '../phone/call.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity({
   name: 'helpRequests',
@@ -86,10 +87,21 @@ export class HelpRequest extends AddressModel {
   @JoinColumn({ name: 'helpListId' })
   helpList?: HelpList;
 
+  @ApiProperty({
+    type: 'integer',
+    format: 'int64',
+  })
+  @Column({ nullable: true })
+  callId?: number;
+
+  // TODO: There is an issue, that swift can not deal with the
+  // recursive one-to-one relation and therefore the id is exposed, but
+  // not the call itself to stop recursion.
+  @ApiHideProperty()
   @OneToOne(
     type => Call,
     call => call.convertedHelpRequest,
   )
-  @JoinColumn()
+  @JoinColumn({ name: 'callId' })
   call?: Call;
 }

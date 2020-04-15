@@ -35,6 +35,7 @@ import { HelpRequestCreateDto } from '../helpRequests/dto/help-request-create.dt
 
 @Controller('phone')
 @ApiTags('Phone')
+@UseInterceptors(ClassSerializerInterceptor)
 export class PhoneController {
   constructor(private readonly callService: PhoneService) {}
 
@@ -83,7 +84,6 @@ export class PhoneController {
   @Get('calls')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({ summary: 'Returns all calls with the given parameters' })
   @ApiOkResponse({ description: 'Successful', type: Call, isArray: true })
   async getCalls(

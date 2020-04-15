@@ -40,7 +40,6 @@ export class Call {
   convertedHelpRequest?: HelpRequest;
 
   // the phonenumber of the caller if provided
-  @Exclude()
   @Column({
     nullable: true,
   })
