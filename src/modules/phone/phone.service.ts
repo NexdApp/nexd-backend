@@ -96,6 +96,9 @@ export class PhoneService {
       query.andWhere('"helpRequests"."callSid" IS NULL');
     }
 
+    // only successful calls
+    query.andWhere('calls.recordingUrl IS NOT NULL');
+
     if (queryParameters.country) {
       query.andWhere('calls.country = :country', {
         country: queryParameters.country,
@@ -142,7 +145,7 @@ export class PhoneService {
     });
 
     if (Number(recordingDuration) < this.DEFAULT_MIN_CALL_DURATION) {
-      this.logger.warn(`Call${callSid} was too short `);
+      this.logger.warn(`Call ${callSid} was too short `);
       return false;
     }
 
@@ -169,10 +172,7 @@ export class PhoneService {
       throw new ConflictException('Call already converted to help request');
     }
 
-    // requesting user converted
-    const converter = new User();
-    converter.id = userId;
-    call.converter = converter;
+    call.converterId = userId;
 
     if (!createHelpRequestDto.phoneNumber) {
       throw new BadRequestException('Phone number needs to be given for calls');
@@ -219,13 +219,13 @@ export class PhoneService {
     // TODO language selection, maybe through incoming number
     switch (body.FromCountry) {
       case 'DE':
-        voiceResponse.play(
-          {
-            loop: 1,
-          },
-          '/api/v1/phone/audio/DE/introduction.mp3',
-        );
-        break;
+      // voiceResponse.play(
+      //   {
+      //     loop: 1,
+      //   },
+      //   '/api/v1/phone/audio/DE/introduction.mp3',
+      // );
+      // break;
 
       default:
         voiceResponse.say(

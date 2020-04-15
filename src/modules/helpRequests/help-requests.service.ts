@@ -20,7 +20,7 @@ export class HelpRequestsService {
     const helpRequest:
       | HelpRequest
       | undefined = await this.helpRequestRepository.findOne(id, {
-      relations: ['articles', 'articles.article', 'requester'],
+      relations: ['articles', 'articles.article', 'requester', 'call'],
     });
     if (!helpRequest) {
       throw new NotFoundException('Help request not found');

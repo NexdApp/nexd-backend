@@ -42,31 +42,30 @@ export class Call {
   // the phonenumber of the caller if provided
   @Exclude()
   @Column({
-    type: 'varchar',
     nullable: true,
   })
   phoneNumber?: string;
 
   // origin country of the call
   @Column({
-    type: 'varchar',
     nullable: true,
   })
   country?: string;
 
   // zip code of the calls origin
   @Column({
-    type: 'varchar',
     nullable: true,
   })
   zip?: string;
 
   // city associated with the zip code
   @Column({
-    type: 'varchar',
     nullable: true,
   })
   city?: string;
+
+  @Column({ nullable: true })
+  converterId: string;
 
   @ManyToOne(type => User)
   @JoinColumn({ name: 'converterId' })
