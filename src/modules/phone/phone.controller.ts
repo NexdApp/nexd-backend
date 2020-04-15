@@ -18,6 +18,7 @@ import {
   ApiNotFoundResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiExcludeEndpoint,
 } from '@nestjs/swagger';
 
 import { PhoneService } from './phone.service';
@@ -57,6 +58,7 @@ export class PhoneController {
 
   // TODO auth
   @Post('twilio/incoming-call')
+  @ApiExcludeEndpoint()
   @ApiOperation({ summary: 'Called by twilio' })
   async incomingCall(@Res() res: any, @Body() body: any): Promise<any> {
     this.callService.handleIncomingCall(res, body);
@@ -64,6 +66,7 @@ export class PhoneController {
 
   // TODO auth
   @Post('twilio/record-callback')
+  @ApiExcludeEndpoint()
   @ApiOperation({ summary: 'Called by twilio' })
   async receiveRecording(@Body() body: any): Promise<any> {
     this.callService.getAndSaveRecord(
@@ -120,6 +123,7 @@ export class PhoneController {
   }
 
   @Get('audio/:language/:file')
+  @ApiExcludeEndpoint()
   async serveAudioFile(
     @Res() response: any,
     @Param() parameters: { language: string; file: string },
