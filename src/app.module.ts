@@ -9,6 +9,7 @@ import { ArticlesModule } from './modules/articles/articles.modules';
 import { HelpRequestsModule } from './modules/helpRequests/help-requests.module';
 import { HelpListsModule } from './modules/helpLists/help-lists.module';
 import { PhoneModule } from './modules/phone/phone.module';
+import { LocalInfosModule } from './modules/locationInfos/locationInfos.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PhoneModule } from './modules/phone/phone.module';
     HelpRequestsModule,
     HelpListsModule,
     PhoneModule,
+    LocalInfosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
