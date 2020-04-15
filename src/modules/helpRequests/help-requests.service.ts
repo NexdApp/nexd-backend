@@ -6,7 +6,6 @@ import { HelpRequest } from './help-request.entity';
 import { HelpRequestCreateDto } from './dto/help-request-create.dto';
 import { HelpRequestArticle } from './help-request-article.entity';
 import { CreateOrUpdateHelpRequestArticleDto } from './dto/help-request-article-create.dto';
-// import { HelpRequestArticleStatusDto } from '../helpList/dto/shopping-list-form.dto';
 
 @Injectable()
 export class HelpRequestsService {
@@ -18,9 +17,15 @@ export class HelpRequestsService {
   ) {}
 
   async getById(id: number) {
-    return this.helpRequestRepository.findOne(id, {
-      relations: ['articles', 'articles.article', 'requester'],
+    const helpRequest:
+      | HelpRequest
+      | undefined = await this.helpRequestRepository.findOne(id, {
+      relations: ['articles', 'articles.article', 'requester', 'call'],
     });
+    if (!helpRequest) {
+      throw new NotFoundException('Help request not found');
+    }
+    return helpRequest;
   }
 
   async create(
@@ -55,6 +60,8 @@ export class HelpRequestsService {
     helpRequest.city = createRequestDto.city;
     helpRequest.street = createRequestDto.street;
     helpRequest.number = createRequestDto.number;
+    helpRequest.firstName = createRequestDto.firstName;
+    helpRequest.lastName = createRequestDto.lastName;
     helpRequest.zipCode = createRequestDto.zipCode;
   }
 
@@ -66,7 +73,7 @@ export class HelpRequestsService {
     status?: string[];
   }) {
     const where: any = {};
-    const relations = ['articles', 'articles.article'];
+    const relations = ['articles', 'articles.article', 'call'];
 
     if (filters.userId) {
       if (filters.excludeUserId) {
