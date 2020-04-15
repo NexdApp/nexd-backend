@@ -118,4 +118,19 @@ export class PhoneController {
       user.userId,
     );
   }
+
+  @Get('audio/:language/:file')
+  async serveAudioFile(
+    @Res() response: any,
+    @Param() parameters: { language: string; file: string },
+  ) {
+    response.setHeader('Content-Type', 'audio/mpeg');
+    response.attachment(parameters.file);
+    return response.download(
+      './src/modules/phone/audio/' +
+        parameters.language +
+        '/' +
+        parameters.file,
+    );
+  }
 }

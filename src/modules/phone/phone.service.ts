@@ -219,13 +219,13 @@ export class PhoneService {
     // TODO language selection, maybe through incoming number
     switch (body.FromCountry) {
       case 'DE':
-      // voiceResponse.play(
-      //   {
-      //     loop: 1,
-      //   },
-      //   '/api/v1/phone/audio/DE/introduction.mp3',
-      // );
-      // break;
+        voiceResponse.play(
+          {
+            loop: 1,
+          },
+          '/api/v1/phone/audio/DE/introduction.mp3',
+        );
+        break;
 
       default:
         voiceResponse.say(
