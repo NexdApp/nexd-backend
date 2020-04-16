@@ -8,9 +8,11 @@ import {
   JoinColumn,
   UpdateDateColumn,
   ManyToOne,
+  RelationId,
 } from 'typeorm';
 import { HelpRequest } from '../helpRequests/help-request.entity';
 import { User } from '../users/user.entity';
+import { ApiHideProperty } from '@nestjs/swagger';
 
 @Entity({
   name: 'calls',
@@ -31,7 +33,12 @@ export class Call {
   @Column({ nullable: true })
   recordingUrl?: string;
 
+  @RelationId((call: Call) => call.convertedHelpRequest)
+  convertedHelpRequestId?: number;
+
   // not null if converted
+  @ApiHideProperty()
+  // hidden due to swift recursion problem
   @OneToOne(
     type => HelpRequest,
     convertedHelpRequest => convertedHelpRequest.call,
