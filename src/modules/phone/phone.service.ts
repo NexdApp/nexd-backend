@@ -91,9 +91,9 @@ export class PhoneService {
       .orderBy('calls.createdAt', 'DESC');
 
     if (queryParameters.converted == true) {
-      query.andWhere('"helpRequests"."callSid" IS NOT NULL');
+      query.andWhere('"helpRequests"."callId" IS NOT NULL');
     } else if (queryParameters.converted == false) {
-      query.andWhere('"helpRequests"."callSid" IS NULL');
+      query.andWhere('"helpRequests"."callId" IS NULL');
     }
 
     // only successful calls
