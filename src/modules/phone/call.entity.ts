@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 import { HelpRequest } from '../helpRequests/help-request.entity';
 import { User } from '../users/user.entity';
-import { ApiHideProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 
 @Entity({
   name: 'calls',
@@ -33,6 +33,10 @@ export class Call {
   @Column({ nullable: true })
   recordingUrl?: string;
 
+  @ApiProperty({
+    type: 'integer',
+    format: 'int64',
+  })
   @RelationId((call: Call) => call.convertedHelpRequest)
   convertedHelpRequestId?: number;
 

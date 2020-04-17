@@ -87,12 +87,8 @@ export class HelpRequest extends AddressModel {
   @JoinColumn({ name: 'helpListId' })
   helpList?: HelpList;
 
-  @ApiProperty({
-    type: 'integer',
-    format: 'int64',
-  })
   @Column({ nullable: true })
-  callId?: number;
+  callSid?: string;
 
   // TODO: There is an issue, that swift can not deal with the
   // recursive one-to-one relation and therefore the id is exposed, but
@@ -102,6 +98,6 @@ export class HelpRequest extends AddressModel {
     type => Call,
     call => call.convertedHelpRequest,
   )
-  @JoinColumn({ name: 'callId' })
+  @JoinColumn({ name: 'callSid' })
   call?: Call;
 }
