@@ -24,14 +24,11 @@ import {
 import { PhoneService } from './phone.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Call } from './call.entity';
-import {
-  CountryHotlineNumbers,
-  countryHotlineNumberExample,
-} from './interfaces/CountryHotlineNumbers.interface';
 import { GetCallsQueryParams } from './dto/get-calls-query-params.dto';
 import { ReqUser } from 'src/decorators/user.decorator';
 import { UserID } from '../users/user.entity';
 import { HelpRequestCreateDto } from '../helpRequests/dto/help-request-create.dto';
+import { PhoneNumberDto } from './dto/phone-number.dto';
 
 @Controller('phone')
 @ApiTags('Phone')
@@ -41,20 +38,15 @@ export class PhoneController {
 
   @Get('numbers')
   @ApiOperation({ summary: 'Returns available numbers' })
-  @ApiOkResponse({
-    description: 'Success',
-    content: {
-      'application/json': {
-        schema: {
-          type: 'string',
-          format: 'json',
-          example: JSON.stringify(countryHotlineNumberExample),
-        },
-      },
-    },
-  })
-  async getNumbers(): Promise<CountryHotlineNumbers> {
-    return countryHotlineNumberExample;
+  async getNumbers(): Promise<PhoneNumberDto[]> {
+    const number1 = new PhoneNumberDto(
+      'de-DE',
+      'DE',
+      'Erste Hotline in Deutschland',
+      '+49 721 98419016',
+    );
+
+    return [number1];
   }
 
   // TODO auth
