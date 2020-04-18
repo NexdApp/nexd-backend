@@ -1,7 +1,3 @@
-# ormconfig potentially has sensitive information
-# generated automatically and needed for creating custom migrations
-ormconfig.json
-
 # compiled output
 /dist
 /node_modules
