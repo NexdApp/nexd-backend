@@ -81,3 +81,4 @@ Postgres is used. Locally is already a postgis command available. The postgis ex
 - [ ] query arrays through comma separation parsing pipe?
 - [ ] rate limiting (for later)
 - [ ] compression
+- [ ] compodoc
