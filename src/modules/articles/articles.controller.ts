@@ -1,32 +1,34 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Put,
+  Patch,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiOperation,
   ApiOkResponse,
   ApiTags,
-  ApiHeader,
 } from '@nestjs/swagger';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { ArticlesService } from './articles.service';
 import { Article } from './article.entity';
-import { AdminSecretGuard } from '../auth/adminsecret-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('articles')
 @ApiTags('Articles')
+@UseGuards(JwtAuthGuard)
+@ApiBadRequestResponse({ description: 'Bad Request' })
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
   @Post()
-  @UseGuards(AdminSecretGuard)
   @ApiOperation({ summary: 'Create an article' })
-  @ApiHeader({
-    name: 'x-admin-secret',
-    required: true,
-    description: 'Secret to access the admin functions.',
-  })
   @ApiCreatedResponse({ description: 'Created', type: Article })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
   async insertOne(
     @Body() createArticleDto: CreateArticleDto,
   ): Promise<Article> {
@@ -42,5 +44,13 @@ export class ArticlesController {
   @ApiBadRequestResponse({ description: 'Bad Request' })
   findAll(): Promise<Article[]> {
     return this.articlesService.findAll();
+  }
+
+  @Patch(':articleId')
+  @ApiOperation({ summary: 'Modify article' })
+  async updateArticle(
+    @Body() createArticleDto: CreateArticleDto,
+  ): Promise<Article> {
+    return this.articlesService.create(createArticleDto);
   }
 }
