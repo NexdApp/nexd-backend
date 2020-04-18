@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
+const AdminUser = require('nestjs-admin').AdminUserEntity;
+
 @Injectable()
 export class ConfigurationService {
   constructor(private configService: ConfigService) {}
@@ -44,7 +46,7 @@ export class ConfigurationService {
     return {
       type: 'postgres',
       ...dbConfig,
-      entities: [__dirname + '/../**/*.entity.{ts,js}'],
+      entities: [__dirname + '/../**/*.entity.{ts,js}', AdminUser],
       synchronize: true,
       migrations: [__dirname + '/../../src/migrations/*.ts'],
       cli: {

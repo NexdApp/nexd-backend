@@ -11,6 +11,8 @@ import { HelpListsModule } from './modules/helpLists/help-lists.module';
 import { PhoneModule } from './modules/phone/phone.module';
 import { LocalInfosModule } from './modules/locationInfos/locationInfos.module';
 
+import { DefaultAdminModule } from 'nestjs-admin';
+
 @Module({
   imports: [
     ConfigurationModule,
@@ -22,6 +24,7 @@ import { LocalInfosModule } from './modules/locationInfos/locationInfos.module';
     HelpListsModule,
     PhoneModule,
     LocalInfosModule,
+    DefaultAdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
