@@ -72,11 +72,11 @@ Postgres is used. Locally is already a postgis command available. The postgis ex
 - [ ] check migrations
 - [x] ssl database
 - [x] exclude for password
-- [ ] pgadmin docker command
+- [x] pgadmin docker command
 - [ ] env config validation
 - [ ] HMR
 - [x] exception handling
-- [ ] configuration module in database -> use isDev
+- [x] configuration module in database -> use isDev
 - [ ] use query builder for upsert of help list request ids
 - [ ] query arrays through comma separation parsing pipe?
 - [ ] rate limiting (for later)
