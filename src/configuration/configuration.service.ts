@@ -40,7 +40,7 @@ export class ConfigurationService {
         url: this.get<string>('DATABASE_URL'),
       };
     }
-    console.log(dbConfig);
+
     return {
       type: 'postgres',
       ...dbConfig,

@@ -59,6 +59,18 @@ Currently, this container is pushed directly to heroku. Later on, it is supposed
 
 Postgres is used. Locally is already a postgis command available. The postgis extension will be used for geo data.
 
+### Migrations
+
+Create your typeorm cli `ormconfig.json` file:
+
+`npm run typeorm:createconfig`
+
+This is not yet fully checked, so please have a look into the `ormconfig.json`. Relative paths seemed to work more reliable.
+
+To create a migration:
+
+`npm run typeorm migration:generate -- -n "<migration name>"`
+
 ## TODO
 
 - [ ] Help lists owner validation DRY
