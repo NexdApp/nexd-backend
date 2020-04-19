@@ -94,3 +94,4 @@ To create a migration:
 - [ ] rate limiting (for later)
 - [ ] compression
 - [ ] compodoc
+- [ ] logging service (e.g. papertrail)
