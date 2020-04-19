@@ -1,4 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { HttpBadRequestErrors } from './httpBadRequestErrors.type';
+
+export class BadRequestErrorEntry {
+  @ApiProperty({
+    description: 'Specific error code from enum',
+    enum: HttpBadRequestErrors,
+  })
+  errorCode?: HttpBadRequestErrors;
+  @ApiProperty()
+  errorDescription: string;
+}
 
 export class HttpBadRequestResponse {
   @ApiProperty({
@@ -8,11 +19,9 @@ export class HttpBadRequestResponse {
   })
   statusCode? = 400;
 
-  @ApiProperty({ example: 'Bad Request' })
-  error!: string;
-
   @ApiProperty({
-    example: ['password must be longer than or equal to 8 characters'],
+    type: BadRequestErrorEntry,
+    isArray: true,
   })
-  message!: string[];
+  errors!: BadRequestErrorEntry[];
 }
