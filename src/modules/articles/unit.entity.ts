@@ -3,11 +3,11 @@ import { Column, Entity, PrimaryGeneratedColumn, Index } from 'typeorm';
 import { AvailableLanguages } from 'src/constants/languages';
 
 @Entity({
-  name: 'articles',
+  name: 'units',
 })
 export class Article {
   @ApiProperty({
-    description: 'Auto-incremented ID of an article.',
+    description: 'Auto-incremented ID of a unit.',
     type: 'integer',
     format: 'int64',
   })
@@ -15,13 +15,13 @@ export class Article {
   id!: number;
 
   @ApiProperty({
-    description: 'Name of the article (without unit)',
+    description: 'Name of the unit',
   })
   @Column()
   name!: string;
 
   @ApiProperty({
-    description: 'Language key of this article',
+    description: 'Language key of this unit',
   })
   @Column({ type: 'enum', enum: AvailableLanguages })
   @Index()
