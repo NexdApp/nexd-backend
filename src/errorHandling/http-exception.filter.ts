@@ -8,6 +8,7 @@ import {
 import { Request, Response } from 'express';
 import { HttpConflictResponse } from './httpConflictResponse.model';
 import { HttpConflictErrors } from './httpConflictErrors.type';
+import { HttpBadRequestResponse } from './httpBadRequestResponse.model';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -26,15 +27,29 @@ export class HttpExceptionFilter implements ExceptionFilter {
       );
       const responseJson: HttpConflictResponse = {
         statusCode: 409,
-        errorCode: errorCodeString as HttpConflictErrors,
-        errorDescription: description,
+        errors: [
+          {
+            errorCode: errorCodeString as HttpConflictErrors,
+            errorDescription: description,
+          },
+        ],
       };
       response.status(status).json(responseJson);
       return;
     }
 
     if (status === HttpStatus.BAD_REQUEST) {
-      response.status(status).json(exception.getResponse());
+      const errorResponse: any = exception.getResponse();
+      const errors = errorResponse.message.map(err => ({
+        errorCode: err,
+        errorDescription: err,
+      }));
+
+      const responseJson: HttpBadRequestResponse = {
+        statusCode: 409,
+        errors,
+      };
+      response.status(status).json(responseJson);
       return;
     }
 

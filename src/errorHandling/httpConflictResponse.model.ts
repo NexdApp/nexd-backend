@@ -1,6 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { HttpConflictErrors } from './httpConflictErrors.type';
 
+export class ConflictErrorEntry {
+  @ApiProperty({
+    description: 'Specific error code from enum',
+    enum: HttpConflictErrors,
+  })
+  errorCode?: HttpConflictErrors;
+  @ApiProperty()
+  errorDescription: string;
+}
+
 export class HttpConflictResponse {
   @ApiProperty({
     type: 'integer',
@@ -10,11 +20,8 @@ export class HttpConflictResponse {
   statusCode? = 409;
 
   @ApiProperty({
-    description: 'Specific error code from enum',
-    enum: HttpConflictErrors,
+    type: ConflictErrorEntry,
+    isArray: true,
   })
-  errorCode!: HttpConflictErrors;
-
-  @ApiProperty()
-  errorDescription?: string;
+  errors!: ConflictErrorEntry[];
 }
