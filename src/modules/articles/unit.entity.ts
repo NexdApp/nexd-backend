@@ -23,7 +23,11 @@ export class Article {
   @ApiProperty({
     description: 'Language key of this unit',
   })
-  @Column({ type: 'enum', enum: AvailableLanguages })
+  @Column({
+    type: 'enum',
+    enum: AvailableLanguages,
+    default: AvailableLanguages['de-DE'],
+  })
   @Index()
   language!: AvailableLanguages;
 }
