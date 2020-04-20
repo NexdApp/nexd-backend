@@ -11,12 +11,26 @@ export class ArticlesService {
     private readonly articlesRepository: Repository<Article>,
   ) {}
 
-  create(createArticleDto: CreateArticleDto): Promise<Article> {
+  async createArticle(createArticleDto: CreateArticleDto): Promise<Article> {
+    // check if already present
+    const articleInDb = await this.articlesRepository.findOne({
+      where: {
+        name: createArticleDto.name,
+        language: createArticleDto.language,
+      },
+    });
+    if (articleInDb) {
+      return articleInDb;
+    }
+
     const article = new Article();
     article.name = createArticleDto.name;
+    article.language = createArticleDto.language;
 
     return this.articlesRepository.save(article);
   }
+
+  async updateArticle(updateArticleDto: UpdateArticleDto): Promise<Article> {}
 
   async findAll(): Promise<Article[]> {
     return this.articlesRepository.find();

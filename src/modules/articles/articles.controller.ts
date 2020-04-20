@@ -24,7 +24,7 @@ export class ArticlesController {
   async insertOne(
     @Body() createArticleDto: CreateArticleDto,
   ): Promise<Article> {
-    return this.articlesService.create(createArticleDto);
+    return this.articlesService.createArticle(createArticleDto);
   }
 
   @Get('/articles')
@@ -38,12 +38,12 @@ export class ArticlesController {
     return this.articlesService.findAll();
   }
 
-  @Put('/articles/:articleId')
+  @Patch('/articles/:articleId')
   @ApiOperation({ summary: 'Modify article' })
   async updateArticle(
     @Body() createArticleDto: CreateArticleDto,
   ): Promise<Article> {
-    return this.articlesService.create(createArticleDto);
+    return this.articlesService.updateArticle(createArticleDto);
   }
 
   @Post('/units')
