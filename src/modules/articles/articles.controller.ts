@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  UseGuards,
-  Put,
-  Patch,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, Put } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -26,7 +18,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
-  @Post()
+  @Post('/articles')
   @ApiOperation({ summary: 'Create an article' })
   @ApiCreatedResponse({ description: 'Created', type: Article })
   async insertOne(
@@ -35,7 +27,7 @@ export class ArticlesController {
     return this.articlesService.create(createArticleDto);
   }
 
-  @Get()
+  @Get('/articles')
   @ApiOperation({ summary: 'List articles' })
   @ApiOkResponse({
     description: 'All existing articles',
@@ -46,9 +38,55 @@ export class ArticlesController {
     return this.articlesService.findAll();
   }
 
-  @Patch(':articleId')
+  @Put('/articles/:articleId')
   @ApiOperation({ summary: 'Modify article' })
   async updateArticle(
+    @Body() createArticleDto: CreateArticleDto,
+  ): Promise<Article> {
+    return this.articlesService.create(createArticleDto);
+  }
+
+  @Post('/units')
+  @ApiOperation({ summary: 'Create a unit' })
+  async createUnit(
+    @Body() createArticleDto: CreateArticleDto,
+  ): Promise<Article> {
+    return this.articlesService.create(createArticleDto);
+  }
+
+  @Get('/units')
+  @ApiOperation({ summary: 'Get a list of units' })
+  async getUnits(@Body() createArticleDto: CreateArticleDto): Promise<Article> {
+    return this.articlesService.create(createArticleDto);
+  }
+
+  @Put('/units/:unitId')
+  @ApiOperation({ summary: 'Add a unit' })
+  async updateUnit(
+    @Body() createArticleDto: CreateArticleDto,
+  ): Promise<Article> {
+    return this.articlesService.create(createArticleDto);
+  }
+
+  @Post('/categories')
+  @ApiOperation({ summary: 'Create a category' })
+  async createCategory(
+    @Body() createArticleDto: CreateArticleDto,
+  ): Promise<Article> {
+    return this.articlesService.create(createArticleDto);
+  }
+
+  @Get('/categories')
+  @ApiOperation({ summary: 'Create a category' })
+  async getCategories(
+    @Body() createArticleDto: CreateArticleDto,
+  ): Promise<Article> {
+    return this.articlesService.create(createArticleDto);
+  }
+
+  @Put('/categories/:categoryId')
+  @ApiOperation({ summary: 'Create a category' })
+  async updateCategory(
     @Body() createArticleDto: CreateArticleDto,
   ): Promise<Article> {
     return this.articlesService.create(createArticleDto);

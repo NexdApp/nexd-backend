@@ -30,4 +30,8 @@ export class Article {
   })
   @Index()
   language!: AvailableLanguages;
+
+  @Column({ default: false })
+  @Index()
+  curated!: boolean;
 }
