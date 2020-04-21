@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { AvailableLanguages } from 'src/constants/languages';
+import { Article } from './article.entity';
 
 @Entity({
   name: 'categories',
 })
-export class Article {
+export class Category {
   @ApiProperty({
     description: 'Auto-incremented ID of an category.',
     type: 'integer',
@@ -29,4 +30,11 @@ export class Article {
     default: AvailableLanguages['de-DE'],
   })
   language!: AvailableLanguages;
+
+  @OneToMany(
+    type => Article,
+    article => article.category,
+    { cascade: true },
+  )
+  articles?: Article[];
 }

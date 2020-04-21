@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { AvailableLanguages } from 'src/constants/languages';
 
-export class GetAllQueryParams {
+export class GetAllArticlesQueryParams {
   @ApiProperty({
     name: 'limit',
     required: false,
@@ -11,7 +11,7 @@ export class GetAllQueryParams {
   })
   limit?: number;
 
-  contains?: string;
+  startsWith?: string;
 
   @ApiProperty({
     required: false,

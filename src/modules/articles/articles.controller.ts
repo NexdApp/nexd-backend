@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, UseGuards, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Put,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -10,8 +18,9 @@ import { CreateArticleDto } from './dto/create-article.dto';
 import { ArticlesService } from './articles.service';
 import { Article } from './article.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { GetAllArticlesQueryParams } from './dto/get-all-articles-query.dto';
 
-@Controller('articles')
+@Controller('article')
 @ApiTags('Articles')
 @UseGuards(JwtAuthGuard)
 @ApiBadRequestResponse({ description: 'Bad Request' })
@@ -34,8 +43,8 @@ export class ArticlesController {
     type: [Article],
   })
   @ApiBadRequestResponse({ description: 'Bad Request' })
-  findAll(): Promise<Article[]> {
-    return this.articlesService.findAll();
+  findAll(@Query() query: GetAllArticlesQueryParams): Promise<Article[]> {
+    return this.articlesService.findAll(query);
   }
 
   @Patch('/articles/:articleId')

@@ -1,6 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn, Index } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  Index,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { AvailableLanguages } from 'src/constants/languages';
+import { Category } from './category.entity';
 
 @Entity({
   name: 'articles',
@@ -33,5 +41,19 @@ export class Article {
 
   @Column({ default: false })
   @Index()
-  curated!: boolean;
+  activated!: boolean;
+
+  @Column({ type: 'int', array: true })
+  unitOrder: number[];
+
+  @ApiProperty({
+    type: 'integer',
+    format: 'int64',
+  })
+  @Column({ nullable: true })
+  categoryId?: number;
+
+  @ManyToOne(type => Category)
+  @JoinColumn({ name: 'categoryId' })
+  category?: Category;
 }
