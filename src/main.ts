@@ -17,14 +17,13 @@ async function bootstrap() {
   const globalPrefix = '/api/v1';
   setupSwagger(app, globalPrefix);
 
-  app.use(requestLoggerMiddleware);
-
   const appConfigService: ConfigurationService = app.get(
     'ConfigurationService',
   );
   const port = appConfigService.APIPort;
   const rootUrl = appConfigService.get('API_ROOT_URL');
 
+  app.use(requestLoggerMiddleware(appConfigService.isDev));
   app.enableCors();
   app.use(helmet());
 
