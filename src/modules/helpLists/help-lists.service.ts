@@ -65,7 +65,7 @@ export class HelpListsService {
   }
 
   async getAllByUser(userId: string) {
-    return await this.helpListsRepository.find({
+    return this.helpListsRepository.find({
       where: { ownerId: userId },
       relations: [
         'helpRequests',
@@ -106,7 +106,7 @@ export class HelpListsService {
         return re;
       });
     }
-    return await this.helpListsRepository.save(helpList);
+    return this.helpListsRepository.save(helpList);
   }
 
   async addRequest(
@@ -119,7 +119,7 @@ export class HelpListsService {
     }
     helpRequest.status = HelpRequestStatus.ONGOING;
     helpList.helpRequests.push(helpRequest);
-    return await this.helpListsRepository.save(helpList);
+    return this.helpListsRepository.save(helpList);
   }
 
   async removeRequest(
@@ -134,7 +134,7 @@ export class HelpListsService {
     helpList.helpRequests = helpList.helpRequests.filter(
       request => request.id != helpRequest.id,
     );
-    return await this.helpListsRepository.save(helpList);
+    return this.helpListsRepository.save(helpList);
   }
 
   async changeArticleDoneForRequest(
@@ -164,7 +164,7 @@ export class HelpListsService {
       throw new NotFoundException('Article not found in request');
     }
     article.articleDone = articleDone;
-    return await this.helpListsRepository.save(helpList);
+    return this.helpListsRepository.save(helpList);
   }
 
   async changeArticleDoneForAll(
@@ -185,6 +185,6 @@ export class HelpListsService {
       });
     });
 
-    return await this.helpListsRepository.save(helpList);
+    return this.helpListsRepository.save(helpList);
   }
 }

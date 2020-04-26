@@ -36,11 +36,11 @@ export class UsersService {
   }
 
   async getByEmail(email: string) {
-    return await this.userRepository.findOne({ email });
+    return this.userRepository.findOne({ email });
   }
 
   async getByPhoneNumber(phoneNumber: string) {
-    return await this.userRepository.findOne({ phoneNumber });
+    return this.userRepository.findOne({ phoneNumber });
   }
 
   async create(payload: RegisterDto) {
@@ -54,7 +54,7 @@ export class UsersService {
     }
 
     const newUser = this.userRepository.create(payload);
-    return await this.userRepository.save(newUser);
+    return this.userRepository.save(newUser);
   }
 
   async update(editRequestDto: UpdateUserDto, user: User) {
@@ -67,11 +67,11 @@ export class UsersService {
     user.role = editRequestDto.role;
     user.phoneNumber = editRequestDto.phoneNumber;
 
-    return await this.userRepository.save(user);
+    return this.userRepository.save(user);
   }
 
   async getAll(): Promise<User[]> {
-    return await this.userRepository.find();
+    return this.userRepository.find();
   }
 
   async createPasswordResetToken(email: string) {
@@ -92,6 +92,6 @@ export class UsersService {
       });
     }
     user.password = await bcrypt.hash(payload.password, 10);
-    return await this.userRepository.save(user);
+    return this.userRepository.save(user);
   }
 }

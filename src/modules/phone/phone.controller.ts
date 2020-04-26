@@ -85,7 +85,7 @@ export class PhoneController {
     if (query.userId === 'me') {
       query.userId = user.userId;
     }
-    return await this.callService.queryCalls(query);
+    return this.callService.queryCalls(query);
   }
 
   @Post('calls/:sid/help-request')
@@ -107,7 +107,7 @@ export class PhoneController {
     @Body() createHelpRequestDto: HelpRequestCreateDto,
     @ReqUser() user: UserID,
   ): Promise<any> {
-    return await this.callService.helpRequestAndUserFromCall(
+    return this.callService.helpRequestAndUserFromCall(
       sid,
       createHelpRequestDto,
       user.userId,
