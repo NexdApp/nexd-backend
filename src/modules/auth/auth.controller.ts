@@ -55,7 +55,7 @@ export class AuthController {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async login(@Request() req, @Body() loginDto: LoginDto): Promise<TokenDto> {
     this.logger.log(`User login`);
-    return await this.authService.createToken(req.user);
+    return this.authService.createToken(req.user);
   }
 
   @Post('register')
@@ -68,7 +68,7 @@ export class AuthController {
     const user = await this.usersService.create(payload);
     this.logger.log(`User registered: ${user.id}`);
     this.logger.debug(`Email: ${payload.email}`);
-    return await this.authService.createToken(user);
+    return this.authService.createToken(user);
   }
 
   @Post('refresh')
@@ -112,6 +112,6 @@ export class AuthController {
     const user = await this.usersService.updatePasswordIfResetTokenMatches(
       payload,
     );
-    return await this.authService.createToken(user);
+    return this.authService.createToken(user);
   }
 }

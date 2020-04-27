@@ -107,7 +107,7 @@ export class HelpRequestsController {
   async getSingleRequest(
     @Param('helpRequestId', ParseIntPipe) helpRequestId: number,
   ): Promise<HelpRequest> {
-    return await this.helpRequestsService.getById(helpRequestId);
+    return this.helpRequestsService.getById(helpRequestId);
   }
 
   @Put(':helpRequestId')
