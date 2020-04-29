@@ -56,6 +56,7 @@ export class HelpListsService {
     if (createRequestDto.helpRequestsIds) {
       helpList.helpRequests = createRequestDto.helpRequestsIds.map(h => ({
         id: h,
+        status: HelpRequestStatus.ONGOING,
       }));
     }
     helpList.ownerId = userId;
