@@ -134,6 +134,7 @@ export class HelpListsService {
     helpList.helpRequests = helpList.helpRequests.filter(
       request => request.id != helpRequest.id,
     );
+    await this.requestRepository.save(helpRequest);
     return await this.helpListsRepository.save(helpList);
   }
 
