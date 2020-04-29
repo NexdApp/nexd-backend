@@ -23,7 +23,7 @@ export class HelpListsService {
     private readonly helpListsRepository: Repository<HelpList>,
     @InjectRepository(HelpRequest)
     private readonly requestRepository: Repository<HelpRequest>,
-  ) { }
+  ) {}
 
   async getById(
     userId: string,
@@ -55,15 +55,11 @@ export class HelpListsService {
     if (createRequestDto.helpRequestsIds) {
       helpList.helpRequests = createRequestDto.helpRequestsIds.map(h => ({
         id: h,
+        status: HelpRequestStatus.ONGOING,
       }));
     }
     helpList.ownerId = userId;
     helpList.status = HelpListStatus.ACTIVE;
-
-    (await this.requestRepository.findByIds(helpList.helpRequests, {})).forEach(r => {
-      r.status = HelpRequestStatus.ONGOING;
-      this.requestRepository.save(r);
-    });
 
     return this.helpListsRepository.save(helpList);
   }
