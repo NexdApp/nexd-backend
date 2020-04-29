@@ -13,8 +13,7 @@ import { User } from './user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RegisterDto } from '../auth/dto/register.dto';
 import { EmailPasswordResetDto } from '../auth/dto/email-password-reset.dto';
-import { HttpConflictErrors } from '../../errorHandling/httpConflictErrors.type';
-import { HttpNotFoundErrors } from 'src/errorHandling/httpNotFoundErrors.type';
+import { BackendErrors } from '../../errorHandling/backendErrors.type';
 
 @Injectable()
 @Roles('admin')
@@ -28,7 +27,7 @@ export class UsersService {
     const user = await this.userRepository.findOne(userId);
     if (!user) {
       throw new NotFoundException({
-        type: HttpNotFoundErrors.USERS_USER_NOT_FOUND,
+        type: BackendErrors.USERS_USER_NOT_FOUND,
         description: 'user is not found',
       });
     }
@@ -48,7 +47,7 @@ export class UsersService {
 
     if (payload.email !== null && checkUserExistence) {
       throw new ConflictException({
-        type: HttpConflictErrors.USERS_USER_EXISTS,
+        type: BackendErrors.USERS_USER_EXISTS,
         description: 'user is already present',
       });
     }
@@ -87,7 +86,7 @@ export class UsersService {
     const user = await this.getByEmail(payload.email);
     if (!user || user.passwordResetToken !== payload.passwordResetToken) {
       throw new NotFoundException({
-        type: HttpNotFoundErrors.USERS_USER_NOT_FOUND,
+        type: BackendErrors.USERS_USER_NOT_FOUND,
         description: 'user is not found',
       });
     }

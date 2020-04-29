@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { HttpBadRequestErrors } from 'src/errorHandling/httpBadRequestErrors.type';
+import { BackendErrors } from '../../../errorHandling/backendErrors.type';
 
 export class EmailPasswordResetDto {
   @ApiProperty({ example: 'test@test.com' })
-  @IsEmail({}, { message: HttpBadRequestErrors.EMAIL_INVALID })
+  @IsEmail({}, { message: BackendErrors.VALIDATION_EMAIL_INVALID })
   email!: string;
 
   @IsNotEmpty()
