@@ -41,7 +41,7 @@ export class LocationInfosService {
       });
     }
 
-    return await query.getOne();
+    return query.getOne();
   }
 
   /**
@@ -54,7 +54,7 @@ export class LocationInfosService {
     radius: number,
     location: LocationInfo,
   ): Promise<LocationInfo[]> {
-    return await this.localInfoRepo
+    return this.localInfoRepo
       .query(` SELECT zip, country, city, state, "stateShort", area, ST_AsGeoJSON(location)::json AS "location" FROM "locationInfos" WHERE ST_DWITHIN(location, 
                                             ST_MakePoint(${location.location.coordinates[0]}, ${location.location.coordinates[1]})::geography, ${radius} );`);
   }

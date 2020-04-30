@@ -7,6 +7,9 @@
     "Fabian Nickel <mail@fabiannickel.de>",
     "Rossana Bermudez <rossana.bermudezd@gmail.com>"
   ],
+  "engines": {
+    "node": "12.x"
+  },
   "private": false,
   "license": "MIT",
   "scripts": {

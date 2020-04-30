@@ -91,7 +91,7 @@ export class HelpRequestsService {
     if (filters.includeRequester) {
       relations.push('requester');
     }
-    return await this.helpRequestRepository.find({
+    return this.helpRequestRepository.find({
       where,
       relations,
     });
@@ -119,7 +119,7 @@ export class HelpRequestsService {
       }
       helpRequest.articles.push(newArticle);
     }
-    return await this.helpRequestRepository.save(helpRequest);
+    return this.helpRequestRepository.save(helpRequest);
   }
 
   async removeArticle(helpRequest: HelpRequest, articleId: number) {
@@ -129,14 +129,14 @@ export class HelpRequestsService {
     if (index > -1) {
       helpRequest.articles.splice(index, 1);
     }
-    return await this.helpRequestRepository.save(helpRequest);
+    return this.helpRequestRepository.save(helpRequest);
   }
 
   async update(requestId: number, requestEntity: HelpRequestCreateDto) {
     const request = await this.findRequest(requestId);
     this.populateRequest(request, requestEntity);
 
-    return await this.helpRequestRepository.save(request);
+    return this.helpRequestRepository.save(request);
   }
 
   private async findRequest(id: number) {

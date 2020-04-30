@@ -66,7 +66,7 @@ export class HelpListsController {
     if (!userId) {
       userIdFilter = user.userId;
     }
-    return await this.helpListsService.getAllByUser(userIdFilter);
+    return this.helpListsService.getAllByUser(userIdFilter);
   }
 
   @Get(':helpListId')
@@ -83,7 +83,7 @@ export class HelpListsController {
     @Param('helpListId') helpListId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    return await this.helpListsService.getById(user.userId, helpListId);
+    return this.helpListsService.getById(user.userId, helpListId);
   }
 
   @Post()
