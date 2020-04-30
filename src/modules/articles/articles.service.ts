@@ -35,9 +35,12 @@ export class ArticlesService {
   async findAll(query: GetAllArticlesQueryParams): Promise<Article[]> {
     const sql = this.articlesRepository
       .createQueryBuilder('articles')
-      .where(query.onlyVerified ? 'articles.status = :status' : '1=1', {
-        status: ArticleStatus.VERIFIED,
-      })
+      .where(
+        query.onlyVerified !== false ? 'articles.status = :status' : '1=1',
+        {
+          status: ArticleStatus.VERIFIED,
+        },
+      )
       .andWhere(query.startsWith ? 'articles.name like :name' : '1=1', {
         name: query.startsWith + '%',
       })
