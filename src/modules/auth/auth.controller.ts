@@ -24,18 +24,17 @@ import { UsersService } from '../users/users.service';
 import { TokenDto } from './dto/token.dto';
 import { LoginDto } from './dto/login.dto';
 import { EmailPasswordResetDto } from './dto/email-password-reset.dto';
-import { HttpBadRequestResponse } from '../../errorHandling/httpBadRequestResponse.model';
-import { HttpConflictResponse } from '../../errorHandling/httpConflictResponse.model';
+import { BackendErrorResponse } from 'src/errorHandling/BackendErrorEntry.model';
 
 @ApiTags('Auth')
 @Controller('auth')
 @ApiBadRequestResponse({
   description: 'Bad Request',
-  type: HttpBadRequestResponse,
+  type: BackendErrorResponse,
 })
 @ApiConflictResponse({
   description: 'Conflict',
-  type: () => HttpConflictResponse,
+  type: () => BackendErrorResponse,
 })
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
