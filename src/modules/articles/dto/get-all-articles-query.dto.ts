@@ -11,6 +11,11 @@ export class GetAllArticlesQueryParams {
   })
   limit?: number;
 
+  @ApiProperty({
+    required: false,
+    name: 'startsWith',
+    description: 'Starts with the given string. Empty string does not filter.',
+  })
   startsWith?: string;
 
   @ApiProperty({
@@ -19,4 +24,14 @@ export class GetAllArticlesQueryParams {
     enumName: 'AvailableLanguages',
   })
   language?: AvailableLanguages;
+
+  @ApiProperty({
+    required: false,
+    name: 'onlyVerified',
+    description:
+      'true to only gets the list of curated articles (default: true)',
+  })
+  @IsOptional()
+  @Transform(val => val !== 'false')
+  onlyVerified?: boolean;
 }

@@ -6,6 +6,7 @@ import {
   UseGuards,
   Put,
   Query,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -13,6 +14,7 @@ import {
   ApiOperation,
   ApiOkResponse,
   ApiTags,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { ArticlesService } from './articles.service';
@@ -42,62 +44,63 @@ export class ArticlesController {
     description: 'All existing articles',
     type: [Article],
   })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
   findAll(@Query() query: GetAllArticlesQueryParams): Promise<Article[]> {
     return this.articlesService.findAll(query);
   }
 
-  @Patch('/articles/:articleId')
-  @ApiOperation({ summary: 'Modify article' })
-  async updateArticle(
-    @Body() createArticleDto: CreateArticleDto,
-  ): Promise<Article> {
-    return this.articlesService.updateArticle(createArticleDto);
-  }
+  // PATCH e.g. used to modify the category of an article
 
-  @Post('/units')
-  @ApiOperation({ summary: 'Create a unit' })
-  async createUnit(
-    @Body() createArticleDto: CreateArticleDto,
-  ): Promise<Article> {
-    return this.articlesService.create(createArticleDto);
-  }
+  // @Patch('/articles/:articleId')
+  // @ApiOperation({ summary: 'Modify article' })
+  // async updateArticle(
+  //   @Body() createArticleDto: CreateArticleDto,
+  // ): Promise<Article> {
+  //   return this.articlesService.updateArticle(createArticleDto);
+  // }
 
-  @Get('/units')
-  @ApiOperation({ summary: 'Get a list of units' })
-  async getUnits(@Body() createArticleDto: CreateArticleDto): Promise<Article> {
-    return this.articlesService.create(createArticleDto);
-  }
+  // @Post('/units')
+  // @ApiOperation({ summary: 'Create a unit' })
+  // async createUnit(
+  //   @Body() createArticleDto: CreateArticleDto,
+  // ): Promise<Article> {
+  //   return this.articlesService.create(createArticleDto);
+  // }
 
-  @Put('/units/:unitId')
-  @ApiOperation({ summary: 'Add a unit' })
-  async updateUnit(
-    @Body() createArticleDto: CreateArticleDto,
-  ): Promise<Article> {
-    return this.articlesService.create(createArticleDto);
-  }
+  // @Get('/units')
+  // @ApiOperation({ summary: 'Get a list of units' })
+  // async getUnits(@Body() createArticleDto: CreateArticleDto): Promise<Article> {
+  //   return this.articlesService.create(createArticleDto);
+  // }
 
-  @Post('/categories')
-  @ApiOperation({ summary: 'Create a category' })
-  async createCategory(
-    @Body() createArticleDto: CreateArticleDto,
-  ): Promise<Article> {
-    return this.articlesService.create(createArticleDto);
-  }
+  // @Put('/units/:unitId')
+  // @ApiOperation({ summary: 'Add a unit' })
+  // async updateUnit(
+  //   @Body() createArticleDto: CreateArticleDto,
+  // ): Promise<Article> {
+  //   return this.articlesService.create(createArticleDto);
+  // }
 
-  @Get('/categories')
-  @ApiOperation({ summary: 'Create a category' })
-  async getCategories(
-    @Body() createArticleDto: CreateArticleDto,
-  ): Promise<Article> {
-    return this.articlesService.create(createArticleDto);
-  }
+  // @Post('/categories')
+  // @ApiOperation({ summary: 'Create a category' })
+  // async createCategory(
+  //   @Body() createArticleDto: CreateArticleDto,
+  // ): Promise<Article> {
+  //   return this.articlesService.create(createArticleDto);
+  // }
 
-  @Put('/categories/:categoryId')
-  @ApiOperation({ summary: 'Create a category' })
-  async updateCategory(
-    @Body() createArticleDto: CreateArticleDto,
-  ): Promise<Article> {
-    return this.articlesService.create(createArticleDto);
-  }
+  // @Get('/categories')
+  // @ApiOperation({ summary: 'Create a category' })
+  // async getCategories(
+  //   @Body() createArticleDto: CreateArticleDto,
+  // ): Promise<Article> {
+  //   return this.articlesService.create(createArticleDto);
+  // }
+
+  // @Put('/categories/:categoryId')
+  // @ApiOperation({ summary: 'Create a category' })
+  // async updateCategory(
+  //   @Body() createArticleDto: CreateArticleDto,
+  // ): Promise<Article> {
+  //   return this.articlesService.create(createArticleDto);
+  // }
 }

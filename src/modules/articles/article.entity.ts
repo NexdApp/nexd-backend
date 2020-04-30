@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { AvailableLanguages } from 'src/constants/languages';
 import { Category } from './category.entity';
+import { ArticleStatus } from './article-status';
 
 @Entity({
   name: 'articles',
@@ -25,7 +26,7 @@ export class Article {
   @ApiProperty({
     description: 'Name of the article (without unit)',
   })
-  @Column()
+  @Column({ length: 255 })
   name!: string;
 
   @ApiProperty({
@@ -39,12 +40,17 @@ export class Article {
   @Index()
   language!: AvailableLanguages;
 
-  @Column({ default: false })
+  @Column({
+    type: 'enum',
+    enum: ArticleStatus,
+    default: ArticleStatus.ACTIVE,
+  })
   @Index()
-  activated!: boolean;
+  status?: boolean;
 
-  @Column({ type: 'int', array: true })
-  unitOrder: number[];
+  // an array of unit ids, calculated by cron
+  @Column({ type: 'int', array: true, default: () => 'array[]::integer[]' })
+  unitOrder?: number[] = [];
 
   @ApiProperty({
     type: 'integer',
