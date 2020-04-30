@@ -51,7 +51,7 @@ export class UserController {
     description: 'Secret to access the admin functions.',
   })
   async getAll(): Promise<User[]> {
-    return await this.userService.getAll();
+    return this.userService.getAll();
   }
 
   @Get('/me')
@@ -60,7 +60,7 @@ export class UserController {
   @ApiNotFoundResponse({ description: 'User not found' })
   @ApiBadRequestResponse({ description: 'Bad Request' })
   async findMe(@ReqUser() user: UserID): Promise<User> {
-    return await this.userService.getById(user.userId);
+    return this.userService.getById(user.userId);
   }
 
   @Get(':userId')
@@ -75,7 +75,7 @@ export class UserController {
   async findOne(
     @Param('userId', UserIdValidationPipe) userId: string,
   ): Promise<User> {
-    return await this.userService.getById(userId);
+    return this.userService.getById(userId);
   }
 
   @Put('/me')

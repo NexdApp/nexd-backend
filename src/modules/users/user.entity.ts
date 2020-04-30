@@ -41,13 +41,19 @@ export class User extends AddressModel {
   @Exclude()
   password: string;
 
+  @ApiHideProperty()
+  @Column({ nullable: true })
+  @Exclude()
+  @IsOptional()
+  passwordResetToken?: string;
+
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
 
   async comparePassword(attempt: string): Promise<boolean> {
-    return await bcrypt.compare(attempt, this.password);
+    return bcrypt.compare(attempt, this.password);
   }
 }
 

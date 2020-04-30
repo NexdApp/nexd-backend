@@ -100,6 +100,6 @@ export class DatabaseTest {
 
     this.modelsCharged.push(model.name);
 
-    return await this.createData(model.name, model.className);
+    return this.createData(model.name, model.className);
   }
 }

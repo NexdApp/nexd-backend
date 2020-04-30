@@ -5,44 +5,47 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
-import { HttpConflictResponse } from './httpConflictResponse.model';
-import { HttpConflictErrors } from './httpConflictErrors.type';
+import { Response } from 'express';
+import { BackendErrorResponse } from './BackendErrorEntry.model';
+import { BackendErrors } from './backendErrors.type';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
-    if (status === HttpStatus.CONFLICT) {
-      const errorCodeString: string = this.getErrorType(
-        exception.getResponse(),
-      );
-      const description: string = this.getErrorDescription(
-        exception.getResponse(),
-      );
-      const responseJson: HttpConflictResponse = {
-        statusCode: 409,
-        errorCode: errorCodeString as HttpConflictErrors,
-        errorDescription: description,
+    if (status === HttpStatus.BAD_REQUEST) {
+      const errorResponse: any = exception.getResponse();
+      const errors = errorResponse.message.map(err => ({
+        errorCode: err,
+        errorDescription: err,
+      }));
+
+      const responseJson: BackendErrorResponse = {
+        statusCode: HttpStatus.BAD_REQUEST,
+        errors,
       };
       response.status(status).json(responseJson);
       return;
     }
 
-    if (status === HttpStatus.BAD_REQUEST) {
-      response.status(status).json(exception.getResponse());
-      return;
-    }
-
-    response.status(status).json({
+    const errorCodeString: string = this.getErrorType(exception.getResponse());
+    const description: string = this.getErrorDescription(
+      exception.getResponse(),
+    );
+    const responseJson: BackendErrorResponse = {
       statusCode: status,
-      timestamp: new Date().toISOString(),
-      path: request.url,
-    });
+      errors: [
+        {
+          errorCode: errorCodeString as BackendErrors,
+          errorDescription: description,
+        },
+      ],
+    };
+    response.status(status).json(responseJson);
+    return;
   }
 
   private getErrorType(exceptionResponse) {
