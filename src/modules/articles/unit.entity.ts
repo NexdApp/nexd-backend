@@ -5,7 +5,7 @@ import { AvailableLanguages } from 'src/constants/languages';
 @Entity({
   name: 'units',
 })
-export class Article {
+export class Unit {
   @ApiProperty({
     description: 'Auto-incremented ID of a unit.',
     type: 'integer',

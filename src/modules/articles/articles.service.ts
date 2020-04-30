@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { Article } from './article.entity';
 import { GetAllArticlesQueryParams } from './dto/get-all-articles-query.dto';
+import { ArticleStatus } from './article-status';
 
 @Injectable()
 export class ArticlesService {
@@ -34,27 +35,23 @@ export class ArticlesService {
   async findAll(query: GetAllArticlesQueryParams): Promise<Article[]> {
     const sql = this.articlesRepository
       .createQueryBuilder('articles')
-      .where('articles.activated = :activated', { activated: true });
-
-    if (query.startsWith) {
-      // ILIKE added soon: https://github.com/typeorm/typeorm/pull/5828
-      sql.andWhere('articles.name like :name', {
+      .where(query.onlyVerified ? 'articles.status = :status' : '1=1', {
+        status: ArticleStatus.VERIFIED,
+      })
+      .andWhere(query.startsWith ? 'articles.name like :name' : '1=1', {
         name: query.startsWith + '%',
-      });
-      // TODO checks
-    }
-
-    if (query.language) {
-      sql.andWhere('articles.language = :language', {
+      })
+      .andWhere(query.language ? 'articles.language = :language' : '1=1', {
         language: query.language,
       });
-    }
+
+    // ILIKE added soon: https://github.com/typeorm/typeorm/pull/5828
 
     if (query.limit) {
       sql.limit(query.limit);
     }
 
-    return await sql.getMany();
+    return sql.getMany();
   }
 
   async remove(id: string): Promise<void> {

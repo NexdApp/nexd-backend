@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AvailableLanguages } from 'src/constants/languages';
+import { IsNotEmpty, IsEnum } from 'class-validator';
 
 export class CreateArticleDto {
   @ApiProperty({
@@ -7,11 +8,13 @@ export class CreateArticleDto {
     description:
       'Name of the article. If the name already exists, no new article will be added.',
   })
+  @IsNotEmpty()
   readonly name!: string;
 
   @ApiProperty({
     required: true,
     description: 'Language of the article, e.g. the user',
   })
+  @IsEnum(AvailableLanguages)
   readonly language!: AvailableLanguages;
 }

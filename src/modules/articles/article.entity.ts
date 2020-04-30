@@ -50,7 +50,7 @@ export class Article {
 
   // an array of unit ids, calculated by cron
   @Column({ type: 'int', array: true, default: () => 'array[]::integer[]' })
-  unitOrder?: number[] = [];
+  unitIdOrder?: number[] = [];
 
   @ApiProperty({
     type: 'integer',
