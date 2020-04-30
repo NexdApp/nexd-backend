@@ -1,0 +1,36 @@
+version: '3.5'
+
+services:
+  postgis-nexd:
+    container_name: postgis-nexd
+    image: postgis/postgis:12-2.5
+    env_file:
+      - .env.postgis.local
+    volumes:
+      - nexd-postgis-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    networks:
+      - nexd
+    restart: unless-stopped
+
+  postgis-pgadmin:
+    container_name: postgis-pgadmin
+    image: dpage/pgadmin4
+    env_file:
+      - .env.postgis.local
+    volumes:
+      - pgadmin:/root/.pgadmin
+    ports:
+      - '3010:80'
+    networks:
+      - nexd
+    restart: unless-stopped
+
+networks:
+  nexd:
+    driver: bridge
+
+volumes:
+  nexd-postgis-data:
+  pgadmin:
