@@ -168,7 +168,7 @@ export class PhoneService {
     if (!call) {
       throw new NotFoundException('Call not found');
     }
-    if (call.converter) {
+    if (call.converterId) {
       throw new ConflictException('Call already converted to help request');
     }
 
