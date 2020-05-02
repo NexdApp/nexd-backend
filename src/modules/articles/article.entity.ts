@@ -46,7 +46,7 @@ export class Article {
     default: ArticleStatus.VERIFIED, // TODO change to ACTIVE later
   })
   @Index()
-  status?: boolean;
+  status?: ArticleStatus;
 
   // an array of unit ids, calculated by cron
   @Column({ type: 'int', array: true, default: () => 'array[]::integer[]' })
