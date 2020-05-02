@@ -43,7 +43,7 @@ export class HelpRequestArticle {
 
   @ManyToOne(type => Unit)
   @JoinColumn({ name: 'unitId' })
-  unit?: Article;
+  unit?: Unit;
 
   @ApiProperty({
     type: 'integer',
