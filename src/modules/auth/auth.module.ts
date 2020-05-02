@@ -8,11 +8,14 @@ import { ConfigurationService } from '../../configuration/configuration.service'
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
 import { ConfigurationModule } from '../../configuration/configuration.module';
+import { EmailService } from '../email/email.service';
+import { EmailModule } from '../email/email.module';
 
 @Module({
   imports: [
     UsersModule,
     ConfigurationModule,
+    EmailModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigurationModule],
@@ -25,8 +28,8 @@ import { ConfigurationModule } from '../../configuration/configuration.module';
       }),
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, EmailService],
   controllers: [AuthController],
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }

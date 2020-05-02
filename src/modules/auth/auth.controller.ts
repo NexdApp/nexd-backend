@@ -23,6 +23,7 @@ import { TokenDto } from './dto/token.dto';
 import { LoginDto } from './dto/login.dto';
 import { HttpBadRequestResponse } from '../../errorHandling/httpBadRequestResponse.model';
 import { HttpConflictResponse } from '../../errorHandling/httpConflictResponse.model';
+import { EmailService } from '../email/email.service';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -40,7 +41,8 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private usersService: UsersService,
-  ) {}
+    private emailService: EmailService,
+  ) { }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -63,6 +65,7 @@ export class AuthController {
   })
   async register(@Body() payload: RegisterDto): Promise<TokenDto> {
     const user = await this.usersService.create(payload);
+    await this.emailService.SendEmailVerificaion(payload.email);
     this.logger.log(`User registered: ${user.id}`);
     this.logger.debug(`Email: ${payload.email}`);
     return await this.authService.createToken(user);
