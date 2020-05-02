@@ -9,5 +9,6 @@ import { ConfigurationModule } from '../../configuration/configuration.module';
   imports: [TypeOrmModule.forFeature([Article]), ConfigurationModule],
   providers: [ArticlesService],
   controllers: [ArticlesController],
+  exports: [ArticlesService],
 })
 export class ArticlesModule {}

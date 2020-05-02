@@ -20,7 +20,7 @@ export class User extends AddressModel {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ nullable: true })
+  @Column({ length: 255, nullable: true })
   email?: string;
 
   @Column({
