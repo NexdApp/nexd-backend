@@ -1,11 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import {
-  SWAGGER_API_CURRENT_VERSION,
-  SWAGGER_API_DESCRIPTION,
-  SWAGGER_API_NAME,
-  SWAGGER_API_ROOT,
-} from './constants';
+import { SWAGGER_API_CURRENT_VERSION, SWAGGER_API_DESCRIPTION, SWAGGER_API_NAME, SWAGGER_API_ROOT } from './constants';
 
 import { ConfigurationService } from '../configuration/configuration.service';
 
@@ -21,6 +16,12 @@ export const setupSwagger = (app: INestApplication, globalPrefix: string) => {
     .setVersion(SWAGGER_API_CURRENT_VERSION)
     .addServer(`${apiRootUrl}:${externalAPIPort}${globalPrefix}`)
     .addBearerAuth()
+    .addTag('Auth', 'user authorization functions - login, registration')
+    .addTag('Users', 'user profiles')
+    .addTag('Articles')
+    .addTag('Help Requests')
+    .addTag('Help Lists')
+    .addTag('Calls', "all operations for call recording and translating")
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
