@@ -1,18 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
-// import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsEmail, MinLength, IsPhoneNumber, IsOptional } from 'class-validator';
+import { BackendErrors } from '../../../errorHandling/backendErrors.type';
 
 export class RegisterDto {
   @ApiProperty({ example: 'test@test.com' })
-  // @IsEmail()
+  @IsEmail(
+    {},
+    {
+      message: BackendErrors.VALIDATION_EMAIL_INVALID,
+    },
+  )
   email!: string;
 
-  // @IsNotEmpty()
-  firstName!: string;
+  firstName?: string;
 
-  // @IsNotEmpty()
-  lastName!: string;
+  lastName?: string;
 
-  // @IsNotEmpty()
-  // @MinLength(5)
+  @IsOptional()
+  @IsPhoneNumber('ZZ', {
+    message: BackendErrors.VALIDATION_PHONENUMBER_INVALID,
+  })
+  phoneNumber?: string;
+
+  @MinLength(8, { message: BackendErrors.VALIDATION_PASSWORD_TOO_SHORT })
   password!: string;
 }

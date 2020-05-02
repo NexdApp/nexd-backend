@@ -36,6 +36,7 @@ import { ReqUser } from '../../decorators/user.decorator';
 import { HelpRequestByIdPipe } from '../helpRequests/help-request-by-id.pipe';
 import { HelpRequest } from '../helpRequests/help-request.entity';
 import { HelpListByIdPipe } from './help-list-by-id.pipe';
+import { UserIdValidationPipe } from '../users/userId-validation.pipe';
 
 @ApiBearerAuth()
 @ApiTags('Help Lists')
@@ -57,14 +58,15 @@ export class HelpListsController {
     description: 'If included, filter by userId, otherwise by requesting user.',
   })
   async getUserLists(
-    @Query('userId') userId: string,
+    @Query('userId', new UserIdValidationPipe({ optional: true }))
+    userId: string,
     @ReqUser() user: UserID,
   ): Promise<HelpList[]> {
     let userIdFilter = userId;
     if (!userId) {
       userIdFilter = user.userId;
     }
-    return await this.helpListsService.getAllByUser(userIdFilter);
+    return this.helpListsService.getAllByUser(userIdFilter);
   }
 
   @Get(':helpListId')
@@ -81,7 +83,7 @@ export class HelpListsController {
     @Param('helpListId') helpListId: number,
     @ReqUser() user: UserID,
   ): Promise<HelpList> {
-    return await this.helpListsService.getById(user.userId, helpListId);
+    return this.helpListsService.getById(user.userId, helpListId);
   }
 
   @Post()

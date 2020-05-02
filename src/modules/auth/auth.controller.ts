@@ -2,6 +2,8 @@ import {
   Controller,
   Request,
   Post,
+  Get,
+  Param,
   UseGuards,
   Logger,
   Body,
@@ -9,10 +11,10 @@ import {
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
-  ApiNotAcceptableResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiConflictResponse,
 } from '@nestjs/swagger';
 
 import { LocalAuthGuard } from './local-auth.guard';
@@ -21,9 +23,19 @@ import { RegisterDto } from './dto/register.dto';
 import { UsersService } from '../users/users.service';
 import { TokenDto } from './dto/token.dto';
 import { LoginDto } from './dto/login.dto';
+import { EmailPasswordResetDto } from './dto/email-password-reset.dto';
+import { BackendErrorResponse } from 'src/errorHandling/BackendErrorEntry.model';
 
 @ApiTags('Auth')
 @Controller('auth')
+@ApiBadRequestResponse({
+  description: 'Bad Request',
+  type: BackendErrorResponse,
+})
+@ApiConflictResponse({
+  description: 'Conflict',
+  type: () => BackendErrorResponse,
+})
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
@@ -39,9 +51,10 @@ export class AuthController {
     description: 'Successful Login',
     type: TokenDto,
   })
-  async login(@Request() req, @Body() _: LoginDto): Promise<TokenDto> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async login(@Request() req, @Body() loginDto: LoginDto): Promise<TokenDto> {
     this.logger.log(`User login`);
-    return await this.authService.createToken(req.user);
+    return this.authService.createToken(req.user);
   }
 
   @Post('register')
@@ -50,13 +63,11 @@ export class AuthController {
     description: 'Successful Registration',
     type: TokenDto,
   })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  @ApiNotAcceptableResponse({ description: 'Already exists' })
   async register(@Body() payload: RegisterDto): Promise<TokenDto> {
     const user = await this.usersService.create(payload);
     this.logger.log(`User registered: ${user.id}`);
     this.logger.debug(`Email: ${payload.email}`);
-    return await this.authService.createToken(user);
+    return this.authService.createToken(user);
   }
 
   @Post('refresh')
@@ -65,9 +76,41 @@ export class AuthController {
     description: 'Successful token refresh',
     type: TokenDto,
   })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
   async refreshToken(@Body() token: TokenDto): Promise<TokenDto> {
     // TODO
     return;
+  }
+
+  @Get('reset_email_password_initiate/:email')
+  @ApiOperation({ summary: 'Email password reset initiation' })
+  @ApiCreatedResponse({
+    description:
+      'If the email address exists, password reset was successfully triggered',
+  })
+  async resetEmailPasswordInitiate(
+    @Param('email') email: string,
+  ): Promise<null> {
+    const passwordResetToken = await this.usersService.createPasswordResetToken(
+      email,
+    );
+    if (passwordResetToken !== null) {
+      // TODO: actually send email with passwordResetToken
+    }
+    return;
+  }
+
+  @Post('reset_email_password_complete')
+  @ApiOperation({ summary: 'Email password reset initiation' })
+  @ApiCreatedResponse({
+    description:
+      'If the email address exists, password reset was successfully triggered',
+  })
+  async resetPasswordComplete(
+    @Body() payload: EmailPasswordResetDto,
+  ): Promise<TokenDto> {
+    const user = await this.usersService.updatePasswordIfResetTokenMatches(
+      payload,
+    );
+    return this.authService.createToken(user);
   }
 }

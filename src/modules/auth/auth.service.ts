@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/user.entity';
@@ -35,6 +35,11 @@ export class AuthService {
   }
 
   async createToken(user: User) {
+    if (!user.email) {
+      throw new ForbiddenException(
+        'User is only registered by phone and not by email',
+      );
+    }
     const payload = { email: user.email, sub: user.id };
     return {
       // eslint-disable-next-line @typescript-eslint/camelcase

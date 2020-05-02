@@ -6,6 +6,8 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { setupSwagger } from './swagger';
 import { ConfigurationService } from './configuration/configuration.service';
 import { requestLoggerMiddleware } from './middlewares/requestLogger.middleware';
+import { HttpExceptionFilter } from './errorHandling/http-exception.filter';
+import { AppService } from './app.service';
 
 async function bootstrap() {
   const logger = new Logger('Main', true);
@@ -15,18 +17,23 @@ async function bootstrap() {
   const globalPrefix = '/api/v1';
   setupSwagger(app, globalPrefix);
 
-  app.use(requestLoggerMiddleware);
-
   const appConfigService: ConfigurationService = app.get(
     'ConfigurationService',
   );
   const port = appConfigService.APIPort;
   const rootUrl = appConfigService.get('API_ROOT_URL');
 
+  app.use(requestLoggerMiddleware(appConfigService.isDev));
   app.enableCors();
   app.use(helmet());
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
+
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   app.setGlobalPrefix(globalPrefix);
 
@@ -34,6 +41,12 @@ async function bootstrap() {
   const externalAPIPort = appConfigService.get('API_PORT');
 
   const url = `${rootUrl}:${externalAPIPort}${globalPrefix}`;
+
+  app.enableShutdownHooks();
+  app.get(AppService).subscribeToShutdown(() => {
+    console.log('close connection');
+    app.close();
+  });
 
   await app.listen(port);
 

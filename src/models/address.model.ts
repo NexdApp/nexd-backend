@@ -3,6 +3,14 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class AddressModel {
   @ApiPropertyOptional()
+  @Column({ length: 255, nullable: true })
+  firstName?: string;
+
+  @ApiPropertyOptional()
+  @Column({ length: 255, nullable: true })
+  lastName?: string;
+
+  @ApiPropertyOptional()
   @Column({
     length: 100,
     nullable: true,

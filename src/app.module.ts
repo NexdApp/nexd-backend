@@ -8,7 +8,8 @@ import { ConfigurationModule } from './configuration/configuration.module';
 import { ArticlesModule } from './modules/articles/articles.modules';
 import { HelpRequestsModule } from './modules/helpRequests/help-requests.module';
 import { HelpListsModule } from './modules/helpLists/help-lists.module';
-import { CallsModule } from './modules/calls/calls.module';
+import { PhoneModule } from './modules/phone/phone.module';
+import { LocalInfosModule } from './modules/locationInfos/locationInfos.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { CallsModule } from './modules/calls/calls.module';
     ArticlesModule,
     HelpRequestsModule,
     HelpListsModule,
-    CallsModule,
+    PhoneModule,
+    LocalInfosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

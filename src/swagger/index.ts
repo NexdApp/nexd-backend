@@ -1,4 +1,4 @@
-import { INestApplication, Logger } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import {
   SWAGGER_API_CURRENT_VERSION,
@@ -22,6 +22,7 @@ export const setupSwagger = (app: INestApplication, globalPrefix: string) => {
     .addServer(`${apiRootUrl}:${externalAPIPort}${globalPrefix}`)
     .addBearerAuth()
     .build();
+
   const document = SwaggerModule.createDocument(app, options);
 
   const css = [
@@ -31,7 +32,6 @@ export const setupSwagger = (app: INestApplication, globalPrefix: string) => {
         'background: linear-gradient(180deg, #4EBF96 23.44%, #0C2E45 100%);',
     },
   ];
-  Logger.log(css);
 
   const compiled = css
     .map(value => {
