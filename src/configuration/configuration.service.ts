@@ -44,11 +44,11 @@ export class ConfigurationService {
     return {
       type: 'postgres',
       ...dbConfig,
-      entities: [__dirname + '/../**/*.entity.{ts,js}'],
+      entities: ['src/**/*.entity.{ts,js}'],
       synchronize: true,
-      migrations: [__dirname + '/../../src/migrations/*.ts'],
+      migrations: ['src/migrations/*.ts'],
       cli: {
-        migrationsDir: __dirname + '/../../src/migrations',
+        migrationsDir: 'src/migrations',
       },
       ssl: this.get<string>('DATABASE_SSL') === 'true',
       logging: this.isDev,
