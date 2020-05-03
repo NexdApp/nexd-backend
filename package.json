@@ -30,6 +30,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm:createconfig": "cross-env NODE_ENV=development.local ts-node -r tsconfig-paths/register scripts/write-typeorm-config.ts",
     "typeorm": "cross-env NODE_ENV=development.local ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed",
+    "seed_manual:run": "ts-node ./src/seeds/seeder.ts",
     "docker:postgis": "docker run -d --name postgis-nexd --rm -p 5432:5432 --env-file .env.postgis.local -v postgis-data:/var/lib/postgresql/data postgis/postgis:12-2.5",
     "docker:pgadmin": "docker run -d --name postgis-pgadmin --rm -p 3010:80 --env-file .env.postgis.local dpage/pgadmin4"
   },
@@ -55,7 +57,8 @@
     "rxjs": "^6.5.5",
     "swagger-ui-express": "^4.1.4",
     "twilio": "^3.42.2",
-    "typeorm": "^0.2.24"
+    "typeorm": "^0.2.24",
+    "typeorm-seeding": "^1.6.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.1.2",

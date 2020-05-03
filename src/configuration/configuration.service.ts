@@ -52,6 +52,8 @@ export class ConfigurationService {
       },
       ssl: this.get<string>('DATABASE_SSL') === 'true',
       logging: this.isDev,
+      seeds: ['src/seeds/**/*{.ts,.js}'],
+      factories: ['src/factories/**/*{.ts,.js}'],
     };
   }
 }
