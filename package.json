@@ -35,7 +35,8 @@
     "docker:pgadmin": "docker run -d --name postgis-pgadmin --rm -p 3010:80 --env-file .env.postgis.local dpage/pgadmin4",
     "start:doc": "compodoc -s -o -p ./tsconfig.json -r 8081",
     "build:doc": "compodoc -p ./tsconfig.json",
-    "test:swagger": "cross-env NODE_ENV=test ts-node ./scripts/validate-swagger.ts"
+    "test:swagger": "cross-env NODE_ENV=test ts-node ./scripts/validate-swagger.ts",
+    "release": "standard-version && git push --follow-tags origin master"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.8",
@@ -64,6 +65,8 @@
   "devDependencies": {
     "@apidevtools/swagger-parser": "^9.0.1",
     "@compodoc/compodoc": "^1.1.11",
+    "@commitlint/cli": "8.3.5",
+    "@commitlint/config-conventional": "8.3.4",
     "@nestjs/cli": "^7.1.2",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.8",
@@ -82,6 +85,7 @@
     "jest": "^25.3.0",
     "nan": "^2.14.1",
     "prettier": "^1.19.1",
+    "standard-version": "^7.1.0",
     "supertest": "^4.0.2",
     "ts-jest": "25.2.1",
     "ts-loader": "^6.2.1",
@@ -102,5 +106,10 @@
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "npm run commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }
