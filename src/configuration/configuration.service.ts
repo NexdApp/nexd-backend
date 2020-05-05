@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import * as path from 'path';
 
 @Injectable()
 export class ConfigurationService {
@@ -44,9 +45,9 @@ export class ConfigurationService {
     return {
       type: 'postgres',
       ...dbConfig,
-      entities: ['src/**/*.entity.{ts,js}'],
+      entities: [path.resolve(__dirname, '../**/*.entity.{ts,js}')],
       synchronize: true,
-      migrations: ['src/migrations/*.ts'],
+      migrations: [path.resolve(__dirname, '../migrations/*.ts')],
       cli: {
         migrationsDir: 'src/migrations',
       },
