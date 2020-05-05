@@ -21,5 +21,6 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'no-return-await': 'warn',
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
   },
 };
