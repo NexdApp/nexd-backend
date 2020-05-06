@@ -3,12 +3,19 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from '../src/app.module';
 
+import {
+  SWAGGER_API_CURRENT_VERSION,
+  SWAGGER_API_DESCRIPTION,
+  SWAGGER_API_NAME,
+} from '../src/swagger/constants';
+
 (async function() {
   const app = await NestFactory.create(AppModule);
   const options = new DocumentBuilder()
-    .setTitle('Title')
-    .setDescription('description')
-    .setVersion('1.0')
+    .setTitle(SWAGGER_API_NAME)
+    .setDescription(SWAGGER_API_DESCRIPTION)
+    .setVersion(SWAGGER_API_CURRENT_VERSION)
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
 

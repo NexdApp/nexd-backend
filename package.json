@@ -34,7 +34,7 @@
     "docker:pgadmin": "docker run -d --name postgis-pgadmin --rm -p 3010:80 --env-file .env.postgis.local dpage/pgadmin4",
     "start:doc": "compodoc -s -o -p ./tsconfig.json -r 8081",
     "build:doc": "compodoc -p ./tsconfig.json",
-    "test:swagger": "ts-node ./scripts/validate-swagger.ts"
+    "test:swagger": "NODE_ENV=test ts-node ./scripts/validate-swagger.ts"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.8",
@@ -74,6 +74,7 @@
     "@typescript-eslint/eslint-plugin": "^2.28.0",
     "@typescript-eslint/parser": "^2.28.0",
     "cross-env": "^7.0.2",
+    "env-cmd": "^10.1.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.2",
