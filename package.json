@@ -33,7 +33,8 @@
     "docker:postgis": "docker run -d --name postgis-nexd --rm -p 5432:5432 --env-file .env.postgis.local -v postgis-data:/var/lib/postgresql/data postgis/postgis:12-2.5",
     "docker:pgadmin": "docker run -d --name postgis-pgadmin --rm -p 3010:80 --env-file .env.postgis.local dpage/pgadmin4",
     "start:doc": "compodoc -s -o -p ./tsconfig.json -r 8081",
-    "build:doc": "compodoc -p ./tsconfig.json"
+    "build:doc": "compodoc -p ./tsconfig.json",
+    "test:swagger": "ts-node ./scripts/validate-swagger.js"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.8",
