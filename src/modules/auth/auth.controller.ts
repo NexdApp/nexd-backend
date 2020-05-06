@@ -65,7 +65,7 @@ export class AuthController {
   })
   async register(@Body() payload: RegisterDto): Promise<TokenDto> {
     const user = await this.usersService.create(payload);
-    await this.emailService.SendEmailVerificaion(payload.email);
+    await this.emailService.sendEmailVerificaion(payload.email);
     this.logger.log(`User registered: ${user.id}`);
     this.logger.debug(`Email: ${payload.email}`);
     return await this.authService.createToken(user);

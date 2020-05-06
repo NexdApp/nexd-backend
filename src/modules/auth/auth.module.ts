@@ -8,7 +8,6 @@ import { ConfigurationService } from '../../configuration/configuration.service'
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
 import { ConfigurationModule } from '../../configuration/configuration.module';
-import { EmailService } from '../email/email.service';
 import { EmailModule } from '../email/email.module';
 
 @Module({
@@ -28,7 +27,7 @@ import { EmailModule } from '../email/email.module';
       }),
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, EmailService],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],
   exports: [AuthService],
 })

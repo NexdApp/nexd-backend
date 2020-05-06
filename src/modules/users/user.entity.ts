@@ -22,7 +22,8 @@ export class User extends AddressModel {
 
   @Column({ nullable: true })
   email?: string;
-
+  @Column({default: false, nullable: true})
+  active?: boolean;
   @Column({
     type: 'enum',
     enum: UserRole,

@@ -10,7 +10,7 @@ export class EmailService {
   constructor(private configService: ConfigurationService) {
     this.sendgrid.setApiKey(configService.get('SENDGRID_API_KEY'));
   }
-  async SendEmailVerificaion(emailId: string): Promise<any> {
+  async sendEmailVerificaion(emailId: string): Promise<any> {
     this.logger.log(`Send Email verification`);
     const msg = {
       to: emailId,
