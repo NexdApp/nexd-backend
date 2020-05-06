@@ -24,7 +24,7 @@ import { UsersService } from '../users/users.service';
 import { TokenDto } from './dto/token.dto';
 import { LoginDto } from './dto/login.dto';
 import { EmailPasswordResetDto } from './dto/email-password-reset.dto';
-import { BackendErrorResponse } from 'src/errorHandling/BackendErrorEntry.model';
+import { BackendErrorResponse } from '../../errorHandling/BackendErrorEntry.model';
 
 @ApiTags('Auth')
 @Controller('auth')
