@@ -26,4 +26,4 @@ jobs:
       - run: npm ci
       - run: docker-compose up -d
       #- run: npm test commented out because tests are failing
-      - run: npm test:swagger
+      - run: npm run test:swagger
