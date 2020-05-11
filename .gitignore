@@ -6,6 +6,7 @@ ormconfig.json
 /dist
 /node_modules
 /documentation
+swagger-spec.json
 
 # Logs
 logs

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, PrimaryGeneratedColumn, Index } from 'typeorm';
-import { AvailableLanguages } from 'src/constants/languages';
+import { AvailableLanguages } from '../../constants/languages';
 
 @Entity({
   name: 'units',

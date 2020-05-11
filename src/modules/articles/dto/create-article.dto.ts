@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AvailableLanguages } from 'src/constants/languages';
+import { AvailableLanguages } from '../../../constants/languages';
 import { IsNotEmpty, IsEnum } from 'class-validator';
 
 export class CreateArticleDto {

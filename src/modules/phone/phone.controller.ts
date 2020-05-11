@@ -25,7 +25,7 @@ import { PhoneService } from './phone.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Call } from './call.entity';
 import { GetCallsQueryParams } from './dto/get-calls-query-params.dto';
-import { ReqUser } from 'src/decorators/user.decorator';
+import { ReqUser } from '../../decorators/user.decorator';
 import { UserID } from '../users/user.entity';
 import { HelpRequestCreateDto } from '../helpRequests/dto/help-request-create.dto';
 import { PhoneNumberDto } from './dto/phone-number.dto';

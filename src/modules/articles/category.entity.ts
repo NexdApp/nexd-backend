@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { AvailableLanguages } from 'src/constants/languages';
+import { AvailableLanguages } from '../../constants/languages';
 import { Article } from './article.entity';
 
 @Entity({
