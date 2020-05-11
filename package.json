@@ -35,7 +35,7 @@
     "docker:pgadmin": "docker run -d --name postgis-pgadmin --rm -p 3010:80 --env-file .env.postgis.local dpage/pgadmin4",
     "start:doc": "compodoc -s -o -p ./tsconfig.json -r 8081",
     "build:doc": "compodoc -p ./tsconfig.json",
-    "test:swagger": "NODE_ENV=test ts-node ./scripts/validate-swagger.ts"
+    "test:swagger": "cross-env NODE_ENV=test ts-node ./scripts/validate-swagger.ts"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.8",
