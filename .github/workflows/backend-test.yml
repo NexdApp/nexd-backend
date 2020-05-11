@@ -24,5 +24,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
+      - run: docker-compose up -d
       - run: npm test
       - run: npm test:swagger
