@@ -13,7 +13,7 @@ import { HelpRequestCreateDto } from './dto/help-request-create.dto';
 import { HelpRequestArticle } from './help-request-article.entity';
 import { CreateOrUpdateHelpRequestArticleDto } from './dto/help-request-article-create.dto';
 import { Article } from '../articles/article.entity';
-import { BackendErrors } from 'src/errorHandling/backendErrors.type';
+import { BackendErrors } from '../../errorHandling/backendErrors.type';
 import { ArticlesService } from '../articles/articles.service';
 
 @Injectable()

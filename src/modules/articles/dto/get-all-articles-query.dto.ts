@@ -1,7 +1,7 @@
 import { IsEnum, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { AvailableLanguages } from 'src/constants/languages';
+import { AvailableLanguages } from '../../../constants/languages';
 
 export class GetAllArticlesQueryParams {
   @ApiProperty({

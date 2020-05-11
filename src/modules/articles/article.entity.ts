@@ -7,7 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { AvailableLanguages } from 'src/constants/languages';
+import { AvailableLanguages } from '../../constants/languages';
 import { Category } from './category.entity';
 import { ArticleStatus } from './article-status';
 

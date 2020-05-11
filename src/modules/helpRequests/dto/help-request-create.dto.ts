@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AddressModel } from '../../../models/address.model';
 import { HelpRequestStatus } from '../help-request-status';
 import { IsPhoneNumber, IsOptional, IsEnum } from 'class-validator';
-import { AvailableLanguages } from 'src/constants/languages';
+import { AvailableLanguages } from '../../../constants/languages';
 
 export class CreateHelpRequestArticleDto {
   @ApiProperty({
