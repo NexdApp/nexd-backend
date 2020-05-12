@@ -9,7 +9,13 @@ import * as Joi from '@hapi/joi';
     ConfigModule.forRoot({
       envFilePath: `.env.${process.env.NODE_ENV}`,
       validationSchema: Joi.object({
-        DATABASE_URL: Joi.string().required(),
+        DATABASE_HOST: Joi.string(),
+        DATABASE_PORT: Joi.number().default(5432),
+        DATABASE_USERNAME: Joi.string(),
+        DATABASE_PASSWORD: Joi.string(),
+        DATABASE_NAME: Joi.string(),
+
+        DATABASE_URL: Joi.string(),
         DATABASE_SSL: Joi.bool().default(false),
 
         JWT_SECRET: Joi.string().required(),
@@ -18,11 +24,14 @@ import * as Joi from '@hapi/joi';
         ADMIN_SECRET: Joi.string().required(),
 
         API_PORT: Joi.number().required(),
-        API_ROOT_URL: Joi.string().required()
-      }),
+        API_ROOT_URL: Joi.string().required(),
+      })
+        .xor('DATABASE_URL', 'DATABASE_HOST')
+        .xor('DATABASE_URL', 'DATABASE_PORT')
+        .and('DATABASE_HOST', 'DATABASE_PORT'),
     }),
   ],
   providers: [ConfigurationService],
   exports: [ConfigurationService],
 })
-export class ConfigurationModule { }
+export class ConfigurationModule {}
