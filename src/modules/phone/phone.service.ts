@@ -70,7 +70,7 @@ export class PhoneService {
    * @param callSid
    */
   async getBySid(callSid: string): Promise<Call | undefined> {
-    return await this.callRepo.findOne({ sid: callSid });
+    return this.callRepo.findOne({ sid: callSid });
   }
 
   /**
@@ -126,7 +126,7 @@ export class PhoneService {
     query.leftJoinAndSelect('calls.convertedHelpRequest', 'helpRequests');
     query.leftJoinAndSelect('calls.converter', 'users');
 
-    return await query.getMany();
+    return query.getMany();
   }
 
   /**
@@ -168,7 +168,7 @@ export class PhoneService {
     if (!call) {
       throw new NotFoundException('Call not found');
     }
-    if (call.converter) {
+    if (call.converterId) {
       throw new ConflictException('Call already converted to help request');
     }
 
@@ -199,7 +199,7 @@ export class PhoneService {
     );
     call.convertedHelpRequest = helpRequest;
 
-    return await this.callRepo.save(call);
+    return this.callRepo.save(call);
   }
 
   handleIncomingCall(

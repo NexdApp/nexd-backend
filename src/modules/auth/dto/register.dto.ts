@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, MinLength, IsPhoneNumber, IsOptional } from 'class-validator';
-import { HttpBadRequestErrors } from '../../../errorHandling/httpBadRequestErrors.type';
+import { BackendErrors } from '../../../errorHandling/backendErrors.type';
 
 export class RegisterDto {
   @ApiProperty({ example: 'test@test.com' })
   @IsEmail(
     {},
     {
-      message: HttpBadRequestErrors.EMAIL_INVALID,
+      message: BackendErrors.VALIDATION_EMAIL_INVALID,
     },
   )
   email!: string;
@@ -17,9 +17,11 @@ export class RegisterDto {
   lastName?: string;
 
   @IsOptional()
-  @IsPhoneNumber('ZZ', { message: HttpBadRequestErrors.PHONENUMBER_INVALID })
+  @IsPhoneNumber('ZZ', {
+    message: BackendErrors.VALIDATION_PHONENUMBER_INVALID,
+  })
   phoneNumber?: string;
 
-  @MinLength(8, { message: HttpBadRequestErrors.PASSWORD_TOO_SHORT })
+  @MinLength(8, { message: BackendErrors.VALIDATION_PASSWORD_TOO_SHORT })
   password!: string;
 }

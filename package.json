@@ -7,6 +7,9 @@
     "Fabian Nickel <mail@fabiannickel.de>",
     "Rossana Bermudez <rossana.bermudezd@gmail.com>"
   ],
+  "engines": {
+    "node": "12.x"
+  },
   "private": false,
   "license": "MIT",
   "scripts": {
@@ -19,7 +22,8 @@
     "start:dev": "cross-env NODE_ENV=development.local nest start --watch",
     "start:debug": "cross-env NODE_ENV=development.local nest start --debug --watch",
     "start:prod": "cross-env NODE_ENV=production node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -28,7 +32,11 @@
     "typeorm:createconfig": "cross-env NODE_ENV=development.local ts-node -r tsconfig-paths/register scripts/write-typeorm-config.ts",
     "typeorm": "cross-env NODE_ENV=development.local ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "docker:postgis": "docker run -d --name postgis-nexd --rm -p 5432:5432 --env-file .env.postgis.local -v postgis-data:/var/lib/postgresql/data postgis/postgis:12-2.5",
-    "docker:pgadmin": "docker run -d --name postgis-pgadmin --rm -p 3010:80 --env-file .env.postgis.local dpage/pgadmin4"
+    "docker:pgadmin": "docker run -d --name postgis-pgadmin --rm -p 3010:80 --env-file .env.postgis.local dpage/pgadmin4",
+    "start:doc": "compodoc -s -o -p ./tsconfig.json -r 8081",
+    "build:doc": "compodoc -p ./tsconfig.json",
+    "test:swagger": "cross-env NODE_ENV=test ts-node ./scripts/validate-swagger.ts",
+    "release": "standard-version && git push --follow-tags origin master"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
@@ -56,6 +64,10 @@
     "typeorm": "^0.2.24"
   },
   "devDependencies": {
+    "@apidevtools/swagger-parser": "^9.0.1",
+    "@compodoc/compodoc": "^1.1.11",
+    "@commitlint/cli": "8.3.5",
+    "@commitlint/config-conventional": "8.3.4",
     "@nestjs/cli": "^7.1.2",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.8",
@@ -75,6 +87,7 @@
     "jest": "^25.3.0",
     "nan": "^2.14.1",
     "prettier": "^1.19.1",
+    "standard-version": "^7.1.0",
     "supertest": "^4.0.2",
     "ts-jest": "25.2.1",
     "ts-loader": "^6.2.1",
@@ -95,5 +108,10 @@
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "npm run commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }

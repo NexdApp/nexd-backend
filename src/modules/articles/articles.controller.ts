@@ -1,46 +1,106 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Put,
+  Query,
+  ParseBoolPipe,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiOperation,
   ApiOkResponse,
   ApiTags,
-  ApiHeader,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { ArticlesService } from './articles.service';
 import { Article } from './article.entity';
-import { AdminSecretGuard } from '../auth/adminsecret-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { GetAllArticlesQueryParams } from './dto/get-all-articles-query.dto';
 
-@Controller('articles')
+@Controller('article')
 @ApiTags('Articles')
+@UseGuards(JwtAuthGuard)
+@ApiBadRequestResponse({ description: 'Bad Request' })
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
-  @Post()
-  @UseGuards(AdminSecretGuard)
+  @Post('/articles')
   @ApiOperation({ summary: 'Create an article' })
-  @ApiHeader({
-    name: 'x-admin-secret',
-    required: true,
-    description: 'Secret to access the admin functions.',
-  })
   @ApiCreatedResponse({ description: 'Created', type: Article })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
   async insertOne(
     @Body() createArticleDto: CreateArticleDto,
   ): Promise<Article> {
-    return this.articlesService.create(createArticleDto);
+    return this.articlesService.createArticle(createArticleDto);
   }
 
-  @Get()
+  @Get('/articles')
   @ApiOperation({ summary: 'List articles' })
   @ApiOkResponse({
     description: 'All existing articles',
     type: [Article],
   })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  findAll(): Promise<Article[]> {
-    return this.articlesService.findAll();
+  findAll(@Query() query: GetAllArticlesQueryParams): Promise<Article[]> {
+    return this.articlesService.findAll(query);
   }
+
+  // PATCH e.g. used to modify the category of an article
+
+  // @Patch('/articles/:articleId')
+  // @ApiOperation({ summary: 'Modify article' })
+  // async updateArticle(
+  //   @Body() createArticleDto: CreateArticleDto,
+  // ): Promise<Article> {
+  //   return this.articlesService.updateArticle(createArticleDto);
+  // }
+
+  // @Post('/units')
+  // @ApiOperation({ summary: 'Create a unit' })
+  // async createUnit(
+  //   @Body() createArticleDto: CreateArticleDto,
+  // ): Promise<Article> {
+  //   return this.articlesService.create(createArticleDto);
+  // }
+
+  // @Get('/units')
+  // @ApiOperation({ summary: 'Get a list of units' })
+  // async getUnits(@Body() createArticleDto: CreateArticleDto): Promise<Article> {
+  //   return this.articlesService.create(createArticleDto);
+  // }
+
+  // @Put('/units/:unitId')
+  // @ApiOperation({ summary: 'Add a unit' })
+  // async updateUnit(
+  //   @Body() createArticleDto: CreateArticleDto,
+  // ): Promise<Article> {
+  //   return this.articlesService.create(createArticleDto);
+  // }
+
+  // @Post('/categories')
+  // @ApiOperation({ summary: 'Create a category' })
+  // async createCategory(
+  //   @Body() createArticleDto: CreateArticleDto,
+  // ): Promise<Article> {
+  //   return this.articlesService.create(createArticleDto);
+  // }
+
+  // @Get('/categories')
+  // @ApiOperation({ summary: 'Create a category' })
+  // async getCategories(
+  //   @Body() createArticleDto: CreateArticleDto,
+  // ): Promise<Article> {
+  //   return this.articlesService.create(createArticleDto);
+  // }
+
+  // @Put('/categories/:categoryId')
+  // @ApiOperation({ summary: 'Create a category' })
+  // async updateCategory(
+  //   @Body() createArticleDto: CreateArticleDto,
+  // ): Promise<Article> {
+  //   return this.articlesService.create(createArticleDto);
+  // }
 }

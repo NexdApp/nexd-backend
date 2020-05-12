@@ -1,17 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { HttpBadRequestErrors } from './httpBadRequestErrors.type';
+import { BackendErrors } from './backendErrors.type';
 
-export class BadRequestErrorEntry {
+export class BackendErrorEntry {
   @ApiProperty({
     description: 'Specific error code from enum',
-    enum: HttpBadRequestErrors,
+    enum: BackendErrors,
   })
-  errorCode?: HttpBadRequestErrors;
+  errorCode?: BackendErrors;
   @ApiProperty()
   errorDescription: string;
 }
 
-export class HttpBadRequestResponse {
+export class BackendErrorResponse {
   @ApiProperty({
     type: 'integer',
     format: 'int64',
@@ -20,8 +20,8 @@ export class HttpBadRequestResponse {
   statusCode? = 400;
 
   @ApiProperty({
-    type: BadRequestErrorEntry,
+    type: BackendErrorEntry,
     isArray: true,
   })
-  errors!: BadRequestErrorEntry[];
+  errors!: BackendErrorEntry[];
 }

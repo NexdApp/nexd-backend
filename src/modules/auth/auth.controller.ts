@@ -24,18 +24,17 @@ import { UsersService } from '../users/users.service';
 import { TokenDto } from './dto/token.dto';
 import { LoginDto } from './dto/login.dto';
 import { EmailPasswordResetDto } from './dto/email-password-reset.dto';
-import { HttpBadRequestResponse } from '../../errorHandling/httpBadRequestResponse.model';
-import { HttpConflictResponse } from '../../errorHandling/httpConflictResponse.model';
+import { BackendErrorResponse } from '../../errorHandling/BackendErrorEntry.model';
 
 @ApiTags('Auth')
 @Controller('auth')
 @ApiBadRequestResponse({
   description: 'Bad Request',
-  type: HttpBadRequestResponse,
+  type: BackendErrorResponse,
 })
 @ApiConflictResponse({
   description: 'Conflict',
-  type: () => HttpConflictResponse,
+  type: () => BackendErrorResponse,
 })
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
@@ -55,7 +54,7 @@ export class AuthController {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async login(@Request() req, @Body() loginDto: LoginDto): Promise<TokenDto> {
     this.logger.log(`User login`);
-    return await this.authService.createToken(req.user);
+    return this.authService.createToken(req.user);
   }
 
   @Post('register')
@@ -68,7 +67,7 @@ export class AuthController {
     const user = await this.usersService.create(payload);
     this.logger.log(`User registered: ${user.id}`);
     this.logger.debug(`Email: ${payload.email}`);
-    return await this.authService.createToken(user);
+    return this.authService.createToken(user);
   }
 
   @Post('refresh')
@@ -112,6 +111,6 @@ export class AuthController {
     const user = await this.usersService.updatePasswordIfResetTokenMatches(
       payload,
     );
-    return await this.authService.createToken(user);
+    return this.authService.createToken(user);
   }
 }
