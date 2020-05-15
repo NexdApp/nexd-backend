@@ -27,8 +27,9 @@ import * as Joi from '@hapi/joi';
         API_ROOT_URL: Joi.string().required(),
       })
         .xor('DATABASE_URL', 'DATABASE_HOST')
-        .xor('DATABASE_URL', 'DATABASE_PORT')
-        .and('DATABASE_HOST', 'DATABASE_PORT'),
+        .xor('DATABASE_URL', 'DATABASE_USERNAME')
+        .xor('DATABASE_URL', 'DATABASE_PASSWORD')
+        .xor('DATABASE_URL', 'DATABASE_NAME'),
     }),
   ],
   providers: [ConfigurationService],
