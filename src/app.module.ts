@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
@@ -15,6 +16,7 @@ import { LocalInfosModule } from './modules/locationInfos/locationInfos.module';
   imports: [
     ConfigurationModule,
     DatabaseModule,
+    ScheduleModule.forRoot(),
     UsersModule,
     AuthModule,
     ArticlesModule,
@@ -26,4 +28,4 @@ import { LocalInfosModule } from './modules/locationInfos/locationInfos.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

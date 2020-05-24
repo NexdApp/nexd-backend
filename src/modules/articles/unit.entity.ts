@@ -30,4 +30,15 @@ export class Unit {
   })
   @Index()
   language!: AvailableLanguages;
+
+  @ApiProperty({
+    description:
+      'Some default ordering, in case there is no automatic ordering for an article, no need in the frontend.',
+    type: 'integer',
+    format: 'int64',
+  })
+  @Column({
+    default: 100,
+  })
+  defaultOrder?: number;
 }

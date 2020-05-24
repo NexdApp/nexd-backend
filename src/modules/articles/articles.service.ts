@@ -1,13 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { Article } from './article.entity';
 import { GetAllArticlesQueryParams } from './dto/get-all-articles-query.dto';
 import { ArticleStatus } from './article-status';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class ArticlesService {
+  private readonly logger = new Logger(ArticlesService.name);
+
   constructor(
     @InjectRepository(Article)
     private readonly articlesRepository: Repository<Article>,
@@ -60,4 +63,9 @@ export class ArticlesService {
   }
 
   // async updateArticle(updateArticleDto: UpdateArticleDto): Promise<Article> {}
+
+  @Cron('45 * * * * *')
+  handleCron() {
+    this.logger.debug('Called when the current second is 45');
+  }
 }
