@@ -43,7 +43,7 @@ export class Article {
   @Column({
     type: 'enum',
     enum: ArticleStatus,
-    default: ArticleStatus.VERIFIED, // TODO change to ACTIVE later
+    default: ArticleStatus.ACTIVE,
   })
   @Index()
   status?: ArticleStatus;
