@@ -23,6 +23,7 @@ export class GetAllArticlesQueryParams {
     enum: AvailableLanguages,
     enumName: 'AvailableLanguages',
   })
+  @IsEnum(AvailableLanguages)
   language?: AvailableLanguages;
 
   @ApiProperty({

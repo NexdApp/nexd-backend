@@ -14,20 +14,25 @@ import {
   ApiOperation,
   ApiOkResponse,
   ApiTags,
-  ApiQuery,
 } from '@nestjs/swagger';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { ArticlesService } from './articles.service';
 import { Article } from './article.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { GetAllArticlesQueryParams } from './dto/get-all-articles-query.dto';
+import { UnitsService } from './units.service';
+import { GetAllUnitsQueryParams } from './dto/get-all-units-query.dto';
+import { Unit } from './unit.entity';
 
 @Controller('article')
 @ApiTags('Articles')
 @UseGuards(JwtAuthGuard)
 @ApiBadRequestResponse({ description: 'Bad Request' })
 export class ArticlesController {
-  constructor(private readonly articlesService: ArticlesService) {}
+  constructor(
+    private readonly articlesService: ArticlesService,
+    private readonly unitsService: UnitsService,
+  ) {}
 
   @Post('/articles')
   @ApiOperation({ summary: 'Create an article' })
@@ -66,11 +71,13 @@ export class ArticlesController {
   //   return this.articlesService.create(createArticleDto);
   // }
 
-  // @Get('/units')
-  // @ApiOperation({ summary: 'Get a list of units' })
-  // async getUnits(@Body() createArticleDto: CreateArticleDto): Promise<Article> {
-  //   return this.articlesService.create(createArticleDto);
-  // }
+  @Get('/units')
+  @ApiOperation({ summary: 'Get a list of units' })
+  async getUnits(
+    @Query() getUnitsDto: GetAllUnitsQueryParams,
+  ): Promise<Unit[]> {
+    return this.unitsService.getUnits(getUnitsDto);
+  }
 
   // @Put('/units/:unitId')
   // @ApiOperation({ summary: 'Add a unit' })

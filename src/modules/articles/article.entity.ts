@@ -50,6 +50,10 @@ export class Article {
 
   // an array of unit ids, calculated by cron
   @Column({ type: 'int', array: true, default: () => 'array[]::integer[]' })
+  @ApiProperty({
+    description:
+      'Determined order of the units. If the array is empty, there is no order yet identified.',
+  })
   unitIdOrder?: number[] = [];
 
   @ApiProperty({
