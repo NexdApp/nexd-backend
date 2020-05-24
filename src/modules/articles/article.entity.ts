@@ -48,8 +48,15 @@ export class Article {
   @Index()
   status?: ArticleStatus;
 
+  @Column({ default: false })
+  @ApiProperty({
+    description:
+      'The article status can be enforced by an admin (e.g. to remove profanity).',
+  })
+  statusOverwritten?: boolean = false;
+
   // an array of unit ids, calculated by cron
-  @Column({ type: 'int', array: true, default: () => 'array[]::integer[]' })
+  @Column({ type: 'int', array: true })
   @ApiProperty({
     description:
       'Determined order of the units. If the array is empty, there is no order yet identified.',
