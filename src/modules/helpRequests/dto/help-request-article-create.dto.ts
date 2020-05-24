@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, Min } from 'class-validator';
+import { IsNumber, Min, IsOptional } from 'class-validator';
 
 export class CreateOrUpdateHelpRequestArticleDto {
   readonly articleDone?: boolean;
@@ -12,4 +12,15 @@ export class CreateOrUpdateHelpRequestArticleDto {
   @IsNumber()
   @Min(1)
   readonly articleCount!: number;
+
+  @ApiProperty({
+    description: 'Unit id of the article',
+    type: 'integer',
+    format: 'int64',
+    required: false,
+  })
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  readonly unitId?: number;
 }
