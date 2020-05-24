@@ -41,14 +41,12 @@ export class ArticlesService {
           status: ArticleStatus.VERIFIED,
         },
       )
-      .andWhere(query.startsWith ? 'articles.name like :name' : '1=1', {
+      .andWhere(query.startsWith ? 'articles.name ilike :name' : '1=1', {
         name: query.startsWith + '%',
       })
       .andWhere(query.language ? 'articles.language = :language' : '1=1', {
         language: query.language,
       });
-
-    // ILIKE added soon: https://github.com/typeorm/typeorm/pull/5828
 
     if (query.limit) {
       sql.limit(query.limit);
