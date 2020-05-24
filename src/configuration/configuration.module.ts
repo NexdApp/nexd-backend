@@ -23,7 +23,7 @@ import * as Joi from '@hapi/joi';
 
         ADMIN_SECRET: Joi.string().required(),
 
-        API_PORT: Joi.number().required(),
+        // API_PORT: Joi.number().required(), // heroku sets PORT from external
         API_ROOT_URL: Joi.string().required(),
       })
         .xor('DATABASE_URL', 'DATABASE_HOST')
