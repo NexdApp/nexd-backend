@@ -1,16 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, getConnection } from 'typeorm';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { Article } from './article.entity';
 import { GetAllArticlesQueryParams } from './dto/get-all-articles-query.dto';
 import { ArticleStatus } from './article-status';
+import { Cron } from '@nestjs/schedule';
+import { ConfigurationService } from '../../configuration/configuration.service';
+import { HelpRequestArticle } from '../helpRequests/help-request-article.entity';
 
 @Injectable()
 export class ArticlesService {
+  private readonly logger = new Logger(ArticlesService.name);
+
   constructor(
     @InjectRepository(Article)
     private readonly articlesRepository: Repository<Article>,
+    private readonly configService: ConfigurationService,
   ) {}
 
   async createArticle(createArticleDto: CreateArticleDto): Promise<Article> {
@@ -41,14 +47,12 @@ export class ArticlesService {
           status: ArticleStatus.VERIFIED,
         },
       )
-      .andWhere(query.startsWith ? 'articles.name like :name' : '1=1', {
+      .andWhere(query.startsWith ? 'articles.name ilike :name' : '1=1', {
         name: query.startsWith + '%',
       })
       .andWhere(query.language ? 'articles.language = :language' : '1=1', {
         language: query.language,
       });
-
-    // ILIKE added soon: https://github.com/typeorm/typeorm/pull/5828
 
     if (query.limit) {
       sql.limit(query.limit);
@@ -62,4 +66,111 @@ export class ArticlesService {
   }
 
   // async updateArticle(updateArticleDto: UpdateArticleDto): Promise<Article> {}
+
+  /**
+   * Articles have an ordered list of units, this cron calculates them
+   */
+  @Cron('50 */5 * * * *')
+  async updateArticleUnits() {
+    this.logger.log('Build the article unit order');
+
+    // get a grouping of article/unit combinations
+    const result = await getConnection()
+      .createQueryBuilder()
+      .select(
+        'COUNT(helpRequestArticle.id) AS cnt, helpRequestArticle.articleId, helpRequestArticle.unitId',
+      )
+      .from(HelpRequestArticle, 'helpRequestArticle')
+      .groupBy('helpRequestArticle.articleId')
+      .addGroupBy('helpRequestArticle.unitId')
+      .getRawMany();
+
+    // group units for each article
+    const articleUnitList = result.reduce((acc, curr) => {
+      const artId = curr.articleId;
+      if (acc[artId]) {
+        acc[artId] = [...acc[artId], curr];
+      } else {
+        acc[artId] = [curr];
+      }
+      return acc;
+    }, {});
+
+    const sortFn = (a: any, b: any) => (a.cnt < b.cnt ? 1 : -1);
+
+    // sort units by count and keep only the order
+    const sortedArticles = Object.entries(articleUnitList).map(
+      ([articleId, val]: [string, any]) => {
+        const sortedUnits = val
+          .sort(sortFn)
+          .map(entry => entry.unitId)
+          .filter(Number);
+        return [articleId, sortedUnits];
+      },
+    );
+
+    // transform to postgres array string
+    const sortedArticlesString = sortedArticles
+      .filter(row => row[1].length > 0) // only used articles
+      .map(row => `(${row[0]}, array${JSON.stringify(row[1])})`);
+
+    const sqlUpdate = await getConnection().query(`
+      update articles as a set
+        "unitIdOrder" = "helper"."unitIdOrder"
+      from (
+        values
+          ${sortedArticlesString.join(',')}
+      )
+      as helper("id", "unitIdOrder")
+      where helper.id = a.id;
+    `);
+
+    this.logger.log(`Unit order set for ${sqlUpdate[1]} articles`);
+  }
+
+  /**
+   * Article status changes to verified, after a certain frequency of usage
+   */
+  @Cron('30 */5 * * * *')
+  async updateArticleStatus() {
+    const neededForVerification = Number(
+      this.configService.get('ARTICLE_REQUIRED_FOR_VERIFICATION') || 10,
+    );
+    this.logger.log(
+      `Update article status, verified with ${neededForVerification} entries`,
+    );
+
+    // get a grouping of article/unit combinations
+    const result = await getConnection()
+      .createQueryBuilder()
+      .select(
+        'COUNT(helpRequestArticle.id) AS cnt, helpRequestArticle.articleId',
+      )
+      .from(HelpRequestArticle, 'helpRequestArticle')
+      .groupBy('helpRequestArticle.articleId')
+      .getRawMany();
+
+    const evaluatedCounts = result.filter(
+      article => article.cnt >= neededForVerification,
+    );
+
+    const statusArray = evaluatedCounts.map(
+      row => `(${row.articleId}, 'verified'::articles_status_enum)`,
+    );
+
+    // syntax is overkill, but taken from unit order update
+    // a simple where would be enough, but this is consistent and
+    // enables for more status later
+    const update = await getConnection().query(`
+      update articles as a set
+        "status" = helper.status
+      from (
+        values
+          ${statusArray.join(',')}
+      )
+      as helper("id", "status")
+      where helper.id = a.id and "a"."statusOverwritten" = false;
+    `);
+    this.logger.log(`Verified articles: ${update[1]}`);
+  }
 }

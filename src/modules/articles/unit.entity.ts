@@ -12,13 +12,19 @@ export class Unit {
     format: 'int64',
   })
   @PrimaryGeneratedColumn()
-  id!: number;
+  id?: number;
 
   @ApiProperty({
     description: 'Name of the unit',
   })
   @Column()
   name!: string;
+
+  @ApiProperty({
+    description: 'Abbreviated name of the unit',
+  })
+  @Column()
+  nameShort!: string;
 
   @ApiProperty({
     description: 'Language key of this unit',
@@ -30,4 +36,15 @@ export class Unit {
   })
   @Index()
   language!: AvailableLanguages;
+
+  @ApiProperty({
+    description:
+      'Some default ordering, in case there is no automatic ordering for an article, no need in the frontend.',
+    type: 'integer',
+    format: 'int64',
+  })
+  @Column({
+    default: 100,
+  })
+  defaultOrder?: number;
 }

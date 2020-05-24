@@ -31,7 +31,13 @@ export class HelpRequestsService {
     const helpRequest:
       | HelpRequest
       | undefined = await this.helpRequestRepository.findOne(id, {
-      relations: ['articles', 'articles.article', 'requester', 'call'],
+      relations: [
+        'articles',
+        'articles.article',
+        'articles.unit',
+        'requester',
+        'call',
+      ],
     });
     if (!helpRequest) {
       throw new NotFoundException('Help request not found');
@@ -63,6 +69,7 @@ export class HelpRequestsService {
         newArticle.articleId = art.articleId;
         newArticle.articleCount = art.articleCount;
         newArticle.articleDone = false;
+        newArticle.unitId = art.unitId;
 
         // create article in case no id is given
         if (art.articleId === undefined) {
@@ -141,9 +148,14 @@ export class HelpRequestsService {
       art => art.articleId === articleId,
     );
     if (oldArticle) {
-      oldArticle.articleCount = helpRequestArticleDto.articleCount;
+      if (helpRequestArticleDto.articleCount) {
+        oldArticle.articleCount = helpRequestArticleDto.articleCount;
+      }
       if (typeof helpRequestArticleDto.articleDone === 'boolean') {
         oldArticle.articleDone = helpRequestArticleDto.articleDone;
+      }
+      if (typeof helpRequestArticleDto.unitId) {
+        oldArticle.unitId = helpRequestArticleDto.unitId;
       }
     } else {
       const newArticle = new HelpRequestArticle();
@@ -151,6 +163,9 @@ export class HelpRequestsService {
       newArticle.articleCount = helpRequestArticleDto.articleCount;
       if (typeof helpRequestArticleDto.articleDone === 'boolean') {
         newArticle.articleDone = helpRequestArticleDto.articleDone;
+      }
+      if (typeof helpRequestArticleDto.unitId) {
+        newArticle.unitId = helpRequestArticleDto.unitId;
       }
       helpRequest.articles.push(newArticle);
     }

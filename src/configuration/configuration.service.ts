@@ -45,8 +45,9 @@ export class ConfigurationService {
       type: 'postgres',
       ...dbConfig,
       entities: [__dirname + '/../**/*.entity.{ts,js}'],
-      synchronize: true,
-      migrations: [__dirname + '/../../src/migrations/*.ts'],
+      synchronize: this.get<string>('DATABASE_SYNCHRONIZE') === 'true',
+      migrationsRun: this.get<string>('DATABASE_MIGRATIONSRUN') === 'true',
+      migrations: [__dirname + '/../**/migrations/*.{ts,js}'],
       cli: {
         migrationsDir: __dirname + '/../../src/migrations',
       },
