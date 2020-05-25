@@ -14,6 +14,7 @@ import {
   ApiOperation,
   ApiOkResponse,
   ApiTags,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { ArticlesService } from './articles.service';
@@ -24,6 +25,7 @@ import { UnitsService } from './units.service';
 import { GetAllUnitsQueryParams } from './dto/get-all-units-query.dto';
 import { Unit } from './unit.entity';
 
+@ApiBearerAuth()
 @Controller('article')
 @ApiTags('Articles')
 @UseGuards(JwtAuthGuard)
