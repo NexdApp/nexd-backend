@@ -114,6 +114,11 @@ export class ArticlesService {
       .filter(row => row[1].length > 0) // only used articles
       .map(row => `(${row[0]}, array${JSON.stringify(row[1])})`);
 
+    if (sortedArticlesString.length <= 0) {
+      this.logger.log('No articles found to be evaluated. Abort.');
+      return;
+    }
+
     const sqlUpdate = await getConnection().query(`
       update articles as a set
         "unitIdOrder" = "helper"."unitIdOrder"
@@ -153,6 +158,11 @@ export class ArticlesService {
     const evaluatedCounts = result.filter(
       article => article.cnt >= neededForVerification,
     );
+
+    if (evaluatedCounts.length <= 0) {
+      this.logger.log('No articles found to be evaluated. Abort.');
+      return;
+    }
 
     const statusArray = evaluatedCounts.map(
       row => `(${row.articleId}, 'verified'::articles_status_enum)`,
