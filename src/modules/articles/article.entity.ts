@@ -62,11 +62,8 @@ export class Article {
       'Determined order of the units. If the array is empty, there is no order yet identified.',
     type: 'array',
     items: {
-      type: 'array',
-      items: {
-        type: 'integer',
-        format: 'int64',
-      },
+      type: 'integer',
+      format: 'int64',
     },
   })
   unitIdOrder?: number[] = [];
