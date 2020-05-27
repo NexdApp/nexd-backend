@@ -60,6 +60,9 @@ export class Article {
   @ApiProperty({
     description:
       'Determined order of the units. If the array is empty, there is no order yet identified.',
+    type: 'integer',
+    format: 'int64',
+    isArray: true,
   })
   unitIdOrder?: number[] = [];
 
