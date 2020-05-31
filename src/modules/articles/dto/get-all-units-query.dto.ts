@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AvailableLanguages } from '../../../constants/languages';
-import { IsEnum } from 'class-validator';
+import { IsEnum, IsOptional } from 'class-validator';
 
 export class GetAllUnitsQueryParams {
   @ApiProperty({
@@ -9,5 +9,6 @@ export class GetAllUnitsQueryParams {
     enumName: 'AvailableLanguages',
   })
   @IsEnum(AvailableLanguages)
+  @IsOptional()
   language?: AvailableLanguages;
 }
