@@ -50,8 +50,8 @@ export class ArticlesService {
       .andWhere(query.startsWith ? 'articles.name ilike :name' : '1=1', {
         name: query.startsWith + '%',
       })
-      .andWhere(query.contains ? 'articles.name ilike :name' : '1=1', {
-        name: `%${query.contains}%`,
+      .andWhere(query.contains ? 'articles.name ilike :nameContains' : '1=1', {
+        nameContains: `%${query.contains}%`,
       })
       .andWhere(query.language ? 'articles.language = :language' : '1=1', {
         language: query.language,
@@ -75,7 +75,7 @@ export class ArticlesService {
   /**
    * Articles have an ordered list of units, this cron calculates them
    */
-  @Cron('50 */30 * * * *')
+  @Cron('50 */5 * * * *')
   async updateArticleUnits() {
     this.logger.log('Build the article unit order');
 
@@ -141,7 +141,7 @@ export class ArticlesService {
   /**
    * Article status changes to verified, after a certain frequency of usage
    */
-  @Cron('30 */1 * * * *')
+  @Cron('30 */5 * * * *')
   async updateArticleStatus() {
     const neededForVerification = Number(
       this.configService.get('ARTICLE_REQUIRED_FOR_VERIFICATION') || 10,
