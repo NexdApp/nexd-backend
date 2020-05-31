@@ -20,6 +20,14 @@ export class GetAllArticlesQueryParams {
 
   @ApiProperty({
     required: false,
+    name: 'contains',
+    description:
+      'Contains with the given string. Empty string does not filter.',
+  })
+  contains?: string;
+
+  @ApiProperty({
+    required: false,
     enum: AvailableLanguages,
     enumName: 'AvailableLanguages',
   })

@@ -50,6 +50,9 @@ export class ArticlesService {
       .andWhere(query.startsWith ? 'articles.name ilike :name' : '1=1', {
         name: query.startsWith + '%',
       })
+      .andWhere(query.contains ? 'articles.name ilike :name' : '1=1', {
+        name: `%${query.contains}%`,
+      })
       .andWhere(query.language ? 'articles.language = :language' : '1=1', {
         language: query.language,
       });
