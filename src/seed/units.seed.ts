@@ -1,7 +1,7 @@
 // seed used in UnitValues seed
 
 import { Unit } from '../modules/articles/unit.entity';
-import { AvailableLanguages } from 'src/constants/languages';
+import { AvailableLanguages } from '../constants/languages';
 
 export const UnitsSeed: Unit[] = [
   {
