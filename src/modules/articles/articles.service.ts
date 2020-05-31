@@ -57,6 +57,10 @@ export class ArticlesService {
         language: query.language,
       });
 
+    if (query.orderByPopularity) {
+      sql.orderBy('articles.popularity', 'DESC');
+    }
+
     if (query.limit) {
       sql.limit(query.limit);
     }
@@ -67,8 +71,6 @@ export class ArticlesService {
   async remove(id: string): Promise<void> {
     await this.articlesRepository.delete(id);
   }
-
-  // async updateArticle(updateArticleDto: UpdateArticleDto): Promise<Article> {}
 
   /**
    * Articles have an ordered list of units, this cron calculates them
@@ -139,13 +141,13 @@ export class ArticlesService {
   /**
    * Article status changes to verified, after a certain frequency of usage
    */
-  @Cron('30 */30 * * * *')
+  @Cron('30 */1 * * * *')
   async updateArticleStatus() {
     const neededForVerification = Number(
       this.configService.get('ARTICLE_REQUIRED_FOR_VERIFICATION') || 10,
     );
     this.logger.log(
-      `Update article status, verified with ${neededForVerification} entries`,
+      `Update article status and ranking, verified with ${neededForVerification} entries`,
     );
 
     // get a grouping of article/unit combinations
@@ -158,12 +160,43 @@ export class ArticlesService {
       .groupBy('helpRequestArticle.articleId')
       .getRawMany();
 
-    const evaluatedCounts = result.filter(
+    if (result.length <= 0) {
+      this.logger.log('No articles found at all. Abort.');
+      return;
+    }
+
+    // backwards from less popular to popular
+    const sortFn = (a: any, b: any) => (a.cnt < b.cnt ? -1 : 1);
+
+    const resultParsed = result.map(row => {
+      row.cnt = parseInt(row.cnt);
+      return row;
+    });
+    const sortedCounts = resultParsed.sort(sortFn);
+
+    const countArray = sortedCounts.map(
+      (row, index) => `(${row.articleId}, ${index})`,
+    );
+
+    const updatePopularity = await getConnection().query(`
+      update articles as a set
+        "popularity" = helper.popularity
+      from (
+        values
+          ${countArray.join(',')}
+      )
+      as helper("id", "popularity")
+      where helper.id = a.id;
+    `);
+
+    this.logger.log(`Updated popularity: ${updatePopularity[1]}`);
+
+    const evaluatedCounts = resultParsed.filter(
       article => article.cnt >= neededForVerification,
     );
 
     if (evaluatedCounts.length <= 0) {
-      this.logger.log('No articles found to be evaluated. Abort.');
+      this.logger.log('No used articles found to be evaluated. Abort.');
       return;
     }
 

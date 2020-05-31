@@ -55,6 +55,16 @@ export class Article {
   })
   statusOverwritten?: boolean = false;
 
+  @Column({ type: 'int', default: 0 })
+  @Index()
+  @ApiProperty({
+    description:
+      'Popularity of the article, the higher the more frequent used.',
+    type: 'integer',
+    format: 'int64',
+  })
+  popularity: number;
+
   // an array of unit ids, calculated by cron
   @Column({ type: 'int', array: true })
   @ApiProperty({
