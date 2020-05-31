@@ -73,7 +73,7 @@ export class ArticlesService {
   /**
    * Articles have an ordered list of units, this cron calculates them
    */
-  @Cron('50 */5 * * * *')
+  @Cron('50 */30 * * * *')
   async updateArticleUnits() {
     this.logger.log('Build the article unit order');
 
@@ -139,7 +139,7 @@ export class ArticlesService {
   /**
    * Article status changes to verified, after a certain frequency of usage
    */
-  @Cron('30 */5 * * * *')
+  @Cron('30 */30 * * * *')
   async updateArticleStatus() {
     const neededForVerification = Number(
       this.configService.get('ARTICLE_REQUIRED_FOR_VERIFICATION') || 10,
