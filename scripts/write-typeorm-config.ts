@@ -1,12 +1,12 @@
 import fs = require('fs');
 
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../src/app.module';
 
 import { ConfigurationService } from '../src/configuration/configuration.service';
+import { ConfigurationModule } from '../src/configuration/configuration.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(ConfigurationModule);
 
   const appConfigService: ConfigurationService = app.get(
     'ConfigurationService',

@@ -124,9 +124,6 @@ export class Init1590326322861 implements MigrationInterface {
       `ALTER TABLE "helpLists" ADD CONSTRAINT "FK_ee9aaefd249429fd2d7c24ba3d9" FOREIGN KEY ("ownerId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
       undefined,
     );
-
-    // necessary to add seeds later
-    await queryRunner.commitTransaction();
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

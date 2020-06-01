@@ -46,7 +46,8 @@ export class ConfigurationService {
       ...dbConfig,
       entities: [__dirname + '/../**/*.entity.{ts,js}'],
       synchronize: this.get<string>('DATABASE_SYNCHRONIZE') === 'true',
-      migrationsRun: this.get<string>('DATABASE_MIGRATIONSRUN') === 'true',
+      // migrationsRun: this.get<string>('DATABASE_MIGRATIONSRUN') === 'true',
+      migrationsRun: false, // use typeorm cli
       migrations: [__dirname + '/../**/migrations/*.{ts,js}'],
       cli: {
         migrationsDir: __dirname + '/../../src/migrations',

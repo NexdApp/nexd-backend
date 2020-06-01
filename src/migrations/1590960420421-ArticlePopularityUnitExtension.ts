@@ -41,9 +41,6 @@ export class ArticlePopularityUnitExtension1590960420421
       `CREATE INDEX "IDX_3332f5557398abc93af6c88d3d" ON "articles" ("popularity") `,
       undefined,
     );
-
-    // necessary to add seeds later
-    await queryRunner.commitTransaction();
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

@@ -22,4 +22,4 @@ EXPOSE 8080
 RUN adduser -D localuser
 USER localuser
 
-CMD [ "npm", "run", "start:prod" ]
+CMD [ "npm", "run", "start:prod:withmigrations" ]
