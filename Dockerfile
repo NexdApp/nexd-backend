@@ -19,7 +19,13 @@ RUN npm run build
 
 EXPOSE 8080
 
+
 RUN adduser -D localuser
+
+RUN touch ormconfig.json
+RUN chown localuser:localuser ormconfig.json
+
 USER localuser
+
 
 CMD [ "npm", "run", "start:prod:withmigrations" ]
