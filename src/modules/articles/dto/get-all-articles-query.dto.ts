@@ -20,6 +20,24 @@ export class GetAllArticlesQueryParams {
 
   @ApiProperty({
     required: false,
+    name: 'contains',
+    description:
+      'Contains with the given string. Empty string does not filter.',
+  })
+  contains?: string;
+
+  @ApiProperty({
+    required: false,
+    name: 'orderByPopularity',
+    description:
+      'If true, orders by the most frequent used articles first. Defaults to false.',
+  })
+  @IsOptional()
+  @Transform(val => val === 'true')
+  orderByPopularity?: boolean;
+
+  @ApiProperty({
+    required: false,
     enum: AvailableLanguages,
     enumName: 'AvailableLanguages',
   })

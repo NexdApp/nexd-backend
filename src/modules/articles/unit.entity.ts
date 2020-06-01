@@ -14,11 +14,23 @@ export class Unit {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @ApiProperty({
-    description: 'Name of the unit',
-  })
   @Column()
-  name!: string;
+  nameZero!: string;
+
+  @Column()
+  nameOne!: string;
+
+  @Column()
+  nameTwo!: string;
+
+  @Column()
+  nameFew!: string;
+
+  @Column()
+  nameMany!: string;
+
+  @Column()
+  nameOther!: string;
 
   @ApiProperty({
     description: 'Abbreviated name of the unit',
