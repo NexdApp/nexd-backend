@@ -15,7 +15,7 @@
       ],
       "essential": true,
       "entryPoint": ["sh", "-c"],
-      "command": ["npm run start:prod"]
+      "command": ["npm run start:prod "]
     }
   ],
   "requiresCompatibilities": ["FARGATE"],
