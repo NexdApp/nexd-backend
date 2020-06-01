@@ -44,7 +44,9 @@
         {
           "name": "DATABASE_HOST",
           "value": "nexd-postgres-staging.cvqvr9vqnzw5.eu-central-1.rds.amazonaws.com"
-        },
+        }
+      ],
+      "secrets": [
         {
           "name": "DATABASE_PASSWORD",
           "valueFrom": "arn:aws:secretsmanager:eu-central-1:729690866396:secret:nexd-staging-database-password-KMmMeE"
