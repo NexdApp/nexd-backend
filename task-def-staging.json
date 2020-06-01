@@ -1,0 +1,23 @@
+{
+  "family": "sample-fargate",
+  "networkMode": "awsvpc",
+  "containerDefinitions": [
+    {
+      "name": "nexd-backend-staging",
+      "image": "httpd:2.4",
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "entryPoint": ["sh", "-c"],
+      "command": ["npm run start:prod"]
+    }
+  ],
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512"
+}
