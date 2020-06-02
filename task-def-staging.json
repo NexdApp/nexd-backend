@@ -16,8 +16,8 @@
       "image": "httpd:2.4",
       "portMappings": [
         {
-          "containerPort": 80,
-          "hostPort": 80,
+          "containerPort": 3001,
+          "hostPort": 3001,
           "protocol": "tcp"
         }
       ],
@@ -31,7 +31,7 @@
         },
         {
           "name": "API_PORT",
-          "value": "80"
+          "value": "3001"
         },
         {
           "name": "API_ROOT_URL",
