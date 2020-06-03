@@ -51,6 +51,7 @@ async function bootstrap() {
 
   await app.listen(port);
 
+  logger.log(`Container port ${port}`);
   logger.log(`Listening to ${url}`);
 
   if (appConfigService.isDev) {
