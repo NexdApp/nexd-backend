@@ -20,7 +20,7 @@ async function bootstrap() {
   const appConfigService: ConfigurationService = app.get(
     'ConfigurationService',
   );
-  const port = appConfigService.APIPort;
+  const port = appConfigService.APIPort; // the container port
   const rootUrl = appConfigService.get('API_ROOT_URL');
 
   app.use(requestLoggerMiddleware(appConfigService.isDev));
@@ -38,6 +38,7 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix);
 
   // in case of heroku, the listen port is not exposed
+  // different from PORT in case of sitting behind something
   const externalAPIPort = appConfigService.get('API_PORT');
 
   const url = `${rootUrl}:${externalAPIPort}${globalPrefix}`;

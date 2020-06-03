@@ -30,12 +30,16 @@
           "value": "2"
         },
         {
-          "name": "API_PORT",
+          "name": "PORT",
           "value": "3001"
         },
         {
+          "name": "API_PORT",
+          "value": "443"
+        },
+        {
           "name": "API_ROOT_URL",
-          "value": "http://localhost"
+          "value": "https://api-staging.nexd.app"
         },
         {
           "name": "JWT_EXPIRATION_TIME_SECONDS",
