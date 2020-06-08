@@ -40,6 +40,7 @@ export class Unit {
 
   @ApiProperty({
     description: 'Language key of this unit',
+    enum: AvailableLanguages,
   })
   @Column({
     type: 'enum',

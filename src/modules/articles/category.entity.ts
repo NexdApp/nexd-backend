@@ -23,6 +23,7 @@ export class Category {
 
   @ApiProperty({
     description: 'Language key of this category',
+    enum: AvailableLanguages,
   })
   @Column({
     type: 'enum',

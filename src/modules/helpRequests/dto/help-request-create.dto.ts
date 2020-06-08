@@ -30,6 +30,7 @@ export class CreateHelpRequestArticleDto {
   @ApiProperty({
     required: false,
     description: 'Language of the article, e.g. the user',
+    enum: AvailableLanguages,
   })
   @IsOptional()
   @IsEnum(AvailableLanguages)

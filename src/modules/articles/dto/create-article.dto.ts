@@ -14,6 +14,7 @@ export class CreateArticleDto {
   @ApiProperty({
     required: true,
     description: 'Language of the article, e.g. the user',
+    enum: AvailableLanguages,
   })
   @IsEnum(AvailableLanguages)
   readonly language!: AvailableLanguages;
