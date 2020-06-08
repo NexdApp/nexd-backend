@@ -51,6 +51,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: fargate-nexd-staging
+          service: nexd-staging-service
           cluster: nexd-staging
           wait-for-service-stability: false
