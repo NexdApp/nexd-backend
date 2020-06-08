@@ -23,7 +23,9 @@ async function bootstrap() {
   const port = appConfigService.APIPort; // the container port
   const rootUrl = appConfigService.get('API_ROOT_URL');
 
-  app.use(requestLoggerMiddleware(appConfigService.isDev));
+  app.use(
+    requestLoggerMiddleware(appConfigService.get('LOG_CONSOLE') !== 'false'),
+  );
   app.enableCors();
   app.use(helmet());
 

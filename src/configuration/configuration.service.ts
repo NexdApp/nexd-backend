@@ -50,7 +50,7 @@ export class ConfigurationService {
       migrationsRun: false, // use typeorm cli
       migrations: [__dirname + '/../**/migrations/*.{ts,js}'],
       cli: {
-        migrationsDir: __dirname + '/../../src/migrations',
+        migrationsDir: 'src/migrations',
       },
       ssl: this.get<string>('DATABASE_SSL') === 'true',
       logging: this.isDev,
