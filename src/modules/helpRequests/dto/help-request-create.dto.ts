@@ -31,6 +31,7 @@ export class CreateHelpRequestArticleDto {
     required: false,
     description: 'Language of the article, e.g. the user',
     enum: AvailableLanguages,
+    enumName: 'AvailableLanguages',
   })
   @IsOptional()
   @IsEnum(AvailableLanguages)

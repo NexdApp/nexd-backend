@@ -15,6 +15,7 @@ export class CreateArticleDto {
     required: true,
     description: 'Language of the article, e.g. the user',
     enum: AvailableLanguages,
+    enumName: 'AvailableLanguages',
   })
   @IsEnum(AvailableLanguages)
   readonly language!: AvailableLanguages;

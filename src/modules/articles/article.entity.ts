@@ -32,6 +32,7 @@ export class Article {
   @ApiProperty({
     description: 'Language key of this article',
     enum: AvailableLanguages,
+    enumName: 'AvailableLanguages',
   })
   @Column({
     type: 'enum',
