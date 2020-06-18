@@ -5,4 +5,3 @@ node_modules
 .env.development
 .env.development.local
 e2e
-scripts

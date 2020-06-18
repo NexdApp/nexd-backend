@@ -1,4 +1,10 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  BadRequestException,
+  Inject,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In, Not } from 'typeorm';
 
@@ -6,6 +12,9 @@ import { HelpRequest } from './help-request.entity';
 import { HelpRequestCreateDto } from './dto/help-request-create.dto';
 import { HelpRequestArticle } from './help-request-article.entity';
 import { CreateOrUpdateHelpRequestArticleDto } from './dto/help-request-article-create.dto';
+import { Article } from '../articles/article.entity';
+import { BackendErrors } from '../../errorHandling/backendErrors.type';
+import { ArticlesService } from '../articles/articles.service';
 
 @Injectable()
 export class HelpRequestsService {
@@ -14,13 +23,21 @@ export class HelpRequestsService {
   constructor(
     @InjectRepository(HelpRequest)
     private readonly helpRequestRepository: Repository<HelpRequest>,
+    @Inject(ArticlesService)
+    private readonly articlesService: ArticlesService,
   ) {}
 
   async getById(id: number) {
     const helpRequest:
       | HelpRequest
       | undefined = await this.helpRequestRepository.findOne(id, {
-      relations: ['articles', 'articles.article', 'requester', 'call'],
+      relations: [
+        'articles',
+        'articles.article',
+        'articles.unit',
+        'requester',
+        'call',
+      ],
     });
     if (!helpRequest) {
       throw new NotFoundException('Help request not found');
@@ -33,25 +50,50 @@ export class HelpRequestsService {
     userId: string,
   ): Promise<HelpRequest> {
     const helpRequest = new HelpRequest();
-    this.populateRequest(helpRequest, createRequestDto);
+    await this.populateRequest(helpRequest, createRequestDto);
     helpRequest.requesterId = userId;
 
     return this.helpRequestRepository.save(helpRequest);
   }
 
-  private populateRequest(
+  private async populateRequest(
     helpRequest: HelpRequest,
     createRequestDto: HelpRequestCreateDto,
   ) {
     if (createRequestDto.articles) {
       helpRequest.articles = [];
-      createRequestDto.articles.forEach(art => {
+      for (const art of createRequestDto.articles) {
+        let savedArticle: Article | undefined;
+
         const newArticle = new HelpRequestArticle();
         newArticle.articleId = art.articleId;
         newArticle.articleCount = art.articleCount;
         newArticle.articleDone = false;
+        newArticle.unitId = art.unitId;
+
+        // create article in case no id is given
+        if (art.articleId === undefined) {
+          if (!art.language) {
+            throw new BadRequestException(
+              BackendErrors.ARTICLE_ARTICLE_NEEDS_LANGUAGE,
+            );
+          }
+          if (!art.articleName) {
+            throw new BadRequestException(
+              BackendErrors.ARTICLE_ARTICLE_NEEDS_NAME,
+            );
+          }
+          const articleDto = {
+            name: art.articleName,
+            language: art.language,
+          };
+          savedArticle = await this.articlesService.createArticle(articleDto);
+
+          newArticle.articleId = savedArticle.id;
+        }
+
         helpRequest.articles.push(newArticle);
-      });
+      }
     }
     helpRequest.status = createRequestDto.status;
     helpRequest.additionalRequest = createRequestDto.additionalRequest;
@@ -106,9 +148,14 @@ export class HelpRequestsService {
       art => art.articleId === articleId,
     );
     if (oldArticle) {
-      oldArticle.articleCount = helpRequestArticleDto.articleCount;
+      if (helpRequestArticleDto.articleCount) {
+        oldArticle.articleCount = helpRequestArticleDto.articleCount;
+      }
       if (typeof helpRequestArticleDto.articleDone === 'boolean') {
         oldArticle.articleDone = helpRequestArticleDto.articleDone;
+      }
+      if (typeof helpRequestArticleDto.unitId) {
+        oldArticle.unitId = helpRequestArticleDto.unitId;
       }
     } else {
       const newArticle = new HelpRequestArticle();
@@ -116,6 +163,9 @@ export class HelpRequestsService {
       newArticle.articleCount = helpRequestArticleDto.articleCount;
       if (typeof helpRequestArticleDto.articleDone === 'boolean') {
         newArticle.articleDone = helpRequestArticleDto.articleDone;
+      }
+      if (typeof helpRequestArticleDto.unitId) {
+        newArticle.unitId = helpRequestArticleDto.unitId;
       }
       helpRequest.articles.push(newArticle);
     }
@@ -134,7 +184,7 @@ export class HelpRequestsService {
 
   async update(requestId: number, requestEntity: HelpRequestCreateDto) {
     const request = await this.findRequest(requestId);
-    this.populateRequest(request, requestEntity);
+    await this.populateRequest(request, requestEntity);
 
     return this.helpRequestRepository.save(request);
   }

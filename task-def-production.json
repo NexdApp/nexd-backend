@@ -1,0 +1,80 @@
+{
+  "family": "nexd-staging",
+  "executionRoleArn": "arn:aws:iam::729690866396:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
+  "containerDefinitions": [
+    {
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "nexd-production",
+          "awslogs-region": "eu-central-1",
+          "awslogs-stream-prefix": "nexd-production-"
+        }
+      },
+      "name": "nexd-backend-production",
+      "image": "httpd:2.4",
+      "portMappings": [
+        {
+          "containerPort": 3001,
+          "hostPort": 3001,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "entryPoint": ["sh", "-c"],
+      "command": ["npm run start:prod:withmigrations"],
+      "environment": [
+        {
+          "name": "ARTICLE_REQUIRED_FOR_VERIFICATION",
+          "value": "10"
+        },
+        {
+          "name": "PORT",
+          "value": "3001"
+        },
+        {
+          "name": "API_PORT",
+          "value": "443"
+        },
+        {
+          "name": "API_ROOT_URL",
+          "value": "https://api.nexd.app"
+        },
+        {
+          "name": "JWT_EXPIRATION_TIME_SECONDS",
+          "value": "3600"
+        },
+        {
+          "name": "DATABASE_HOST",
+          "value": "nexd-postgres-staging.cvqvr9vqnzw5.eu-central-1.rds.amazonaws.com"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "DATABASE_PASSWORD",
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:729690866396:secret:nexd-staging-database-password-KMmMeE"
+        },
+        {
+          "name": "ADMIN_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:729690866396:secret:nexd-staging-admin-secret-oL3kKR"
+        },
+        {
+          "name": "JWT_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:729690866396:secret:nexd-staging-jwt-secret-PA5lT4"
+        },
+        {
+          "name": "TWILIO_ACCOUNT_SID",
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:729690866396:secret:nexd-staging-twilio-sid-5sO8Ml"
+        },
+        {
+          "name": "TWILIO_AUTH_TOKEN",
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:729690866396:secret:nexd-staging-twilio-auth-token-kQppd8"
+        }
+      ]
+    }
+  ],
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512"
+}

@@ -22,26 +22,37 @@
     "start:dev": "cross-env NODE_ENV=development.local nest start --watch",
     "start:debug": "cross-env NODE_ENV=development.local nest start --debug --watch",
     "start:prod": "cross-env NODE_ENV=production node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "start:prod:withmigrations": "run-s typeorm:createconfig:prod typeorm:migration:run start:prod",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm:createconfig": "cross-env NODE_ENV=development.local ts-node -r tsconfig-paths/register scripts/write-typeorm-config.ts",
+    "typeorm:createconfig:prod": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register scripts/write-typeorm-config.ts",
+    "typeorm:migration:generate": "npm run typeorm -- migration:generate -n",
+    "typeorm:migration:show": "npm run typeorm -- migration:show",
+    "typeorm:migration:run": "npm run typeorm -- migration:run -t=false",
+    "typeorm:reset": "npm run typeorm -- schema:drop",
     "typeorm": "cross-env NODE_ENV=development.local ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "docker:postgis": "docker run -d --name postgis-nexd --rm -p 5432:5432 --env-file .env.postgis.local -v postgis-data:/var/lib/postgresql/data postgis/postgis:12-2.5",
+    "docker:postgis": "docker run -d --name postgis-nexd --rm -p 5430:5432 --env-file .env.postgis.local -v postgis-data:/var/lib/postgresql/data postgis/postgis:12-2.5",
     "docker:pgadmin": "docker run -d --name postgis-pgadmin --rm -p 3010:80 --env-file .env.postgis.local dpage/pgadmin4",
     "start:doc": "compodoc -s -o -p ./tsconfig.json -r 8081",
-    "build:doc": "compodoc -p ./tsconfig.json"
+    "build:doc": "compodoc -p ./tsconfig.json",
+    "test:swagger": "cross-env NODE_ENV=test ts-node ./scripts/validate-swagger.ts",
+    "release": "standard-version && git push --follow-tags origin master"
   },
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "@nestjs/common": "^7.0.8",
     "@nestjs/config": "^0.4.0",
     "@nestjs/core": "^7.0.8",
     "@nestjs/jwt": "^7.0.0",
     "@nestjs/passport": "^7.0.0",
     "@nestjs/platform-express": "^7.0.8",
+    "@nestjs/schedule": "^0.4.0",
     "@nestjs/swagger": "^4.5.2",
     "@nestjs/typeorm": "^7.0.0",
     "bcrypt": "^4.0.1",
@@ -60,11 +71,15 @@
     "typeorm": "^0.2.24"
   },
   "devDependencies": {
+    "@apidevtools/swagger-parser": "^9.0.1",
+    "@commitlint/cli": "8.3.5",
+    "@commitlint/config-conventional": "8.3.4",
     "@compodoc/compodoc": "^1.1.11",
     "@nestjs/cli": "^7.1.2",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.8",
     "@types/express": "^4.17.6",
+    "@types/hapi__joi": "^16.0.12",
     "@types/jest": "25.1.4",
     "@types/node": "^13.13.0",
     "@types/passport-jwt": "^3.0.3",
@@ -78,7 +93,9 @@
     "eslint-plugin-import": "^2.20.2",
     "jest": "^25.3.0",
     "nan": "^2.14.1",
+    "npm-run-all": "^4.1.5",
     "prettier": "^1.19.1",
+    "standard-version": "^7.1.0",
     "supertest": "^4.0.2",
     "ts-jest": "25.2.1",
     "ts-loader": "^6.2.1",
@@ -99,5 +116,10 @@
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "npm run commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }

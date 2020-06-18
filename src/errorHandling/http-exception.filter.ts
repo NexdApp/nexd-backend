@@ -18,6 +18,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (status === HttpStatus.BAD_REQUEST) {
       const errorResponse: any = exception.getResponse();
+      if (typeof errorResponse.message === 'string') {
+        errorResponse.message = [errorResponse.message];
+      }
       const errors = errorResponse.message.map(err => ({
         errorCode: err,
         errorDescription: err,
