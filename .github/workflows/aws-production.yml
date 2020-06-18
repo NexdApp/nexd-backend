@@ -3,7 +3,7 @@ on:
     branches:
       - master
 
-name: Staging - Deploy to Amazon ECS
+name: Production - Deploy to Amazon ECS
 
 jobs:
   deploy:
