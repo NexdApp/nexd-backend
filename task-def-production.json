@@ -47,21 +47,21 @@
         },
         {
           "name": "DATABASE_HOST",
-          "value": "nexd-postgres-staging.cvqvr9vqnzw5.eu-central-1.rds.amazonaws.com"
+          "value": "nexd-postgres-production.cvqvr9vqnzw5.eu-central-1.rds.amazonaws.com"
         }
       ],
       "secrets": [
         {
           "name": "DATABASE_PASSWORD",
-          "valueFrom": "arn:aws:secretsmanager:eu-central-1:729690866396:secret:nexd-staging-database-password-KMmMeE"
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:729690866396:secret:nexd-production-database-password-kbt5p6"
         },
         {
           "name": "ADMIN_SECRET",
-          "valueFrom": "arn:aws:secretsmanager:eu-central-1:729690866396:secret:nexd-staging-admin-secret-oL3kKR"
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:729690866396:secret:nexd-production-admin-secret-lcp34X"
         },
         {
           "name": "JWT_SECRET",
-          "valueFrom": "arn:aws:secretsmanager:eu-central-1:729690866396:secret:nexd-staging-jwt-secret-PA5lT4"
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:729690866396:secret:nexd-production-jwt-secret-fmzSxl"
         },
         {
           "name": "TWILIO_ACCOUNT_SID",
